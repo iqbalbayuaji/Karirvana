@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/pie_chart.dart';
 import 'package:get/get.dart';
-import 'package:karirvana/app/styles/app_colors.dart'; // <-- Import baru
-
+import 'package:karirvana/app/styles/app_colors.dart';
 import '../controllers/homepage_controller.dart';
 import '../local_widget/Rekomendasi_Container.dart';
 import '../local_widget/icon_features.dart';
@@ -42,14 +41,14 @@ class HomepageView extends GetView<HomepageController> {
                                   icon: const Icon(
                                     CupertinoIcons.bell_fill,
                                     size: 27,
-                                    color: AppColors.textOnPrimary, // Warna baru
+                                    color: AppColors.textOnPrimary, 
                                   )),
                               IconButton(
                                 onPressed: () {},
                                 icon: const Icon(
                                   CupertinoIcons.bars,
                                   size: 42,
-                                  color: AppColors.textOnPrimary, // Warna baru
+                                  color: AppColors.textOnPrimary,
                                 ),
                               )
                             ],
@@ -65,7 +64,7 @@ class HomepageView extends GetView<HomepageController> {
                                     fontSize: 20,
                                     fontFamily: "Montserrat",
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.textOnPrimary, // Warna baru
+                                    color: AppColors.textOnPrimary,
                                   ),
                                 ),
                                 const Text(
@@ -74,7 +73,7 @@ class HomepageView extends GetView<HomepageController> {
                                       fontSize: 20,
                                       fontFamily: "Montserrat",
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.textOnPrimary), // Warna baru
+                                      color: AppColors.textOnPrimary),
                                 ),
                               ],
                             ),
@@ -90,9 +89,9 @@ class HomepageView extends GetView<HomepageController> {
                             const SizedBox(height: 90),
                             Container(
                               width: double.infinity,
-                              height: 800,
+                              height: 2000,
                               decoration: const BoxDecoration(
-                                color: AppColors.surfaceVariant, // Warna baru
+                                color: AppColors.surfaceVariant,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(25),
                                   topRight: Radius.circular(25),
@@ -167,19 +166,19 @@ class HomepageView extends GetView<HomepageController> {
                                       width: double.infinity,
                                       padding: EdgeInsets.symmetric(horizontal: 20),
                                       decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.35),
+                                            blurRadius: 18,
+                                            offset: const Offset(0, 8),
+                                          )
+                                        ],
                                         gradient: LinearGradient(
                                         colors: AppColors.heroGradientSecondary,
                                         begin: Alignment.topRight,
                                         end: Alignment.bottomCenter,
                                       ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.10),
-                                          blurRadius: 24,
-                                          // offset: const Offset(0, 8),
-                                        )
-                                      ],
-                                        borderRadius: BorderRadius.circular(15)
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       
                                       child: Row(
@@ -214,14 +213,18 @@ class HomepageView extends GetView<HomepageController> {
                                                       fontFamily: "Montserrat",
                                                       fontSize: 13,
                                                       color: AppColors.textOnPrimary,
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight: FontWeight.w400,
                                                       ),
                                                   )
                                                 ],
                                               ),
                                             ),
                                           ),
-                                          Icon(CupertinoIcons.arrow_right, color: AppColors.textOnPrimary,)
+                                          Icon(
+                                            CupertinoIcons.arrow_right, 
+                                            color: AppColors.textOnPrimary,
+                                            size: 25,
+                                          )
                                         ],
                                       ),
                                     ),
@@ -230,8 +233,9 @@ class HomepageView extends GetView<HomepageController> {
                                     height: 30,
                                   ),
                                   Container(
-                                    height: 220,
+                                    height: 230,
                                     width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(vertical: 15),
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors: AppColors.heroGradient,
@@ -239,18 +243,128 @@ class HomepageView extends GetView<HomepageController> {
                                         end: Alignment.bottomLeft,
                                       ),
                                     ),
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: 4,
-                                      padding: const EdgeInsets.only(left: 35),
-                                      itemBuilder: (context, index) {
-                                            return Row(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Carousel",
+                                          style: TextStyle(
+                                            fontFamily: "Montserrat",
+                                            fontSize: 17,
+                                            color: AppColors.textOnPrimary,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          ),
+                                        Expanded(
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: 4,
+                                            padding: const EdgeInsets.only(left: 35),
+                                            itemBuilder: (context, index) {
+                                                  return Row(
+                                                    children: [
+                                                      RekomendasiContainer(),
+                                                      RekomendasiContainer(),
+                                                    ],
+                                                  );
+                                                },
+                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                                    child: Container(
+                                        height: 190,
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.secondary,
+                                          borderRadius: BorderRadius.circular(15),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.30),
+                                              blurRadius: 24,
+                                              offset: const Offset(0, 8),
+                                            )
+                                          ],
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
-                                                RekomendasiContainer(),
-                                                RekomendasiContainer(),
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "AI Career Assistant",
+                                                      style: TextStyle(
+                                                        fontFamily: "Montserrat",
+                                                        fontSize: 18,
+                                                        color: AppColors.textOnPrimary,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 190,
+                                                      child: Text(
+                                                        "Berkembang Lebih Asik dengan AI Career Assistant",
+                                                        style: TextStyle(
+                                                          fontFamily: "Montserrat",
+                                                          fontSize: 14,
+                                                          color: AppColors.textOnPrimary,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Container(
+                                                  width: 60,
+                                                  height: 60,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.primary,
+                                                    borderRadius: BorderRadius.circular(15)
+                                                  ),
+                                                )
                                               ],
-                                            );
-                                          },
+                                            ),
+                                            Container(
+                                              width: double.infinity,
+                                              padding: const EdgeInsets.symmetric(horizontal: 15),
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                color: AppColors.primaryContainer,
+                                                borderRadius: BorderRadius.circular(30),
+                                              ),
+                                              child: Row(
+                                                children: [ 
+                                                  Icon(
+                                                    Icons.search,
+                                                    color: AppColors.textSecondary,
+                                                    ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text(
+                                                    "Tanya ke AI",
+                                                    style: TextStyle(
+                                                      fontFamily: "Montserrat",
+                                                      fontSize: 14,
+                                                      color: AppColors.textSecondary,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                   )
                                 ],
@@ -263,10 +377,9 @@ class HomepageView extends GetView<HomepageController> {
                           child: Container(
                               width: 320,
                               height: 180,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 20),
+                              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                               decoration: BoxDecoration(
-                                color: AppColors.surface, // Warna baru
+                                color: AppColors.surface, 
                                 borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
@@ -292,7 +405,7 @@ class HomepageView extends GetView<HomepageController> {
                                               fontSize: 15,
                                               fontFamily: "Montserrat",
                                               fontWeight: FontWeight.w600,
-                                              color: AppColors.textPrimary, // Warna baru
+                                              color: AppColors.textPrimary,
                                             ),
                                             softWrap: true,
                                             maxLines: 2,
@@ -307,7 +420,7 @@ class HomepageView extends GetView<HomepageController> {
                                                   fontSize: 13,
                                                   fontFamily: "Montserrat",
                                                   fontWeight: FontWeight.w400,
-                                                  color: AppColors.textSecondary, // Warna baru
+                                                  color: AppColors.textSecondary,
                                                 ),
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
@@ -318,7 +431,7 @@ class HomepageView extends GetView<HomepageController> {
                                                   fontSize: 13,
                                                   fontFamily: "Montserrat",
                                                   fontWeight: FontWeight.w600,
-                                                  color: AppColors.textPrimary, // Warna baru
+                                                  color: AppColors.textPrimary,
                                                 ),
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,

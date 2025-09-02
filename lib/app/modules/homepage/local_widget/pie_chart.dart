@@ -39,7 +39,7 @@ class Chart_Pie extends StatelessWidget {
                           )),
                         colorList: [
                           Color(0xFF3B82F6), 
-                          Colors.grey[400]!, 
+                          Color(0xFFC7D2FE), 
                         ],
                       );
   }
