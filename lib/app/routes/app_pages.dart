@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
+import '../modules/learning/bindings/learning_binding.dart';
+import '../modules/learning/views/learning_view.dart';
 
 part 'app_routes.dart';
 
@@ -15,6 +17,11 @@ class AppPages {
       name: _Paths.HOMEPAGE,
       page: () => const HomepageView(),
       binding: HomepageBinding(),
+    ),
+    GetPage(
+      name: _Paths.LEARNING,
+      page: () => const LearningView(),
+      binding: LearningBinding(),
     ),
   ];
 }
