@@ -4,6 +4,7 @@ class HomepageController extends GetxController {
   //TODO: Implement HomepageController
 
   final count = 0.obs;
+  final activeIndex = 0.obs;
   @override
   void onInit() {
     super.onInit();

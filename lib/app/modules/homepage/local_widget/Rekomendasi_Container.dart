@@ -40,7 +40,7 @@ class RekomendasiContainer extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 12,
+                  flex: 13,
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
                     alignment: Alignment.centerLeft,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/carousel.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/pie_chart.dart';
 import 'package:get/get.dart';
@@ -256,19 +257,23 @@ class HomepageView extends GetView<HomepageController> {
                                           ),
                                           ),
                                         Expanded(
-                                          child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: 4,
-                                            padding: const EdgeInsets.only(left: 35),
-                                            itemBuilder: (context, index) {
-                                                  return Row(
-                                                    children: [
-                                                      CarouselContainer(),
-                                                      CarouselContainer(),
-                                                    ],
-                                                  );
-                                                },
+                                          child: CarouselSlider(
+                                            options: CarouselOptions(
+                                              height: 140.0,
+                                              viewportFraction: 0.6,
+                                              autoPlay: true,
+                                              onPageChanged: (index, reason) {
+                                                controller.activeIndex.value = index;
+                                              },
                                             ),
+                                            items: [1, 2, 3, 4].map((i) {
+                                              return Builder(
+                                                builder: (BuildContext context) {
+                                                  return const CarouselContainer();
+                                                },
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -287,8 +292,8 @@ class HomepageView extends GetView<HomepageController> {
                                           borderRadius: BorderRadius.circular(15),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.30),
-                                              blurRadius: 24,
+                                              color: Colors.black.withOpacity(0.10),
+                                              blurRadius: 10,
                                               offset: const Offset(0, 8),
                                             )
                                           ],
@@ -416,7 +421,7 @@ class HomepageView extends GetView<HomepageController> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               const Text(
-                                                "Modul :",
+                                                "Last Activity",
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontFamily: "Montserrat",
@@ -426,16 +431,42 @@ class HomepageView extends GetView<HomepageController> {
                                                 softWrap: true,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                              const Text(
-                                                "Middleware",
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontFamily: "Montserrat",
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.textPrimary,
-                                                ),
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Middleware",
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColors.textPrimary,
+                                                    ),
+                                                    softWrap: true,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  Text(
+                                                    " - ",
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColors.textPrimary,
+                                                    ),
+                                                    softWrap: true,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  Text(
+                                                    "10:46",
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColors.textPrimary,
+                                                    ),
+                                                    softWrap: true,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
