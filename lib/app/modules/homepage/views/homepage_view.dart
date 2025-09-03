@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/carousel.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/pie_chart.dart';
 import 'package:get/get.dart';
@@ -11,8 +12,11 @@ import '../local_widget/icon_features.dart';
 
 class HomepageView extends GetView<HomepageController> {
   const HomepageView({super.key});
+  
   @override
   Widget build(BuildContext context) {
+    final CarouselSliderController carouselController = CarouselSliderController();
+    int activeIndex = 0;
     return Scaffold(
       body: Stack(
         children: [
@@ -234,49 +238,74 @@ class HomepageView extends GetView<HomepageController> {
                                   SizedBox(
                                     height: 30,
                                   ),
-                                  Container(
-                                    height: 230,
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.symmetric(vertical: 15),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: AppColors.heroGradient,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomLeft,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          "Carousel",
-                                          style: TextStyle(
-                                            fontFamily: "Montserrat",
-                                            fontSize: 17,
-                                            color: AppColors.textOnPrimary,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          ),
-                                        Expanded(
-                                          child: CarouselSlider(
-                                            options: CarouselOptions(
-                                              height: 140.0,
-                                              viewportFraction: 0.6,
-                                              autoPlay: true,
-                                              onPageChanged: (index, reason) {
-                                                controller.activeIndex.value = index;
-                                              },
-                                            ),
-                                            items: [1, 2, 3, 4].map((i) {
-                                              return Builder(
-                                                builder: (BuildContext context) {
-                                                  return const CarouselContainer();
-                                                },
-                                              );
-                                            }).toList(),
+                                  StatefulBuilder(
+                                    builder: (context, setState) {
+                                      return Container(
+                                        height: 230,
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(vertical: 15),
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: AppColors.heroGradient,
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              "Carousel",
+                                              style: TextStyle(
+                                                fontFamily: "Montserrat",
+                                                fontSize: 17,
+                                                color: AppColors.textOnPrimary,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: CarouselSlider(
+                                                carouselController: carouselController,
+                                                options: CarouselOptions(
+                                                  height: 140.0,
+                                                  viewportFraction: 0.6,
+                                                  autoPlay: true,
+                                                  onPageChanged: (index, reason) {
+                                                    setState(() {
+                                                      activeIndex = index;
+                                                    });
+                                                  },
+                                                ),
+                                                items: [1, 2, 3, 4].map((i) {
+                                                  return Builder(
+                                                    builder: (BuildContext context) {
+                                                      return const CarouselContainer();
+                                                    },
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                            AnimatedSmoothIndicator(
+                                              activeIndex: activeIndex,
+                                              count: 4,
+                                              onDotClicked: (index) {
+                                                carouselController.animateToPage(
+                                                  index,
+                                                  duration: const Duration(milliseconds: 300),
+                                                  curve: Curves.ease,
+                                                );
+                                              },
+                                              effect: ExpandingDotsEffect(
+                                                dotHeight: 8,
+                                                dotWidth: 8,
+                                                activeDotColor: AppColors.textOnPrimary,
+                                                dotColor: AppColors.textOnPrimary.withOpacity(0.4),
+                                                spacing: 8,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
                                   ),
                                   SizedBox(
                                     height: 30,
