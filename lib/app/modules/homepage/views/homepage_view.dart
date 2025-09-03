@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:karirvana/app/modules/homepage/local_widget/carousel.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/pie_chart.dart';
 import 'package:get/get.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
@@ -136,10 +137,10 @@ class HomepageView extends GetView<HomepageController> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 15,
+                                        height: 10,
                                       ),
                                       SizedBox(
-                                        height: 140,
+                                        height: 180,
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount: 2,
@@ -157,7 +158,7 @@ class HomepageView extends GetView<HomepageController> {
                                     ],
                                   ),
                                   SizedBox(
-                                    height: 30,
+                                    height: 10,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -262,8 +263,8 @@ class HomepageView extends GetView<HomepageController> {
                                             itemBuilder: (context, index) {
                                                   return Row(
                                                     children: [
-                                                      RekomendasiContainer(),
-                                                      RekomendasiContainer(),
+                                                      CarouselContainer(),
+                                                      CarouselContainer(),
                                                     ],
                                                   );
                                                 },
@@ -415,7 +416,7 @@ class HomepageView extends GetView<HomepageController> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               const Text(
-                                                "Progress Modul :",
+                                                "Modul :",
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontFamily: "Montserrat",
@@ -426,7 +427,7 @@ class HomepageView extends GetView<HomepageController> {
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                               const Text(
-                                                "Intermediate",
+                                                "Middleware",
                                                 style: TextStyle(
                                                   fontSize: 13,
                                                   fontFamily: "Montserrat",
