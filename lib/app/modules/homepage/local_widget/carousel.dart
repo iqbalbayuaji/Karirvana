@@ -9,7 +9,7 @@ class CarouselContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+      margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.primaryContainer,

@@ -148,12 +148,11 @@ class HomepageView extends GetView<HomepageController> {
                                         height: 180,
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: 2,
+                                          itemCount: 5,
                                           padding: const EdgeInsets.only(left: 25),
                                           itemBuilder: (context, index) {
                                             return Row(
                                               children: [
-                                                RekomendasiContainer(),
                                                 RekomendasiContainer(),
                                               ],
                                             );
@@ -433,17 +432,47 @@ class HomepageView extends GetView<HomepageController> {
                                         height: 10,
                                       ),
                                       SizedBox(
-                                        height: 180,
+                                        height: 143,
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: 2,
+                                          itemCount: 6,
                                           padding: const EdgeInsets.only(left: 25),
                                           itemBuilder: (context, index) {
-                                            return Row(
-                                              children: [
-                                                RekomendasiContainer(),
-                                                RekomendasiContainer(),
-                                              ],
+                                            return Container(
+                                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 9),
+                                              margin: const EdgeInsets.only(right: 20),
+                                              width: 140,
+                                              decoration: BoxDecoration(
+                                                color: AppColors.primaryContainer,
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: 
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    width: 70,
+                                                    height: 70,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      image: DecorationImage(
+                                                        image: AssetImage('assets/images/hero.jpg'),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "PT GoTo Gojek Indonesia Tbk.",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontFamily: "Montserrat",
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColors.textPrimary,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             );
                                           },
                                         ),
