@@ -9,6 +9,7 @@ import 'package:karirvana/app/styles/app_colors.dart';
 import '../controllers/homepage_controller.dart';
 import '../local_widget/Rekomendasi_Container.dart';
 import '../local_widget/icon_features.dart';
+import '../local_widget/kemitraan_container.dart';
 
 class HomepageView extends GetView<HomepageController> {
   const HomepageView({super.key});
@@ -153,7 +154,9 @@ class HomepageView extends GetView<HomepageController> {
                                           itemBuilder: (context, index) {
                                             return Row(
                                               children: [
-                                                RekomendasiContainer(),
+                                                RekomendasiContainer(
+                                                  index: index,
+                                                ),
                                               ],
                                             );
                                           },
@@ -280,7 +283,9 @@ class HomepageView extends GetView<HomepageController> {
                                                 items: [1, 2, 3, 4].map((i) {
                                                   return Builder(
                                                     builder: (BuildContext context) {
-                                                      return const CarouselContainer();
+                                                      return CarouselContainer(
+                                                        index: i - 1,
+                                                      );
                                                     },
                                                   );
                                                 }).toList(),
@@ -438,41 +443,8 @@ class HomepageView extends GetView<HomepageController> {
                                           itemCount: 6,
                                           padding: const EdgeInsets.only(left: 25),
                                           itemBuilder: (context, index) {
-                                            return Container(
-                                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 9),
-                                              margin: const EdgeInsets.only(right: 20),
-                                              width: 140,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.primaryContainer,
-                                                borderRadius: BorderRadius.circular(10),
-                                              ),
-                                              child: 
-                                              Column(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Container(
-                                                    width: 70,
-                                                    height: 70,
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      image: DecorationImage(
-                                                        image: AssetImage('assets/images/hero.jpg'),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "PT GoTo Gojek Indonesia Tbk.",
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight: FontWeight.w600,
-                                                      color: AppColors.textPrimary,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
+                                            return KemitraanContainer(
+                                              index: index,
                                             );
                                           },
                                         ),

@@ -2,12 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 
 class RekomendasiContainer extends StatelessWidget {
+  final int index;
+
   const RekomendasiContainer({
     super.key,
+    required this.index,
   });
+
+  static final List<Map<String, dynamic>> _recommendations = [
+    {
+      'title': 'Microsoft Excel Beginner Course',
+      'provider': 'EduLearn',
+      'imageUrl': 'assets/images/hero.jpg',
+      'discount': '30% Off',
+      'showDiscount': true,
+    },
+    {
+      'title': 'Flutter Development Bootcamp',
+      'provider': 'CodeAcademy',
+      'imageUrl': 'assets/images/hero.jpg',
+      'discount': '50% Off',
+      'showDiscount': true,
+    },
+    {
+      'title': 'Digital Marketing Fundamentals',
+      'provider': 'MarketPro',
+      'imageUrl': 'assets/images/hero.jpg',
+      'discount': '25% Off',
+      'showDiscount': true,
+    },
+    {
+      'title': 'Data Science with Python',
+      'provider': 'DataLearn',
+      'imageUrl': 'assets/images/hero.jpg',
+      'discount': '',
+      'showDiscount': false,
+    },
+    {
+      'title': 'UI/UX Design Masterclass',
+      'provider': 'DesignHub',
+      'imageUrl': 'assets/images/hero.jpg',
+      'discount': '40% Off',
+      'showDiscount': true,
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final recommendation = _recommendations[index % _recommendations.length];
+    final String title = recommendation['title'];
+    final String provider = recommendation['provider'];
+    final String imageUrl = recommendation['imageUrl'];
+    final String discount = recommendation['discount'];
+    final bool showDiscount = recommendation['showDiscount'];
+    
     return Stack(
       children: [
         Container(
@@ -34,7 +82,7 @@ class RekomendasiContainer extends StatelessWidget {
                   child: SizedBox(
                     width: double.infinity,
                     child: Image.asset(
-                      "assets/images/hero.jpg",
+                      imageUrl,
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -48,7 +96,7 @@ class RekomendasiContainer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Microsoft Exel Beginner Course',
+                          title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -59,7 +107,7 @@ class RekomendasiContainer extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'EduLearn',
+                          provider,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -77,32 +125,33 @@ class RekomendasiContainer extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          height: 24,
-          width: 80,
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(9),
-              bottomLeft: Radius.circular(9),
-            ),
-            gradient: LinearGradient(
-                colors: AppColors.heroGradientSecondary,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+        if (showDiscount)
+          Container(
+            height: 24,
+            width: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(9),
+                bottomLeft: Radius.circular(9),
               ),
-          ),
-          child: Text(
-            "30% Disc",
-            style: TextStyle(
-              color: AppColors.textOnPrimary,
-              fontFamily: "Montserrat",
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+              gradient: LinearGradient(
+                  colors: AppColors.heroGradientSecondary,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
             ),
-          ),
-        )
+            child: Text(
+              discount,
+              style: TextStyle(
+                color: AppColors.textOnPrimary,
+                fontFamily: "Montserrat",
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          )
       ],
     );
   }

@@ -2,12 +2,53 @@ import 'package:flutter/material.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 
 class CarouselContainer extends StatelessWidget {
+  final int index;
+
   const CarouselContainer({
     super.key,
+    required this.index,
   });
+
+  static final List<Map<String, dynamic>> _testimonials = [
+    {
+      'name': 'Erlangga Tresnamada Muliawan',
+      'year': '2002',
+      'company': 'PT Garuda Indonesia Tbk.',
+      'testimonial': '"Saya merasa terbantu dengan adanya aplikasi karirvana ini, karena dapat membantu saya mengembangkan diri"',
+      'imageUrl': 'assets/images/hero.jpg',
+    },
+    {
+      'name': 'Siti Nurhaliza Putri',
+      'year': '2001',
+      'company': 'PT Telkom Indonesia Tbk.',
+      'testimonial': '"Aplikasi ini sangat membantu dalam menemukan peluang karir yang sesuai dengan passion saya"',
+      'imageUrl': 'assets/images/hero.jpg',
+    },
+    {
+      'name': 'Ahmad Rizki Pratama',
+      'year': '2003',
+      'company': 'PT Bank Central Asia Tbk.',
+      'testimonial': '"Fitur-fitur yang ada sangat lengkap dan mudah digunakan untuk pengembangan karir"',
+      'imageUrl': 'assets/images/hero.jpg',
+    },
+    {
+      'name': 'Maya Sari Dewi',
+      'year': '2000',
+      'company': 'PT Unilever Indonesia Tbk.',
+      'testimonial': '"Berkat aplikasi ini, saya berhasil mendapatkan pekerjaan impian di perusahaan multinasional"',
+      'imageUrl': 'assets/images/hero.jpg',
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final testimonial = _testimonials[index % _testimonials.length];
+    final String name = testimonial['name'];
+    final String year = testimonial['year'];
+    final String company = testimonial['company'];
+    final String testimonialText = testimonial['testimonial'];
+    final String imageUrl = testimonial['imageUrl'];
+    
     return Container(
       margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
@@ -27,7 +68,7 @@ class CarouselContainer extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('assets/images/hero.jpg'),
+                    image: AssetImage(imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -39,7 +80,7 @@ class CarouselContainer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Erlangga Tresnamada Muliawan", 
+                    Text(name, 
                       style: TextStyle(
                         fontSize: 12,
                         fontFamily: "Montserrat",
@@ -49,7 +90,7 @@ class CarouselContainer extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Text("2002", 
+                    Text(year, 
                       style: TextStyle(
                         fontSize: 10,
                         fontFamily: "Montserrat",
@@ -77,7 +118,7 @@ class CarouselContainer extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: "PT Garuda Indonesia Tbk.",
+                  text: company,
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: "Montserrat",
@@ -89,7 +130,7 @@ class CarouselContainer extends StatelessWidget {
             )
           ),
           Text(
-            '"Saya merasa terbantu dengan adanya aplikasi karirvana ini, karena dapat membantu saya mengembangkan diri"',
+            testimonialText,
             style: TextStyle(
               fontSize: 12,
               fontFamily: "Montserrat",
