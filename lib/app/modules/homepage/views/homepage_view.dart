@@ -107,7 +107,7 @@ class HomepageView extends GetView<HomepageController> {
                                 children: [
                                   const SizedBox(height: 120),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                                    padding: const EdgeInsets.symmetric(horizontal: 25),
                                     child: const Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,7 +125,7 @@ class HomepageView extends GetView<HomepageController> {
                                   Column(
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 35),
+                                        padding: const EdgeInsets.symmetric(horizontal: 25),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
@@ -149,7 +149,7 @@ class HomepageView extends GetView<HomepageController> {
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount: 2,
-                                          padding: const EdgeInsets.only(left: 35),
+                                          padding: const EdgeInsets.only(left: 25),
                                           itemBuilder: (context, index) {
                                             return Row(
                                               children: [
@@ -241,7 +241,7 @@ class HomepageView extends GetView<HomepageController> {
                                   StatefulBuilder(
                                     builder: (context, setState) {
                                       return Container(
-                                        height: 230,
+                                        height: 297,
                                         width: double.infinity,
                                         padding: const EdgeInsets.symmetric(vertical: 15),
                                         decoration: BoxDecoration(
@@ -262,12 +262,15 @@ class HomepageView extends GetView<HomepageController> {
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
+                                            SizedBox(
+                                              height: 8,
+                                            ),
                                             Expanded(
                                               child: CarouselSlider(
                                                 carouselController: carouselController,
                                                 options: CarouselOptions(
-                                                  height: 140.0,
-                                                  viewportFraction: 0.6,
+                                                  height: 260.0,
+                                                  viewportFraction: 0.74,
                                                   autoPlay: true,
                                                   onPageChanged: (index, reason) {
                                                     setState(() {
@@ -283,6 +286,9 @@ class HomepageView extends GetView<HomepageController> {
                                                   );
                                                 }).toList(),
                                               ),
+                                            ),
+                                            SizedBox(
+                                              height: 12,
                                             ),
                                             AnimatedSmoothIndicator(
                                               activeIndex: activeIndex,
@@ -401,7 +407,47 @@ class HomepageView extends GetView<HomepageController> {
                                           ],
                                         ),
                                       ),
-                                  )
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 25),
+                                    child: 
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                                  "Kemitraan",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontFamily: "Montserrat",
+                                                    color: AppColors.textSecondary,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 180,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: 2,
+                                          padding: const EdgeInsets.only(left: 25),
+                                          itemBuilder: (context, index) {
+                                            return Row(
+                                              children: [
+                                                RekomendasiContainer(),
+                                                RekomendasiContainer(),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      )
                                 ],
                               ),
                             ),
