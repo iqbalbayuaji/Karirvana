@@ -371,26 +371,39 @@ class CourseStoreView extends GetView<CourseStoreController> {
                       SizedBox(height: 25),
                       
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: 25),
-                        padding: EdgeInsets.all(30),
+                        margin: EdgeInsets.symmetric(horizontal: 30),
+                        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
                         decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.10),
+                              blurRadius: 15,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
                           color: AppColors.surfaceVariant,
                           borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: AppColors.secondaryContainer,
+                            width: 1,
+                          ),
                         ),
-                        child: Column(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 _buildDetailItem(CupertinoIcons.time, "Durasi", "8 jam"),
+                                SizedBox(height: 20),
                                 _buildDetailItem(CupertinoIcons.play_circle, "Video", "24 video"),
                               ],
                             ),
-                            SizedBox(height: 15),
-                            Row(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 _buildDetailItem(CupertinoIcons.doc_text, "Materi", "12 modul"),
+                                SizedBox(height: 20),
                                 _buildDetailItem(CupertinoIcons.checkmark_seal, "Sertifikat", "Ya"),
                               ],
                             ),
@@ -464,7 +477,6 @@ class CourseStoreView extends GetView<CourseStoreController> {
               ],
             ),
             
-            // Back button
             Positioned(
               top: 40,
               left: 25,
