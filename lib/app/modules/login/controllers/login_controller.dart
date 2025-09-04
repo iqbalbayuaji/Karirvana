@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../services/firebase_auth_service.dart';
 
 class LoginController extends GetxController {
   // Form controllers
@@ -9,6 +10,9 @@ class LoginController extends GetxController {
   // Observable variables
   final isPasswordHidden = true.obs;
   final isLoading = false.obs;
+  
+  // Firebase Auth Service
+  final FirebaseAuthService _authService = Get.find<FirebaseAuthService>();
   
   @override
   void onInit() {
@@ -33,44 +37,48 @@ class LoginController extends GetxController {
   }
   
   // Login method
-  void login() {
-    // if (emailController.text.isEmpty) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Email tidak boleh kosong',
-    //     backgroundColor: Colors.red,
-    //     colorText: Colors.white,
-    //   );
-    //   return;
-    // }
-    
-    // if (passwordController.text.isEmpty) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Password tidak boleh kosong',
-    //     backgroundColor: Colors.red,
-    //     colorText: Colors.white,
-    //   );
-    //   return;
-    // }
-    
-    // TODO: Implement actual login logic
-    isLoading.value = true;
-    
-    // Simulate API call
-    Future.delayed(const Duration(seconds: 2), () {
-      isLoading.value = false;
-      
-      // For demo purposes, accept any email/password
+  Future<void> login() async {
+    if (emailController.text.isEmpty) {
       Get.snackbar(
-        'Success',
-        'Login berhasil!',
-        backgroundColor: Colors.green,
+        'Error',
+        'Email tidak boleh kosong',
+        backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      return;
+    }
+    
+    if (passwordController.text.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Password tidak boleh kosong',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    
+    isLoading.value = true;
+    
+    try {
+      final userCredential = await _authService.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      );
       
-      // TODO: Navigate to home page after successful login
-      Get.offAllNamed('/homepage');
-    });
+      if (userCredential != null) {
+        Get.snackbar(
+          'Success',
+          'Login berhasil!',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        
+        // Navigate to home page after successful login
+        Get.offAllNamed('/homepage');
+      }
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

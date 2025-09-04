@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../services/firebase_auth_service.dart';
 
 class RegisterController extends GetxController {
   // Form controllers
@@ -14,6 +15,9 @@ class RegisterController extends GetxController {
   final isConfirmPasswordHidden = true.obs;
   final isLoading = false.obs;
   final selectedDate = Rx<DateTime?>(null);
+  
+  // Firebase Auth Service
+  final FirebaseAuthService _authService = Get.find<FirebaseAuthService>();
   
   @override
   void onInit() {
@@ -61,7 +65,7 @@ class RegisterController extends GetxController {
   // }
   
   // Register method
-  void register() {
+  Future<void> register() async {
     // Basic validation
     if (nameController.text.isEmpty) {
       Get.snackbar(
@@ -83,16 +87,6 @@ class RegisterController extends GetxController {
       return;
     }
     
-    // if (birthDateController.text.isEmpty) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Tanggal lahir tidak boleh kosong',
-    //     backgroundColor: Colors.red,
-    //     colorText: Colors.white,
-    //   );
-    //   return;
-    // }
-    
     if (passwordController.text.isEmpty) {
       Get.snackbar(
         'Error',
@@ -113,23 +107,38 @@ class RegisterController extends GetxController {
       return;
     }
     
-    // TODO: Implement actual register logic
-    isLoading.value = true;
-    
-    // Simulate API call
-    Future.delayed(const Duration(seconds: 2), () {
-      isLoading.value = false;
-      
-      // For demo purposes, accept any valid input
+    if (passwordController.text.length < 6) {
       Get.snackbar(
-        'Success',
-        'Registrasi berhasil!',
-        backgroundColor: Colors.green,
+        'Error',
+        'Password minimal 6 karakter',
+        backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+      return;
+    }
+    
+    isLoading.value = true;
+    
+    try {
+      final userCredential = await _authService.registerWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text,
+        name: nameController.text.trim(),
+      );
       
-      // Navigate to login page after successful registration
-      Get.offAllNamed('/login');
-    });
+      if (userCredential != null) {
+        Get.snackbar(
+          'Success',
+          'Registrasi berhasil!',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        
+        // Navigate to login page after successful registration
+        Get.offAllNamed('/login');
+      }
+    } finally {
+      isLoading.value = false;
+    }
   }
 }
