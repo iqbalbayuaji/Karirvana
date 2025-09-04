@@ -34,25 +34,25 @@ class LoginController extends GetxController {
   
   // Login method
   void login() {
-    if (emailController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Email tidak boleh kosong',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
+    // if (emailController.text.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Email tidak boleh kosong',
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    //   return;
+    // }
     
-    if (passwordController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Password tidak boleh kosong',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
+    // if (passwordController.text.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Password tidak boleh kosong',
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    //   return;
+    // }
     
     // TODO: Implement actual login logic
     isLoading.value = true;
@@ -70,7 +70,7 @@ class LoginController extends GetxController {
       );
       
       // TODO: Navigate to home page after successful login
-      // Get.offAllNamed('/home');
+      Get.offAllNamed('/homepage');
     });
   }
 }

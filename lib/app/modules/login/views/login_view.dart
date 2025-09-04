@@ -221,7 +221,7 @@ class LoginView extends GetView<LoginController> {
                                     alignment: Alignment.centerRight,
                                     child: TextButton(
                                       onPressed: () {
-                                        Get.toNamed("/homepage");
+                                        // TODO: Navigate to forgot password page
                                       },
                                       child: const Text(
                                         'Lupa Password?',
@@ -289,7 +289,7 @@ class LoginView extends GetView<LoginController> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          // TODO: Navigate to register page
+                                          Get.offAllNamed('/register');
                                         },
                                         child: const Text(
                                           'Daftar',
