@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/course_store/bindings/course_store_binding.dart';
+import '../modules/course_store/views/course_store_view.dart';
 import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
 import '../modules/learning/bindings/learning_binding.dart';
@@ -36,6 +38,11 @@ class AppPages {
       name: _Paths.REGISTER,
       page: () => const RegisterView(),
       binding: RegisterBinding(),
+    ),
+    GetPage(
+      name: _Paths.COURSE_STORE,
+      page: () => const CourseStoreView(),
+      binding: CourseStoreBinding(),
     ),
   ];
 }
