@@ -128,7 +128,7 @@ class RekomendasiContainer extends StatelessWidget {
         if (showDiscount)
           Container(
             height: 24,
-            width: 80,
+            width: 70,
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
               color: AppColors.primary,
