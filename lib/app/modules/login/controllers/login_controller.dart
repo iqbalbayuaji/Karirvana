@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../routes/app_pages.dart';
 import '../../../services/firebase_auth_service.dart';
 
 class LoginController extends GetxController {
@@ -75,7 +76,7 @@ class LoginController extends GetxController {
         );
         
         // Navigate to home page after successful login
-        Get.offAllNamed('/homepage');
+        Get.toNamed(Routes.HOMEPAGE);
       }
     } finally {
       isLoading.value = false;

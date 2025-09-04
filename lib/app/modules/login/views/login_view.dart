@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
 import '../../../styles/app_colors.dart';
 import '../controllers/login_controller.dart';
 
@@ -289,7 +290,7 @@ class LoginView extends GetView<LoginController> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          Get.offAllNamed('/register');
+                                          Get.toNamed(Routes.REGISTER);
                                         },
                                         child: const Text(
                                           'Daftar',

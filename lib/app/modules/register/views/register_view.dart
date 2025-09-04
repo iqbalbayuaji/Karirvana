@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
 import '../../../styles/app_colors.dart';
 import '../controllers/register_controller.dart';
 
@@ -436,7 +437,7 @@ class RegisterView extends GetView<RegisterController> {
                                       ),
                                       TextButton(
                                         onPressed: () {
-                                          Get.offAllNamed('/login');
+                                          Get.toNamed(Routes.LOGIN);
                                         },
                                         child: const Text(
                                           'Masuk',
