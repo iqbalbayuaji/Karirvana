@@ -4,16 +4,22 @@ import 'package:pie_chart/pie_chart.dart';
 import '../../../styles/app_colors.dart';
 
 class Chart_Pie extends StatelessWidget {
+  final double progress;
+  
   const Chart_Pie({
     super.key,
+    this.progress = 60.0,
   });
 
   @override
   Widget build(BuildContext context) {
+    final completed = progress;
+    final remaining = 100 - progress;
+    
     return PieChart(
-                        dataMap: const {
-                          "Selesai": 40,
-                          "Tertunda": 25,
+                        dataMap: {
+                          "Selesai": completed,
+                          "Tertunda": remaining,
                         },
                         chartType: ChartType.ring,
                         ringStrokeWidth: 18,
@@ -29,7 +35,7 @@ class Chart_Pie extends StatelessWidget {
                           decimalPlaces: 1,
                         ),
                         centerWidget: Container(
-                          child: Text("60%", 
+                          child: Text("${progress.toInt()}%", 
                             style: TextStyle(
                               fontSize: 25,
                               color: AppColors.textPrimary,

@@ -1,19 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:karirvana/app/routes/app_pages.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/carousel.dart';
-import 'package:karirvana/app/modules/homepage/local_widget/pie_chart.dart';
 import 'package:get/get.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 import '../controllers/homepage_controller.dart';
 import '../local_widget/Rekomendasi_Container.dart';
 import '../local_widget/icon_features.dart';
 import '../local_widget/kemitraan_container.dart';
+import '../local_widget/course_progress_carousel.dart';
 
 class HomepageView extends GetView<HomepageController> {
   const HomepageView({super.key});
+  
+  // Sample data for courses - in real app this would come from controller/API
+  List<CourseData> _getSampleCourses() {
+    return [
+      CourseData(
+        id: "1",
+        title: "Express JS Intermediate",
+        lastActivity: "Middleware",
+        lastTime: "10:46",
+        progress: 60.0,
+      ),
+      CourseData(
+        id: "2", 
+        title: "Flutter Advanced",
+        lastActivity: "State Management",
+        lastTime: "14:30",
+        progress: 75.0,
+      ),
+      CourseData(
+        id: "3",
+        title: "React Native Basics",
+        lastActivity: "Navigation",
+        lastTime: "09:15",
+        progress: 45.0,
+      ),
+    ];
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -455,111 +481,8 @@ class HomepageView extends GetView<HomepageController> {
                             ),
                           ],
                         ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: GestureDetector(
-                            onTap: () {
-                              Get.toNamed(Routes.COURSE_USER);
-                            },
-                            child: Container(
-                                width: 320,
-                                height: 180,
-                                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                                decoration: BoxDecoration(
-                                  color: AppColors.surface, 
-                                  borderRadius: BorderRadius.circular(15),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.08),
-                                      blurRadius: 24,
-                                      offset: const Offset(0, 8),
-                                    )
-                                  ],
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 10),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const Text(
-                                              "Express JS Intermediate",
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                                fontFamily: "Montserrat",
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.textPrimary,
-                                              ),
-                                              softWrap: true,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  "Last Activity",
-                                                  style: TextStyle(
-                                                    fontSize: 13,
-                                                    fontFamily: "Montserrat",
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.textSecondary,
-                                                  ),
-                                                  softWrap: true,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "Middleware",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        fontFamily: "Montserrat",
-                                                        fontWeight: FontWeight.w600,
-                                                        color: AppColors.textPrimary,
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                    Text(
-                                                      " - ",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        fontFamily: "Montserrat",
-                                                        fontWeight: FontWeight.w600,
-                                                        color: AppColors.textPrimary,
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                    Text(
-                                                      "10:46",
-                                                      style: TextStyle(
-                                                        fontSize: 13,
-                                                        fontFamily: "Montserrat",
-                                                        fontWeight: FontWeight.w600,
-                                                        color: AppColors.textPrimary,
-                                                      ),
-                                                      softWrap: true,
-                                                      overflow: TextOverflow.ellipsis,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    const Chart_Pie(),
-                                  ],
-                                )),
-                          ),
+                        CourseProgressCarousel(
+                          courses: _getSampleCourses(),
                         ),
                       ],
                     )
