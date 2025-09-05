@@ -567,41 +567,8 @@ class CourseStoreView extends GetView<CourseStoreController> {
                             ),
                           ),
                           
-                          SizedBox(height: 30),
+                          SizedBox(height: 80),
                           
-                          // Purchase button
-                          Container(
-                            width: double.infinity,
-                            height: 55,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Handle purchase
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: AppColors.textOnPrimary,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
-                              child: Text(
-                                "Beli Sekarang",
-                                style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          
-                          SizedBox(height: 20),
-                          
-                          // Add to cart button
-                          
-                          
-                          SizedBox(height: 30),
                         ],
                       ),
                     ),
