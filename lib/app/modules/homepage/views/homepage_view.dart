@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:karirvana/app/routes/app_pages.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/carousel.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/pie_chart.dart';
@@ -456,104 +457,109 @@ class HomepageView extends GetView<HomepageController> {
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child: Container(
-                              width: 320,
-                              height: 180,
-                              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                              decoration: BoxDecoration(
-                                color: AppColors.surface, 
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.08),
-                                    blurRadius: 24,
-                                    offset: const Offset(0, 8),
-                                  )
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          const Text(
-                                            "Express JS Intermediate",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontFamily: "Montserrat",
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.textPrimary,
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.toNamed(Routes.COURSE_USER);
+                            },
+                            child: Container(
+                                width: 320,
+                                height: 180,
+                                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface, 
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.08),
+                                      blurRadius: 24,
+                                      offset: const Offset(0, 8),
+                                    )
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Express JS Intermediate",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: "Montserrat",
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.textPrimary,
+                                              ),
+                                              softWrap: true,
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                            softWrap: true,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "Last Activity",
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontFamily: "Montserrat",
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.textSecondary,
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  "Last Activity",
+                                                  style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontFamily: "Montserrat",
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.textSecondary,
+                                                  ),
+                                                  softWrap: true,
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
-                                                softWrap: true,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Middleware",
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight: FontWeight.w600,
-                                                      color: AppColors.textPrimary,
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Middleware",
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontFamily: "Montserrat",
+                                                        fontWeight: FontWeight.w600,
+                                                        color: AppColors.textPrimary,
+                                                      ),
+                                                      softWrap: true,
+                                                      overflow: TextOverflow.ellipsis,
                                                     ),
-                                                    softWrap: true,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                  Text(
-                                                    " - ",
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight: FontWeight.w600,
-                                                      color: AppColors.textPrimary,
+                                                    Text(
+                                                      " - ",
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontFamily: "Montserrat",
+                                                        fontWeight: FontWeight.w600,
+                                                        color: AppColors.textPrimary,
+                                                      ),
+                                                      softWrap: true,
+                                                      overflow: TextOverflow.ellipsis,
                                                     ),
-                                                    softWrap: true,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                  Text(
-                                                    "10:46",
-                                                    style: TextStyle(
-                                                      fontSize: 13,
-                                                      fontFamily: "Montserrat",
-                                                      fontWeight: FontWeight.w600,
-                                                      color: AppColors.textPrimary,
+                                                    Text(
+                                                      "10:46",
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontFamily: "Montserrat",
+                                                        fontWeight: FontWeight.w600,
+                                                        color: AppColors.textPrimary,
+                                                      ),
+                                                      softWrap: true,
+                                                      overflow: TextOverflow.ellipsis,
                                                     ),
-                                                    softWrap: true,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  const Chart_Pie(),
-                                ],
-                              )),
+                                    const SizedBox(width: 12),
+                                    const Chart_Pie(),
+                                  ],
+                                )),
+                          ),
                         ),
                       ],
                     )
