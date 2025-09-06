@@ -481,8 +481,13 @@ class HomepageView extends GetView<HomepageController> {
                             ),
                           ],
                         ),
-                        CourseProgressCarousel(
-                          courses: _getSampleCourses(),
+                        Positioned(
+                          top: -37,
+                          left: 0,
+                          right: 0,
+                          child: CourseProgressCarousel(
+                            courses: _getSampleCourses(),
+                          ),
                         ),
                       ],
                     )

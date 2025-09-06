@@ -26,7 +26,7 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
   void initState() {
     super.initState();
     _pageController = PageController(
-      viewportFraction: widget.courses.length > 1 ? 0.85 : 1.0,
+      viewportFraction: widget.courses.length > 1 ? 0.78 : 1.0,
     );
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -61,8 +61,10 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
     }
 
     // Multiple courses - scrollable with preview effect
-    return SizedBox(
-      height: 180,
+    return Container(
+      height: 260,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      clipBehavior: Clip.none, // Allow shadows to extend beyond container bounds
       child: PageView.builder(
         controller: _pageController,
         onPageChanged: (index) {
@@ -78,7 +80,12 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
               double value = 1.0;
               if (_pageController.position.haveDimensions) {
                 value = _pageController.page! - index;
-                value = (1 - (value.abs() * 0.1)).clamp(0.85, 1.0);
+                value = (1 - (value.abs() * 0.12)).clamp(0.82, 1.0);
+              } else {
+                // Initial state - simulate the same behavior as when scrolling
+                double simulatedPage = _currentIndex.toDouble();
+                value = simulatedPage - index;
+                value = (1 - (value.abs() * 0.12)).clamp(0.82, 1.0);
               }
               
               return Transform.scale(
@@ -102,29 +109,29 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
     bool isActive = false,
     bool isSingle = false,
   }) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      margin: EdgeInsets.symmetric(
-        horizontal: isSingle ? 0 : (isActive ? 8 : 16),
-        vertical: isActive ? 0 : 8,
-      ),
-      child: GestureDetector(
-        onTap: () {
-          Get.toNamed(Routes.COURSE_USER, arguments: course);
-        },
-        child: Container(
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.COURSE_USER, arguments: course);
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: isSingle ? 0 : 8,
+          vertical: 30,
+        ),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
           width: isSingle ? 320 : null,
           height: 180,
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(isActive ? 0.12 : 0.06),
-                blurRadius: isActive ? 28 : 16,
-                offset: Offset(0, isActive ? 12 : 6),
+                color: Colors.black.withOpacity(isActive ? 0.12 : 0.08),
+                blurRadius: isActive ? 24 : 16,
+                offset: Offset(0, isActive ? 8 : 4),
               )
             ],
           ),
@@ -169,7 +176,7 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
                               Text(
                                 course.lastActivity,
                                 style: const TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 12,
                                   fontFamily: "Montserrat",
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimary,
@@ -180,7 +187,7 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
                               const Text(
                                 " - ",
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 12,
                                   fontFamily: "Montserrat",
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimary,
@@ -191,7 +198,7 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
                               Text(
                                 course.lastTime,
                                 style: const TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 12,
                                   fontFamily: "Montserrat",
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimary,
@@ -207,7 +214,6 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
               Chart_Pie(progress: course.progress),
             ],
           ),
