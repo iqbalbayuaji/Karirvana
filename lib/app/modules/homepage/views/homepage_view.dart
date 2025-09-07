@@ -144,7 +144,9 @@ class HomepageView extends GetView<HomepageController> {
                                           featureData: FeatureData(
                                             icon: Icons.article_outlined,
                                             title: "Course",
-                                            onTap: () {},
+                                            onTap: () {
+                                              Get.toNamed('/course-store-main');
+                                            },
                                           ),
                                         ),
                                         IconFeatures(

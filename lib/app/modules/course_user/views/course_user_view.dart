@@ -102,7 +102,6 @@ class CourseUserView extends GetView<CourseUserController> {
                               ),
                             ),
                             SizedBox(
-                              width: screenWidth * 0.40,
                               child: Text(
                                 "akowandwjsh",
                                 style: TextStyle(

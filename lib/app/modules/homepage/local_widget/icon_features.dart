@@ -35,16 +35,16 @@ class IconFeatures extends StatelessWidget {
             width: 55,
             height: 57,
             decoration: BoxDecoration(
-              color: featureData.backgroundColor ?? AppColors.primaryContainer,
+              color: featureData.backgroundColor ?? AppColors.primary.withOpacity(0.9),
               borderRadius: BorderRadius.circular(15)
             ),
             child: Icon(
               featureData.icon,
-              color: AppColors.textSecondary,
+              color: AppColors.textOnPrimary,
               size: 30,
             ),
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 7),
           SizedBox(
             width: featureData.width,
             child: Text(
