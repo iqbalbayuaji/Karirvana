@@ -93,7 +93,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
             
             // Filter Section
             Container(
-              height: 40,
+              height: 60,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 20),
@@ -103,6 +103,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                     return Padding(
                       padding: EdgeInsets.only(right: 12),
                       child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 8),
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
@@ -133,12 +134,6 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                   );
                 },
               ),
-            ),
-            
-            // Divider
-            Container(
-              height: 1,
-              color: AppColors.outline.withOpacity(0.1),
             ),
             
             // Course List

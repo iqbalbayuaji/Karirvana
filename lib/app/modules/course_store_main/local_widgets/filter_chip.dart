@@ -19,6 +19,7 @@ class CustomFilterChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
+        margin: EdgeInsets.symmetric(vertical: 8),
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : AppColors.primaryContainer,
