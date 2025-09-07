@@ -135,20 +135,50 @@ class HomepageView extends GetView<HomepageController> {
                                 children: [
                                   const SizedBox(height: 120),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                                    child: const Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        IconFeatures(),
-                                        IconFeatures(),
-                                        IconFeatures(),
-                                        IconFeatures(),
+                                        IconFeatures(
+                                          featureData: FeatureData(
+                                            icon: Icons.article_outlined,
+                                            title: "Course",
+                                            onTap: () {},
+                                          ),
+                                        ),
+                                        IconFeatures(
+                                          featureData: FeatureData(
+                                            icon: CupertinoIcons.text_badge_checkmark,
+                                            title: "Certification",
+                                            width: 80,
+                                            onTap: () => Get.toNamed('/course-user'),
+                                          ),
+                                        ),
+                                        IconFeatures(
+                                          featureData: FeatureData(
+                                            icon: CupertinoIcons.person_2,
+                                            title: "Interview Practice",
+                                            width: 60,
+                                            onTap: () {
+                                              // TODO: Navigate to interview practice
+                                            },
+                                          ),
+                                        ),
+                                        IconFeatures(
+                                          featureData: FeatureData(
+                                            icon: CupertinoIcons.chart_bar,
+                                            title: "Progress",
+                                            onTap: () {
+                                              // TODO: Navigate to progress tracking
+                                            },
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
                                   const SizedBox(
-                                    height: 20,
+                                    height: 15,
                                   ),
                                   Column(
                                     children: [
