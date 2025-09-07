@@ -2,12 +2,12 @@ import 'package:get/get.dart';
 
 import '../modules/course_store/bindings/course_store_binding.dart';
 import '../modules/course_store/views/course_store_view.dart';
+import '../modules/course_store_main/bindings/course_store_main_binding.dart';
+import '../modules/course_store_main/views/course_store_main_view.dart';
 import '../modules/course_user/bindings/course_user_binding.dart';
 import '../modules/course_user/views/course_user_view.dart';
 import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
-import '../modules/learning/bindings/learning_binding.dart';
-import '../modules/learning/views/learning_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/register/bindings/register_binding.dart';
@@ -25,11 +25,6 @@ class AppPages {
       name: _Paths.HOMEPAGE,
       page: () => const HomepageView(),
       binding: HomepageBinding(),
-    ),
-    GetPage(
-      name: _Paths.LEARNING,
-      page: () => const LearningView(),
-      binding: LearningBinding(),
     ),
     GetPage(
       name: _Paths.LOGIN,
@@ -50,6 +45,11 @@ class AppPages {
       name: _Paths.COURSE_USER,
       page: () => const CourseUserView(),
       binding: CourseUserBinding(),
+    ),
+    GetPage(
+      name: _Paths.COURSE_STORE_MAIN,
+      page: () => const CourseStoreMainView(),
+      binding: CourseStoreMainBinding(),
     ),
   ];
 }

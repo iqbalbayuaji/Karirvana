@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class LearningController extends GetxController {
-  //TODO: Implement LearningController
+class CourseStoreMainController extends GetxController {
+  //TODO: Implement CourseStoreMainController
 
   final count = 0.obs;
   @override

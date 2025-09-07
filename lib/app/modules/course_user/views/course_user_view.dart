@@ -73,7 +73,7 @@ class CourseUserView extends GetView<CourseUserController> {
                             Color(0xFFC7D2FE), 
                           ],
                         ),
-                        SizedBox(height: screenHeight * 0.02),
+                        SizedBox(height: screenHeight * 0.03),
                         Text(
                           "Progress Course",
                           style: TextStyle(
@@ -83,31 +83,34 @@ class CourseUserView extends GetView<CourseUserController> {
                             color: AppColors.textOnPrimary,
                           ),
                         ),
-                        SizedBox(height: screenHeight * 0.03),
+                        SizedBox(height: screenHeight * 0.04),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: screenWidth * 0.50,
+                              width: screenWidth * 0.40,
                               child: Text(
                                 "Express JS Intermediate",
                                 style: TextStyle(
                                   fontFamily: "Montserrat",
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                   color: AppColors.textOnPrimary,
                                 ),
                                 maxLines: 2,
                               ),
                             ),
-                            Text(
-                              "akowandwjsh",
-                              style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                color: AppColors.textOnPrimary,
+                            SizedBox(
+                              width: screenWidth * 0.40,
+                              child: Text(
+                                "akowandwjsh",
+                                style: TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                  color: AppColors.textOnPrimary,
+                                ),
                               ),
                             ),
                           ],
