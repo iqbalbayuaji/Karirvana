@@ -28,13 +28,15 @@ class CustomFilterChip extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontFamily: "Montserrat",
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            color: isSelected ? AppColors.textOnPrimary : AppColors.textSecondary,
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: "Montserrat",
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              color: isSelected ? AppColors.textOnPrimary : AppColors.textSecondary,
+            ),
           ),
         ),
       ),
