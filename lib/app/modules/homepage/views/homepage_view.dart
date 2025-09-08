@@ -191,7 +191,7 @@ class HomepageView extends GetView<HomepageController> {
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "Rekomendasi",
+                                              "Rekomendasi Course",
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontFamily: "Montserrat",
@@ -222,6 +222,50 @@ class HomepageView extends GetView<HomepageController> {
                                           },
                                         ),
                                       )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Rekomendasi Certification",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: "Montserrat",
+                                                color: AppColors.textSecondary,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 180,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: 5,
+                                          padding: const EdgeInsets.only(left: 25),
+                                          itemBuilder: (context, index) {
+                                            return Row(
+                                              children: [
+                                                RekomendasiContainer(
+                                                  index: index,
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(
