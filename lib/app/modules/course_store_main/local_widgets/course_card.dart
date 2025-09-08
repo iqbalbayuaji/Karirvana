@@ -141,7 +141,7 @@ class CourseCard extends StatelessWidget {
                                   children: [
                                     if (course.showDiscount && course.discountedPrice > 0) ...[
                                       Text(
-                                        'Rp ${_formatPrice(course.discountedPrice)}',
+                                        _formatPrice(course.discountedPrice),
                                         style: TextStyle(
                                           fontFamily: "Montserrat",
                                           fontSize: 16,
@@ -150,7 +150,7 @@ class CourseCard extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        'Rp ${_formatPrice(course.originalPrice)}',
+                                        _formatPrice(course.originalPrice),
                                         style: TextStyle(
                                           fontFamily: "Montserrat",
                                           fontSize: 12,
@@ -162,7 +162,7 @@ class CourseCard extends StatelessWidget {
                                       ),
                                     ] else
                                       Text(
-                                        'Rp ${_formatPrice(course.originalPrice)}',
+                                        _formatPrice(course.originalPrice),
                                         style: TextStyle(
                                           fontFamily: "Montserrat",
                                           fontSize: 16,
@@ -291,6 +291,6 @@ class CourseCard extends StatelessWidget {
   }
 
   String _formatPrice(int price) {
-    return price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.');
+    return 'Rp ${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 }

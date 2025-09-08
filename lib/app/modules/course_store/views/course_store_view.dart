@@ -46,98 +46,119 @@ class CourseStoreView extends GetView<CourseStoreController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.surface,
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          SingleChildScrollView(
-            child: Stack(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 300,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            AppColors.primary,
-                            AppColors.primaryContainer,
-                          ],
-                        ),
-                      ),
-                    ),
-                    
-                    // Course title and cart section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Rp 299.000",
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontFamily: "Montserrat",
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              Container(
-                                child: Text(
-                                  "Rp 599.000",
-                                  style: TextStyle(
-                                    color: AppColors.textSecondary,
-                                    fontFamily: "Montserrat",
-                                    fontSize: 16,
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 10),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: Colors.red.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Text(
-                                  "50% Disc",
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontFamily: "Montserrat",
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(child: CircularProgressIndicator());
+        }
+        
+        final course = controller.selectedCourse.value;
+        if (course == null) {
+          return Center(child: Text('Course not found'));
+        }
+        
+        return Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            SingleChildScrollView(
+              child: Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 300,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.primary,
+                              AppColors.primaryContainer,
                             ],
                           ),
-            
-                          SizedBox(height: 8),
-            
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Microsoft Excel Beginner Course", 
-                                  style: TextStyle(
-                                    color: AppColors.textPrimary,
-                                    fontFamily: "Montserrat",
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      
+                      // Course title and cart section
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (course.showDiscount && course.discountedPrice > 0) ...[
+                                  Text(
+                                    controller.formatPrice(course.discountedPrice),
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontFamily: "Montserrat",
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                  Container(
+                                    child: Text(
+                                      controller.formatPrice(course.originalPrice),
+                                      style: TextStyle(
+                                        color: AppColors.textSecondary,
+                                        fontFamily: "Montserrat",
+                                        fontSize: 16,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      course.discount,
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontFamily: "Montserrat",
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ] else
+                                  Text(
+                                    controller.formatPrice(course.originalPrice),
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontFamily: "Montserrat",
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                              ],
+                            ),
+              
+                            SizedBox(height: 8),
+              
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    course.title, 
+                                    style: TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontFamily: "Montserrat",
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
                               SizedBox(width: 15),
                               Container(
                                 alignment: Alignment.center,
@@ -174,7 +195,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "4.8",
+                                          course.rating.toString(),
                                           style: TextStyle(
                                             color: AppColors.textPrimary,
                                             fontFamily: "Montserrat",
@@ -186,7 +207,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                     ),
                                     SizedBox(width: 7),
                                     Text(
-                                      "(2,847 reviews)",
+                                      "(${controller.formatNumber(course.totalStudents)} reviews)",
                                       style: TextStyle(
                                         color: AppColors.textSecondary,
                                         fontFamily: "Montserrat",
@@ -205,7 +226,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                     ),
                                     SizedBox(width: 7),
                                     Text(
-                                      "5 students",
+                                      "${controller.formatNumber(course.totalStudents)} students",
                                       style: TextStyle(
                                         color: AppColors.textSecondary,
                                         fontFamily: "Montserrat",
@@ -231,7 +252,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                           ),
                           SizedBox(height: 6),
                           Text(
-                            "Pelajari Microsoft Excel dari dasar hingga mahir. Kursus ini dirancang khusus untuk pemula yang ingin menguasai spreadsheet dan analisis data. Dengan metode pembelajaran yang mudah dipahami dan praktis.",
+                            course.description,
                             style: TextStyle(
                               color: AppColors.textSecondary,
                               fontFamily: "Montserrat",
@@ -308,7 +329,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                 ),
                               ),
                               Text(
-                                "12 Modul",
+                                "${course.totalLessons} Modul",
                                 style: TextStyle(
                                   color: AppColors.textSecondary,
                                   fontFamily: "Montserrat",
@@ -432,15 +453,15 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    _buildDetailItem(CupertinoIcons.time, "Durasi", "8 jam"),
+                                    _buildDetailItem(CupertinoIcons.time, "Durasi", course.duration),
                                     SizedBox(height: 20),
-                                    _buildDetailItem(CupertinoIcons.play_circle, "Video", "24 video"),
+                                    _buildDetailItem(CupertinoIcons.play_circle, "Video", "${course.totalLessons} video"),
                                   ],
                                 ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    _buildDetailItem(CupertinoIcons.doc_text, "Materi", "12 modul"),
+                                    _buildDetailItem(CupertinoIcons.doc_text, "Materi", "${course.totalLessons} modul"),
                                     SizedBox(height: 20),
                                     _buildDetailItem(CupertinoIcons.checkmark_seal, "Sertifikat", "Ya"),
                                   ],
@@ -666,7 +687,8 @@ class CourseStoreView extends GetView<CourseStoreController> {
             ),
           ),
         ],
-      ),
+      );
+      }),
     );
   }
   
