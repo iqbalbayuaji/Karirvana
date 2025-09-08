@@ -17,215 +17,217 @@ class CourseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(bottom: 16),
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.outline.withOpacity(0.1),
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
-          border: Border.all(
-            color: AppColors.outline.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                gradient: LinearGradient(
-                  colors: _getCategoryGradient(course.category),
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+      child: Stack(
+        children: [
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 13, 0, 10),
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.outline.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
                 ),
-              ),
-              child: Center(
-                child: Icon(
-                  _getCategoryIcon(course.category),
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ),
+              ],
             ),
-            SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    course.title,
-                    style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Container(
+                      width: 90,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          colors: _getCategoryGradient(course.category),
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          _getCategoryIcon(course.category),
+                          color: Colors.white,
+                          size: 32,
+                        ),
+                      ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    course.instructor,
-                    style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(
-                        CupertinoIcons.star_fill,
-                        size: 14,
-                        color: Color(0xFFFBBF24),
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        course.rating.toString(),
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                    Container(
+                      height: 20,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.5),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(5),
                         ),
                       ),
-                      SizedBox(width: 12),
-                      Icon(
-                        CupertinoIcons.person_2_fill,
-                        size: 14,
-                        color: AppColors.textSecondary,
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        _formatNumber(course.totalStudents),
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Icon(
-                        CupertinoIcons.clock_fill,
-                        size: 14,
-                        color: AppColors.textSecondary,
-                      ),
-                      SizedBox(width: 4),
-                      Text(
-                        course.duration,
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      course.isFree
-                          ? Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xFF10B981).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                'GRATIS',
-                                style: TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF10B981),
-                                ),
-                              ),
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (course.showDiscount && course.discountedPrice > 0) ...[
-                                  // Show discounted price
-                                  Text(
-                                    'Rp.${_formatPrice(course.discountedPrice)}',
-                                    style: TextStyle(
-                                      fontFamily: "Montserrat",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                  // Show original price with strikethrough
-                                  Text(
-                                    'Rp.${_formatPrice(course.originalPrice)}',
-                                    style: TextStyle(
-                                      fontFamily: "Montserrat",
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.textSecondary,
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationColor: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                ] else
-                                  // Show regular price when no discount
-                                  Text(
-                                    'Rp.${_formatPrice(course.originalPrice)}',
-                                    style: TextStyle(
-                                      fontFamily: "Montserrat",
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                              ],
-                            ),
-
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getLevelColor(course.level).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
+                      child: Center(
                         child: Text(
-                          course.level,
+                          course.rating.toString(),
                           style: TextStyle(
+                            color: AppColors.textOnPrimary,
                             fontFamily: "Montserrat",
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: _getLevelColor(course.level),
                           ),
                         ),
                       ),
+                    )
+                  ],
+                ),
+              
+                SizedBox(width: 10),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        course.title,
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textPrimary,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        course.instructor,
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+          
+                      SizedBox(height: 10),
+          
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          course.isFree
+                              ? Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF10B981).withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    'GRATIS',
+                                    style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color(0xFF10B981),
+                                    ),
+                                  ),
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (course.showDiscount && course.discountedPrice > 0) ...[
+                                      Text(
+                                        'Rp ${_formatPrice(course.discountedPrice)}',
+                                        style: TextStyle(
+                                          fontFamily: "Montserrat",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Rp ${_formatPrice(course.originalPrice)}',
+                                        style: TextStyle(
+                                          fontFamily: "Montserrat",
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.textSecondary,
+                                          decoration: TextDecoration.lineThrough,
+                                          decorationColor: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                    ] else
+                                      Text(
+                                        'Rp ${_formatPrice(course.originalPrice)}',
+                                        style: TextStyle(
+                                          fontFamily: "Montserrat",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+          
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getLevelColor(course.level).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              course.level,
+                              style: TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: _getLevelColor(course.level),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ],
+                ),
+              ],
+            ),
+          ),
+          if (course.showDiscount)
+            Container(
+              height: 22,
+              width: 70,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(9),
+                  bottomLeft: Radius.circular(9),
+                ),
+                gradient: LinearGradient(
+                    colors: AppColors.heroGradientSecondary,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  course.discount,
+                  style: TextStyle(
+                    color: AppColors.textOnPrimary,
+                    fontFamily: "Montserrat",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

@@ -56,7 +56,7 @@ class RekomendasiContainer extends StatelessWidget {
   ];
 
   String _formatPrice(int price) {
-    return 'Rp. ${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    return 'Rp ${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 
   @override
@@ -124,34 +124,38 @@ class RekomendasiContainer extends StatelessWidget {
                             ),
                           ),
                           if (showDiscount && discountedPrice > 0) ...[
-                            // Show discounted price
-                            Text(
-                              _formatPrice(discountedPrice),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontFamily: "Montserrat",
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            // Show original price with strikethrough
-                            Text(
-                              _formatPrice(originalPrice),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: AppColors.textSecondary,
-                                fontFamily: "Montserrat",
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: AppColors.textSecondary,
-                              ),
+                            Row(
+                              children: [
+                                Text(
+                                  _formatPrice(discountedPrice),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: AppColors.primary,
+                                    fontFamily: "Montserrat",
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 7,
+                                ),
+                                Text(
+                                  _formatPrice(originalPrice),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: AppColors.textSecondary,
+                                    fontFamily: "Montserrat",
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
                             ),
                           ] else
-                            // Show regular price when no discount
                             Text(
                               _formatPrice(originalPrice),
                               maxLines: 1,
