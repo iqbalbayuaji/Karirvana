@@ -5,6 +5,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:karirvana/app/modules/homepage/local_widget/carousel.dart';
 import 'package:get/get.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
+import 'package:karirvana/app/shared/widgets/bottom_navbar.dart';
 import '../controllers/homepage_controller.dart';
 import '../local_widget/Rekomendasi_Container.dart';
 import '../local_widget/icon_features.dart';
@@ -530,6 +531,7 @@ class HomepageView extends GetView<HomepageController> {
           
         ],
       ),
+      bottomNavigationBar: const BottomNavbar(currentIndex: 0),
     );
   }
 }
