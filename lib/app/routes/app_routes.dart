@@ -9,6 +9,7 @@ abstract class Routes {
   static const COURSE_STORE = _Paths.COURSE_STORE;
   static const COURSE_USER = _Paths.COURSE_USER;
   static const COURSE_STORE_MAIN = _Paths.COURSE_STORE_MAIN;
+  static const CERTIFICATION_STORE_MAIN = _Paths.CERTIFICATION_STORE_MAIN;
 }
 
 abstract class _Paths {
@@ -19,4 +20,5 @@ abstract class _Paths {
   static const COURSE_STORE = '/course-store';
   static const COURSE_USER = '/course-user';
   static const COURSE_STORE_MAIN = '/course-store-main';
+  static const CERTIFICATION_STORE_MAIN = '/certification-store-main';
 }

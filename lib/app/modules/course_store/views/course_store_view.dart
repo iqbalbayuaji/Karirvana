@@ -80,7 +80,6 @@ class CourseStoreView extends GetView<CourseStoreController> {
                         ),
                       ),
                       
-                      // Course title and cart section
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
                         child: Column(

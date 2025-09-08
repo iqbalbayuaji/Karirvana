@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../styles/app_colors.dart';
-import '../controllers/course_store_main_controller.dart';
+import '../controllers/certification_store_main_controller.dart';
 import '../local_widgets/filter_chip.dart';
-import '../local_widgets/course_card.dart';
+import '../local_widgets/certification_card.dart';
 
-class CourseStoreMainView extends GetView<CourseStoreMainController> {
-  const CourseStoreMainView({super.key});
+class CertificationStoreMainView extends GetView<CertificationStoreMainController> {
+  const CertificationStoreMainView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
       body: SafeArea(
         child: Column(
           children: [
+            // Header with Search
             Container(
               padding: EdgeInsets.fromLTRB(20, 16, 20, 16),
               child: Row(
@@ -49,7 +50,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                       child: TextField(
                         controller: controller.searchController,
                         decoration: InputDecoration(
-                          hintText: "Cari course...",
+                          hintText: "Cari sertifikasi...",
                           hintStyle: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 14,
@@ -135,7 +136,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
               ),
             ),
             
-            // Course List
+            // Certification List
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value) {
@@ -148,7 +149,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'Memuat course...',
+                          'Memuat sertifikasi...',
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 14,
@@ -161,19 +162,19 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                   );
                 }
                 
-                if (controller.filteredCourses.isEmpty) {
+                if (controller.filteredCertifications.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          CupertinoIcons.book,
+                          CupertinoIcons.doc_checkmark,
                           size: 64,
                           color: AppColors.textSecondary.withOpacity(0.5),
                         ),
                         SizedBox(height: 16),
                         Text(
-                          'Tidak ada course ditemukan',
+                          'Tidak ada sertifikasi ditemukan',
                           style: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 16,
@@ -199,16 +200,16 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                 
                 return ListView.builder(
                   padding: EdgeInsets.all(20),
-                  itemCount: controller.filteredCourses.length,
+                  itemCount: controller.filteredCertifications.length,
                   itemBuilder: (context, index) {
-                    final course = controller.filteredCourses[index];
-                    return CourseCard(
-                      course: course,
+                    final certification = controller.filteredCertifications[index];
+                    return CertificationCard(
+                      certification: certification,
                       onTap: () {
-                        // Navigate to course detail
+                        // Navigate to certification detail
                         Get.snackbar(
-                          'Course Selected',
-                          'Navigating to ${course.title}',
+                          'Sertifikasi Dipilih',
+                          'Navigasi ke ${certification.title}',
                           backgroundColor: AppColors.primary,
                           colorText: AppColors.textOnPrimary,
                           duration: Duration(seconds: 2),

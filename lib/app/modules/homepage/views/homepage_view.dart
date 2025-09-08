@@ -154,7 +154,7 @@ class HomepageView extends GetView<HomepageController> {
                                             icon: CupertinoIcons.text_badge_checkmark,
                                             title: "Certification",
                                             width: 80,
-                                            onTap: () => Get.toNamed('/course-user'),
+                                            onTap: () => Get.toNamed('/certification-store-main'),
                                           ),
                                         ),
                                         IconFeatures(

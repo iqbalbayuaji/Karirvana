@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/certification_store_main/bindings/certification_store_main_binding.dart';
+import '../modules/certification_store_main/views/certification_store_main_view.dart';
 import '../modules/course_store/bindings/course_store_binding.dart';
 import '../modules/course_store/views/course_store_view.dart';
 import '../modules/course_store_main/bindings/course_store_main_binding.dart';
@@ -50,6 +52,11 @@ class AppPages {
       name: _Paths.COURSE_STORE_MAIN,
       page: () => const CourseStoreMainView(),
       binding: CourseStoreMainBinding(),
+    ),
+    GetPage(
+      name: _Paths.CERTIFICATION_STORE_MAIN,
+      page: () => const CertificationStoreMainView(),
+      binding: CertificationStoreMainBinding(),
     ),
   ];
 }
