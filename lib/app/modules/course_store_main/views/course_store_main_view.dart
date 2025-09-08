@@ -50,7 +50,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                       child: TextField(
                         controller: controller.searchController,
                         decoration: InputDecoration(
-                          hintText: "Cari course yang kamu inginkan...",
+                          hintText: "Cari course...",
                           hintStyle: TextStyle(
                             fontFamily: "Montserrat",
                             fontSize: 14,

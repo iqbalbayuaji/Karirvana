@@ -12,9 +12,12 @@ class Course {
   final int totalStudents;
   final int totalLessons;
   final String duration;
-  final double price;
+  final int originalPrice;
+  final int discountedPrice;
   final bool isFree;
   final String level;
+  final String discount;
+  final bool showDiscount;
 
   Course({
     required this.id,
@@ -27,10 +30,16 @@ class Course {
     required this.totalStudents,
     required this.totalLessons,
     required this.duration,
-    required this.price,
+    required this.originalPrice,
+    required this.discountedPrice,
     required this.isFree,
     required this.level,
+    required this.discount,
+    required this.showDiscount,
   });
+
+  // Getter for backward compatibility
+  int get price => showDiscount && discountedPrice > 0 ? discountedPrice : originalPrice;
 }
 
 class CourseStoreMainController extends GetxController {
@@ -90,9 +99,12 @@ class CourseStoreMainController extends GetxController {
         totalStudents: 1250,
         totalLessons: 45,
         duration: '12 jam',
-        price: 299000,
+        originalPrice: 350000,
+        discountedPrice: 175000,
         isFree: false,
         level: 'Pemula',
+        discount: '50% Off',
+        showDiscount: true,
       ),
       Course(
         id: '2',
@@ -105,9 +117,12 @@ class CourseStoreMainController extends GetxController {
         totalStudents: 890,
         totalLessons: 32,
         duration: '8 jam',
-        price: 199000,
+        originalPrice: 250000,
+        discountedPrice: 125000,
         isFree: false,
         level: 'Pemula',
+        discount: '50% Off',
+        showDiscount: true,
       ),
       Course(
         id: '3',
@@ -120,9 +135,12 @@ class CourseStoreMainController extends GetxController {
         totalStudents: 2100,
         totalLessons: 28,
         duration: '6 jam',
-        price: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
         isFree: true,
         level: 'Menengah',
+        discount: '',
+        showDiscount: false,
       ),
       Course(
         id: '4',
@@ -135,9 +153,12 @@ class CourseStoreMainController extends GetxController {
         totalStudents: 1580,
         totalLessons: 38,
         duration: '15 jam',
-        price: 399000,
+        originalPrice: 399000,
+        discountedPrice: 0,
         isFree: false,
         level: 'Menengah',
+        discount: '',
+        showDiscount: false,
       ),
       Course(
         id: '5',
@@ -150,9 +171,12 @@ class CourseStoreMainController extends GetxController {
         totalStudents: 750,
         totalLessons: 25,
         duration: '10 jam',
-        price: 249000,
+        originalPrice: 300000,
+        discountedPrice: 180000,
         isFree: false,
         level: 'Lanjutan',
+        discount: '40% Off',
+        showDiscount: true,
       ),
       Course(
         id: '6',
@@ -165,9 +189,12 @@ class CourseStoreMainController extends GetxController {
         totalStudents: 920,
         totalLessons: 42,
         duration: '14 jam',
-        price: 349000,
+        originalPrice: 349000,
+        discountedPrice: 0,
         isFree: false,
         level: 'Menengah',
+        discount: '',
+        showDiscount: false,
       ),
     ];
     

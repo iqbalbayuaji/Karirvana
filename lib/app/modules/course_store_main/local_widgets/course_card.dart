@@ -38,7 +38,6 @@ class CourseCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Course Image
             Container(
               width: 80,
               height: 80,
@@ -59,12 +58,10 @@ class CourseCard extends StatelessWidget {
               ),
             ),
             SizedBox(width: 16),
-            // Course Details
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Course Title
                   Text(
                     course.title,
                     style: TextStyle(
@@ -77,7 +74,6 @@ class CourseCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4),
-                  // Instructor
                   Text(
                     course.instructor,
                     style: TextStyle(
@@ -88,10 +84,8 @@ class CourseCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  // Course Stats
                   Row(
                     children: [
-                      // Rating
                       Icon(
                         CupertinoIcons.star_fill,
                         size: 14,
@@ -108,7 +102,6 @@ class CourseCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 12),
-                      // Students
                       Icon(
                         CupertinoIcons.person_2_fill,
                         size: 14,
@@ -125,7 +118,6 @@ class CourseCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(width: 12),
-                      // Duration
                       Icon(
                         CupertinoIcons.clock_fill,
                         size: 14,
@@ -144,11 +136,10 @@ class CourseCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 8),
-                  // Price and Level
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Price
                       course.isFree
                           ? Container(
                               padding: EdgeInsets.symmetric(
@@ -169,16 +160,46 @@ class CourseCard extends StatelessWidget {
                                 ),
                               ),
                             )
-                          : Text(
-                              'Rp ${_formatPrice(course.price)}',
-                              style: TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.primary,
-                              ),
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (course.showDiscount && course.discountedPrice > 0) ...[
+                                  // Show discounted price
+                                  Text(
+                                    'Rp.${_formatPrice(course.discountedPrice)}',
+                                    style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                  // Show original price with strikethrough
+                                  Text(
+                                    'Rp.${_formatPrice(course.originalPrice)}',
+                                    style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.textSecondary,
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationColor: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ] else
+                                  // Show regular price when no discount
+                                  Text(
+                                    'Rp.${_formatPrice(course.originalPrice)}',
+                                    style: TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                              ],
                             ),
-                      // Level Badge
+
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8,
@@ -267,12 +288,7 @@ class CourseCard extends StatelessWidget {
     return number.toString();
   }
 
-  String _formatPrice(double price) {
-    if (price >= 1000000) {
-      return '${(price / 1000000).toStringAsFixed(1)}jt';
-    } else if (price >= 1000) {
-      return '${(price / 1000).toStringAsFixed(0)}rb';
-    }
-    return price.toStringAsFixed(0);
+  String _formatPrice(int price) {
+    return price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.');
   }
 }

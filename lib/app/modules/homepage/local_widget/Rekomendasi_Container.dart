@@ -15,46 +15,56 @@ class RekomendasiContainer extends StatelessWidget {
   static final List<Map<String, dynamic>> _recommendations = [
     {
       'title': 'Microsoft Excel Beginner Course',
-      'provider': 'EduLearn',
+      'originalPrice': 200000,
+      'discountedPrice': 140000,
       'imageUrl': 'assets/images/hero.jpg',
       'discount': '30% Off',
       'showDiscount': true,
     },
     {
       'title': 'Flutter Development Bootcamp',
-      'provider': 'CodeAcademy',
+      'originalPrice': 350000,
+      'discountedPrice': 175000,
       'imageUrl': 'assets/images/hero.jpg',
       'discount': '50% Off',
       'showDiscount': true,
     },
     {
       'title': 'Digital Marketing Fundamentals',
-      'provider': 'MarketPro',
+      'originalPrice': 180000,
+      'discountedPrice': 135000,
       'imageUrl': 'assets/images/hero.jpg',
       'discount': '25% Off',
       'showDiscount': true,
     },
     {
       'title': 'Data Science with Python',
-      'provider': 'DataLearn',
+      'originalPrice': 250000,
+      'discountedPrice': 0,
       'imageUrl': 'assets/images/hero.jpg',
       'discount': '',
       'showDiscount': false,
     },
     {
       'title': 'UI/UX Design Masterclass',
-      'provider': 'DesignHub',
+      'originalPrice': 300000,
+      'discountedPrice': 180000,
       'imageUrl': 'assets/images/hero.jpg',
       'discount': '40% Off',
       'showDiscount': true,
     },
   ];
 
+  String _formatPrice(int price) {
+    return 'Rp. ${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final recommendation = _recommendations[index % _recommendations.length];
     final String title = recommendation['title'];
-    final String provider = recommendation['provider'];
+    final int originalPrice = recommendation['originalPrice'];
+    final int discountedPrice = recommendation['discountedPrice'];
     final String imageUrl = recommendation['imageUrl'];
     final String discount = recommendation['discount'];
     final bool showDiscount = recommendation['showDiscount'];
@@ -113,17 +123,46 @@ class RekomendasiContainer extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Text(
-                            provider,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontFamily: "Montserrat",
-                              fontSize: 11,
-                              fontWeight: FontWeight.w400,
+                          if (showDiscount && discountedPrice > 0) ...[
+                            // Show discounted price
+                            Text(
+                              _formatPrice(discountedPrice),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontFamily: "Montserrat",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
+                            // Show original price with strikethrough
+                            Text(
+                              _formatPrice(originalPrice),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontFamily: "Montserrat",
+                                fontSize: 10,
+                                fontWeight: FontWeight.w400,
+                                decoration: TextDecoration.lineThrough,
+                                decorationColor: AppColors.textSecondary,
+                              ),
+                            ),
+                          ] else
+                            // Show regular price when no discount
+                            Text(
+                              _formatPrice(originalPrice),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontFamily: "Montserrat",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                         ],
                       ),
                     ),
