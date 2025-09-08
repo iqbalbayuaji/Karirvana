@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/career_assistant/bindings/career_assistant_binding.dart';
+import '../modules/career_assistant/views/career_assistant_view.dart';
 import '../modules/certification_store_main/bindings/certification_store_main_binding.dart';
 import '../modules/certification_store_main/views/certification_store_main_view.dart';
 import '../modules/course_store/bindings/course_store_binding.dart';
@@ -57,6 +59,11 @@ class AppPages {
       name: _Paths.CERTIFICATION_STORE_MAIN,
       page: () => const CertificationStoreMainView(),
       binding: CertificationStoreMainBinding(),
+    ),
+    GetPage(
+      name: _Paths.CAREER_ASSISTANT,
+      page: () => const CareerAssistantView(),
+      binding: CareerAssistantBinding(),
     ),
   ];
 }
