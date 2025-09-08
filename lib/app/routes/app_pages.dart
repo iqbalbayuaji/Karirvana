@@ -14,6 +14,8 @@ import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/profile_user/bindings/profile_user_binding.dart';
+import '../modules/profile_user/views/profile_user_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 
@@ -64,6 +66,11 @@ class AppPages {
       name: _Paths.CAREER_ASSISTANT,
       page: () => const CareerAssistantView(),
       binding: CareerAssistantBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE_USER,
+      page: () => const ProfileUserView(),
+      binding: ProfileUserBinding(),
     ),
   ];
 }
