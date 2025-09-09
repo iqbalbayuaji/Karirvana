@@ -39,19 +39,28 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                           color: AppColors.textOnPrimary,
                         ),
                       ),
-                      SizedBox(height: 100),
-                      _buildUserMessage(
-                        "Assalamualaikum, perkenalkan nama saya adalah wongIrengjembuten",
-                        context,
+                      SizedBox(height: 20),
+                      Expanded(
+                        child: Obx(() => ListView.builder(
+                          controller: controller.scrollController,
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                          itemCount: controller.messages.length + (controller.isTyping.value ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index == controller.messages.length && controller.isTyping.value) {
+                              return _buildTypingIndicator(context);
+                            }
+                            
+                            final message = controller.messages[index];
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: screenHeight * 0.03),
+                              child: message.isUser
+                                  ? _buildUserMessage(message.content, context)
+                                  : _buildBotMessage(message.content, context, isWelcome: index == 0),
+                            );
+                          },
+                        )),
                       ),
-                      SizedBox(
-                        height: screenHeight * 0.03,
-                      ),
-                      _buildBotMessage(
-                        "Waalaikumassalam, hallo wongirengjembuten. Apa yang ingin kamu tanyakan hari ini?",
-                        context,
-                        isWelcome: true,
-                      )
+                      SizedBox(height: 20),
                     ],
                   ),
                 )
@@ -61,62 +70,60 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 margin: const EdgeInsets.only(bottom: 100),
                 child: TextFormField(
+                  controller: controller.messageController,
+                  onFieldSubmitted: (value) {
+                    if (value.trim().isNotEmpty) {
+                      controller.sendMessage(value);
+                    }
+                  },
                   decoration: InputDecoration(
-                    hintText: 'Tanyakan kawokaod',
-                                      hintStyle: const TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.textSecondary,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                      prefixIcon: const Icon(
-                                        Icons.search,
-                                        color: AppColors.textSecondary,
-                                        size: 20,
-                                      ),
-                                      suffixIcon: Icon(
-                                        Icons.keyboard_voice,
-                                        color: AppColors.textSecondary,
-                                        size: 20,
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                        borderSide: const BorderSide(
-                                          color: AppColors.outline,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                        borderSide: const BorderSide(
-                                          color: AppColors.outline,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(50),
-                                        borderSide: const BorderSide(
-                                          color: AppColors.outline,
-                                          width: 1,
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: AppColors.surface,
-                  )
+                    hintText: 'Tanyakan seputar karir...',
+                    hintStyle: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                      fontFamily: 'Montserrat',
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: AppColors.textSecondary,
+                      size: 20,
+                    ),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        final text = controller.messageController.text;
+                        if (text.trim().isNotEmpty) {
+                          controller.sendMessage(text);
+                        }
+                      },
+                      child: Icon(
+                        Icons.keyboard_voice,
+                        color: AppColors.primary,
+                        size: 20,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: const BorderSide(
+                        color: AppColors.outline,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: const BorderSide(
+                        color: AppColors.outline,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: const BorderSide(
+                        color: AppColors.outline,
+                        width: 1,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: AppColors.surface,
+                  ),
                 )
-                // Container(
-                //   width: double.infinity,
-                //   height:60,
-                //   decoration: BoxDecoration(
-                //     color: AppColors.surface,
-                //     borderRadius: BorderRadius.circular(15),
-                //     boxShadow: [
-                //       BoxShadow(
-                //         color: Colors.black.withOpacity(0.05),
-                //         blurRadius: 5,
-                //         offset: const Offset(0, 2),
-                //       ),
-                //     ],
-                //   ),
-                  
-                // ),
               )
             ],
           ),
@@ -258,62 +265,47 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
     );
   }
 
-  Widget _buildQuickActions() {
-    return Column(
+  Widget _buildTypingIndicator(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Topik Populer:',
-          style: TextStyle(
-            fontFamily: 'Montserrat',
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+        SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.closed_caption_off_rounded,
+                  color: AppColors.textOnPrimary,
+                  size: 20,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Mengetik...',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 14,
+                    color: AppColors.textOnPrimary.withOpacity(0.7),
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                SizedBox(width: 8),
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.textOnPrimary.withOpacity(0.7)),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _buildQuickActionChip('💼 Panduan Karir'),
-            _buildQuickActionChip('📄 Review CV'),
-            _buildQuickActionChip('🎯 Interview Tips'),
-            _buildQuickActionChip('📊 Skill Assessment'),
-            _buildQuickActionChip('💰 Negosiasi Gaji'),
-            _buildQuickActionChip('🚀 Career Switch'),
-          ],
         ),
       ],
-    );
-  }
-
-  Widget _buildQuickActionChip(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.outline.withOpacity(0.3),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontFamily: 'Montserrat',
-          fontSize: 14,
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
     );
   }
 }
