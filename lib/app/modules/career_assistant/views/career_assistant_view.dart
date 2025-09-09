@@ -9,244 +9,310 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
   const CareerAssistantView({super.key});
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: AppColors.heroGradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: SafeArea(
-              child: Column(
-                children: [
-                  // Header Section
-                  Padding(
-                    padding: const EdgeInsets.all(25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'AI Career Assistant',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textOnPrimary,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                CupertinoIcons.bell_fill,
-                                size: 27,
-                                color: AppColors.textOnPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Berkembang bersama AI untuk karir yang lebih baik',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.textOnPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppColors.heroGradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  // Main Content
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: AppColors.surfaceVariant,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 45),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Career Assistant",
+                        style: TextStyle(
+                          fontFamily: "Montserrat",
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: AppColors.textOnPrimary,
                         ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(25),
-                        child: Column(
-                          children: [
-                            // Search/Chat Input
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                              decoration: BoxDecoration(
-                                color: AppColors.surface,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    CupertinoIcons.chat_bubble_text,
-                                    color: AppColors.primary,
-                                    size: 24,
-                                  ),
-                                  const SizedBox(width: 15),
-                                  const Expanded(
-                                    child: Text(
-                                      'Tanya apapun tentang karir Anda...',
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16,
+                      SizedBox(height: 100),
+                      _buildUserMessage(
+                        "Assalamualaikum, perkenalkan nama saya adalah wongIrengjembuten",
+                        context,
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.03,
+                      ),
+                      _buildBotMessage(
+                        "Waalaikumassalam, hallo wongirengjembuten. Apa yang ingin kamu tanyakan hari ini?",
+                        context,
+                        isWelcome: true,
+                      )
+                    ],
+                  ),
+                )
+              ),
+              Container(
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                margin: const EdgeInsets.only(bottom: 100),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Tanyakan kawokaod',
+                                      hintStyle: const TextStyle(
+                                        fontSize: 14,
                                         color: AppColors.textSecondary,
-                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Montserrat',
                                       ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Icon(
-                                      CupertinoIcons.arrow_up,
-                                      color: AppColors.textOnPrimary,
-                                      size: 20,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 30),
-                            // Quick Actions
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Mulai dengan topik ini:',
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            Expanded(
-                              child: GridView.count(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
-                                childAspectRatio: 1.2,
-                                children: [
-                                  _buildQuickActionCard(
-                                    'Panduan Karir',
-                                    'Dapatkan saran karir yang tepat',
-                                    CupertinoIcons.compass,
-                                    AppColors.primary,
-                                  ),
-                                  _buildQuickActionCard(
-                                    'CV Review',
-                                    'Analisis dan perbaiki CV Anda',
-                                    CupertinoIcons.doc_text,
-                                    AppColors.secondary,
-                                  ),
-                                  _buildQuickActionCard(
-                                    'Interview Prep',
-                                    'Persiapan wawancara kerja',
-                                    CupertinoIcons.person_2,
-                                    AppColors.tertiary,
-                                  ),
-                                  _buildQuickActionCard(
-                                    'Skill Assessment',
-                                    'Evaluasi kemampuan Anda',
-                                    CupertinoIcons.chart_bar,
-                                    const Color(0xFF10B981),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                                      prefixIcon: const Icon(
+                                        Icons.search,
+                                        color: AppColors.textSecondary,
+                                        size: 20,
+                                      ),
+                                      suffixIcon: Icon(
+                                        Icons.keyboard_voice,
+                                        color: AppColors.textSecondary,
+                                        size: 20,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                        borderSide: const BorderSide(
+                                          color: AppColors.outline,
+                                        ),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                        borderSide: const BorderSide(
+                                          color: AppColors.outline,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(50),
+                                        borderSide: const BorderSide(
+                                          color: AppColors.outline,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      filled: true,
+                                      fillColor: AppColors.surface,
+                  )
+                )
+                // Container(
+                //   width: double.infinity,
+                //   height:60,
+                //   decoration: BoxDecoration(
+                //     color: AppColors.surface,
+                //     borderRadius: BorderRadius.circular(15),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: Colors.black.withOpacity(0.05),
+                //         blurRadius: 5,
+                //         offset: const Offset(0, 2),
+                //       ),
+                //     ],
+                //   ),
+                  
+                // ),
+              )
+            ],
           ),
-          BottomNavbar(currentIndex: 1)
+          BottomNavbar(currentIndex: 1),
         ],
       ),
     );
   }
 
-  Widget _buildQuickActionCard(
-    String title,
-    String subtitle,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _buildBotMessage(String message, BuildContext context, {bool isWelcome = false}) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(width: screenWidth * 0.04),
+        Flexible(
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: screenWidth * 0.85, 
+              minWidth: screenWidth * 0.2,  
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
+            decoration: BoxDecoration(
+              // color: AppColors.surface,
+              // borderRadius: const BorderRadius.only(
+              //   topLeft: Radius.circular(4),
+              //   topRight: Radius.circular(20),
+              //   bottomLeft: Radius.circular(20),
+              //   bottomRight: Radius.circular(20),
+              // ),
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: Colors.black.withOpacity(0.1),
+              //     blurRadius: 8,
+              //     offset: const Offset(0, 2),
+              //   ),
+              // ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.closed_caption_off_rounded,
+                      color: AppColors.textOnPrimary,
+                      size: 25,
+                    ),
+                    SizedBox(
+                      width: 6,
+                    ),
+                    Text(
+                      "Answer",
+                      style: TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 15,
+                        color: AppColors.textOnPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: screenWidth * 0.04,
+                    ),
+                    Flexible(
+                      child: Text(
+                        textAlign: TextAlign.left,
+                        message,
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 14,
+                          color: AppColors.textOnPrimary,
+                          fontWeight: isWelcome ? FontWeight.w500 : FontWeight.w400,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserMessage(String message, BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Flexible(
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: screenWidth * 0.75, 
+              minWidth: screenWidth * 0.2, 
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(4),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Text(
+              textAlign: TextAlign.left,
+              message,
+              style: const TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 14,
+                color: AppColors.textOnPrimary,
+                fontWeight: FontWeight.w400,
+                height: 1.4,
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: screenWidth * 0.04),
+      ],
+    );
+  }
+
+  Widget _buildQuickActions() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Topik Populer:',
+          style: TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _buildQuickActionChip('💼 Panduan Karir'),
+            _buildQuickActionChip('📄 Review CV'),
+            _buildQuickActionChip('🎯 Interview Tips'),
+            _buildQuickActionChip('📊 Skill Assessment'),
+            _buildQuickActionChip('💰 Negosiasi Gaji'),
+            _buildQuickActionChip('🚀 Career Switch'),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickActionChip(String text) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.outline.withOpacity(0.3),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 24,
-            ),
-          ),
-          const SizedBox(height: 15),
-          Text(
-            title,
-            style: const TextStyle(
-              fontFamily: 'Montserrat',
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            subtitle,
-            style: const TextStyle(
-              fontFamily: 'Montserrat',
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontFamily: 'Montserrat',
+          fontSize: 14,
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
