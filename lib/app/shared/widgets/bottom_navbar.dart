@@ -14,7 +14,12 @@ class BottomNavbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 85,
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
@@ -24,37 +29,31 @@ class BottomNavbar extends StatelessWidget {
           ),
         ],
       ),
-      child: SafeArea(
-        child: Container(
-          height: 80,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(
-                icon: CupertinoIcons.house_fill,
-                inactiveIcon: CupertinoIcons.house,
-                label: 'Homepage',
-                index: 0,
-                onTap: () => Get.offAllNamed('/homepage'),
-              ),
-              _buildNavItem(
-                icon: CupertinoIcons.chat_bubble_2_fill,
-                inactiveIcon: CupertinoIcons.chat_bubble_2,
-                label: 'AI Assistant',
-                index: 1,
-                onTap: () => Get.offAllNamed('/career-assistant'),
-              ),
-              _buildNavItem(
-                icon: CupertinoIcons.person_fill,
-                inactiveIcon: CupertinoIcons.person,
-                label: 'Profile',
-                index: 2,
-                onTap: () => Get.offAllNamed('/profile-user'),
-              ),
-            ],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(
+            icon: CupertinoIcons.house_fill,
+            inactiveIcon: CupertinoIcons.house,
+            label: 'Homepage',
+            index: 0,
+            onTap: () => Get.offAllNamed('/homepage'),
           ),
-        ),
+          _buildNavItem(
+            icon: CupertinoIcons.chat_bubble_2_fill,
+            inactiveIcon: CupertinoIcons.chat_bubble_2,
+            label: 'AI Assistant',
+            index: 1,
+            onTap: () => Get.offAllNamed('/career-assistant'),
+          ),
+          _buildNavItem(
+            icon: CupertinoIcons.person_fill,
+            inactiveIcon: CupertinoIcons.person,
+            label: 'Profile',
+            index: 2,
+            onTap: () => Get.offAllNamed('/profile-user'),
+          ),
+        ],
       ),
     );
   }

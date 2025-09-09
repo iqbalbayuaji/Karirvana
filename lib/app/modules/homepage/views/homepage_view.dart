@@ -48,485 +48,153 @@ class HomepageView extends GetView<HomepageController> {
     int activeIndex = 0;
     return Scaffold(
       body: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Container(
-            height: 350,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: AppColors.heroGradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          Stack(
+            children: [
+              Container(
+                height: 350,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppColors.heroGradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
               ),
-            ),
-          ),
-          ListView(
-              children: [
-                Column(
+              ListView(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    CupertinoIcons.bell_fill,
-                                    size: 27,
-                                    color: AppColors.textOnPrimary, 
-                                  )),
-                              IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  CupertinoIcons.bars,
-                                  size: 42,
-                                  color: AppColors.textOnPrimary,
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Siap Berkembang ",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.textOnPrimary,
-                                  ),
-                                ),
-                                const Text(
-                                  "Banon?",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: "Montserrat",
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textOnPrimary),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Stack(
+                    Column(
                       children: [
-                        Column(
-                          children: [
-                            const SizedBox(height: 90),
-                            Container(
-                              width: double.infinity,
-                              height: 2000,
-                              decoration: const BoxDecoration(
-                                color: AppColors.surfaceVariant,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(25),
-                                  topRight: Radius.circular(25),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 15),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        CupertinoIcons.bell_fill,
+                                        size: 27,
+                                        color: AppColors.textOnPrimary, 
+                                      )),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      CupertinoIcons.bars,
+                                      size: 42,
+                                      color: AppColors.textOnPrimary,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Siap Berkembang ",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontFamily: "Montserrat",
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.textOnPrimary,
+                                      ),
+                                    ),
+                                    const Text(
+                                      "Banon?",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textOnPrimary),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 120),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        IconFeatures(
-                                          featureData: FeatureData(
-                                            icon: Icons.article_outlined,
-                                            title: "Course",
-                                            onTap: () {
-                                              Get.toNamed('/course-store-main');
-                                            },
-                                          ),
-                                        ),
-                                        IconFeatures(
-                                          featureData: FeatureData(
-                                            icon: CupertinoIcons.text_badge_checkmark,
-                                            title: "Certification",
-                                            width: 80,
-                                            onTap: () => Get.toNamed('/certification-store-main'),
-                                          ),
-                                        ),
-                                        IconFeatures(
-                                          featureData: FeatureData(
-                                            icon: CupertinoIcons.person_2,
-                                            title: "Interview Practice",
-                                            width: 60,
-                                            onTap: () {
-                                              // TODO: Navigate to interview practice
-                                            },
-                                          ),
-                                        ),
-                                        IconFeatures(
-                                          featureData: FeatureData(
-                                            icon: CupertinoIcons.chart_bar,
-                                            title: "Progress",
-                                            onTap: () {
-                                              // TODO: Navigate to progress tracking
-                                            },
-                                          ),
-                                        ),
-                                      ],
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        Stack(
+                          children: [
+                            Column(
+                              children: [
+                                const SizedBox(height: 90),
+                                Container(
+                                  width: double.infinity,
+                                  height: 2000,
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.surfaceVariant,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(25),
+                                      topRight: Radius.circular(25),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Column(
+                                  child: Column(
                                     children: [
+                                      const SizedBox(height: 120),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                                        padding: const EdgeInsets.symmetric(horizontal: 30),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Rekomendasi Course",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: "Montserrat",
-                                                color: AppColors.textSecondary,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      SizedBox(
-                                        height: 180,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: 5,
-                                          padding: const EdgeInsets.only(left: 25),
-                                          itemBuilder: (context, index) {
-                                            return Row(
-                                              children: [
-                                                RekomendasiContainer(
-                                                  index: index,
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "Rekomendasi Certification",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: "Montserrat",
-                                                color: AppColors.textSecondary,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      SizedBox(
-                                        height: 180,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: 5,
-                                          padding: const EdgeInsets.only(left: 25),
-                                          itemBuilder: (context, index) {
-                                            return Row(
-                                              children: [
-                                                RekomendasiContainer(
-                                                  index: index,
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                                    child: Container(
-                                      height: 100,
-                                      width: double.infinity,
-                                      padding: EdgeInsets.symmetric(horizontal: 20),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.35),
-                                            blurRadius: 18,
-                                            offset: const Offset(0, 8),
-                                          )
-                                        ],
-                                        gradient: LinearGradient(
-                                        colors: AppColors.heroGradientSecondary,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            height: 55,
-                                            width: 55,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.primary,
-                                              borderRadius: BorderRadius.circular(15)
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 190,
-                                            child: Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Vana Plus",
-                                                    style: TextStyle(
-                                                    fontFamily: "Montserrat",
-                                                    fontSize: 15,
-                                                    color: AppColors.textOnPrimary,
-                                                    fontWeight: FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                  Text("Berkembang Lebih asik dengan Vana Plus",
-                                                    style: TextStyle(
-                                                      fontFamily: "Montserrat",
-                                                      fontSize: 13,
-                                                      color: AppColors.textOnPrimary,
-                                                      fontWeight: FontWeight.w400,
-                                                      ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Icon(
-                                            CupertinoIcons.arrow_right, 
-                                            color: AppColors.textOnPrimary,
-                                            size: 25,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                  StatefulBuilder(
-                                    builder: (context, setState) {
-                                      return Container(
-                                        height: 297,
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.symmetric(vertical: 15),
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: AppColors.heroGradient,
-                                            begin: Alignment.topRight,
-                                            end: Alignment.bottomLeft,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              "Carousel",
-                                              style: TextStyle(
-                                                fontFamily: "Montserrat",
-                                                fontSize: 17,
-                                                color: AppColors.textOnPrimary,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            Expanded(
-                                              child: CarouselSlider(
-                                                carouselController: carouselController,
-                                                options: CarouselOptions(
-                                                  height: 260.0,
-                                                  viewportFraction: 0.74,
-                                                  autoPlay: true,
-                                                  onPageChanged: (index, reason) {
-                                                    setState(() {
-                                                      activeIndex = index;
-                                                    });
-                                                  },
-                                                ),
-                                                items: [1, 2, 3, 4].map((i) {
-                                                  return Builder(
-                                                    builder: (BuildContext context) {
-                                                      return CarouselContainer(
-                                                        index: i - 1,
-                                                      );
-                                                    },
-                                                  );
-                                                }).toList(),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 12,
-                                            ),
-                                            AnimatedSmoothIndicator(
-                                              activeIndex: activeIndex,
-                                              count: 4,
-                                              onDotClicked: (index) {
-                                                carouselController.animateToPage(
-                                                  index,
-                                                  duration: const Duration(milliseconds: 300),
-                                                  curve: Curves.ease,
-                                                );
-                                              },
-                                              effect: ExpandingDotsEffect(
-                                                dotHeight: 8,
-                                                dotWidth: 8,
-                                                activeDotColor: AppColors.textOnPrimary,
-                                                dotColor: AppColors.textOnPrimary.withOpacity(0.4),
-                                                spacing: 8,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                                    child: Container(
-                                        height: 190,
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.secondary,
-                                          borderRadius: BorderRadius.circular(15),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.10),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 8),
-                                            )
-                                          ],
-                                        ),
-                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "AI Career Assistant",
-                                                      style: TextStyle(
-                                                        fontFamily: "Montserrat",
-                                                        fontSize: 18,
-                                                        color: AppColors.textOnPrimary,
-                                                        fontWeight: FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 190,
-                                                      child: Text(
-                                                        "Berkembang Lebih Asik dengan AI Career Assistant",
-                                                        style: TextStyle(
-                                                          fontFamily: "Montserrat",
-                                                          fontSize: 14,
-                                                          color: AppColors.textOnPrimary,
-                                                          fontWeight: FontWeight.w400,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Container(
-                                                  width: 60,
-                                                  height: 60,
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.primary,
-                                                    borderRadius: BorderRadius.circular(15)
-                                                  ),
-                                                )
-                                              ],
+                                            IconFeatures(
+                                              featureData: FeatureData(
+                                                icon: Icons.article_outlined,
+                                                title: "Course",
+                                                onTap: () {
+                                                  Get.toNamed('/course-store-main');
+                                                },
+                                              ),
                                             ),
-                                            Container(
-                                              width: double.infinity,
-                                              padding: const EdgeInsets.symmetric(horizontal: 15),
-                                              height: 40,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.primaryContainer,
-                                                borderRadius: BorderRadius.circular(30),
+                                            IconFeatures(
+                                              featureData: FeatureData(
+                                                icon: CupertinoIcons.text_badge_checkmark,
+                                                title: "Certification",
+                                                width: 80,
+                                                onTap: () => Get.toNamed('/certification-store-main'),
                                               ),
-                                              child: Row(
-                                                children: [ 
-                                                  Icon(
-                                                    Icons.search,
-                                                    color: AppColors.textSecondary,
-                                                    ),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Text(
-                                                    "Tanya ke AI",
-                                                    style: TextStyle(
-                                                      fontFamily: "Montserrat",
-                                                      fontSize: 14,
-                                                      color: AppColors.textSecondary,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ],
+                                            ),
+                                            IconFeatures(
+                                              featureData: FeatureData(
+                                                icon: CupertinoIcons.person_2,
+                                                title: "Interview Practice",
+                                                width: 60,
+                                                onTap: () {
+                                                  // TODO: Navigate to interview practice
+                                                },
                                               ),
-                                            )
+                                            ),
+                                            IconFeatures(
+                                              featureData: FeatureData(
+                                                icon: CupertinoIcons.chart_bar,
+                                                title: "Progress",
+                                                onTap: () {
+                                                  // TODO: Navigate to progress tracking
+                                                },
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 25),
-                                    child: 
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                                  "Kemitraan",
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Rekomendasi Course",
                                                   style: TextStyle(
                                                     fontSize: 16,
                                                     fontFamily: "Montserrat",
@@ -534,48 +202,385 @@ class HomepageView extends GetView<HomepageController> {
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                   ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                        height: 10,
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          SizedBox(
+                                            height: 180,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: 5,
+                                              padding: const EdgeInsets.only(left: 25),
+                                              itemBuilder: (context, index) {
+                                                return Row(
+                                                  children: [
+                                                    RekomendasiContainer(
+                                                      index: index,
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Rekomendasi Certification",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontFamily: "Montserrat",
+                                                    color: AppColors.textSecondary,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          SizedBox(
+                                            height: 180,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: 5,
+                                              padding: const EdgeInsets.only(left: 25),
+                                              itemBuilder: (context, index) {
+                                                return Row(
+                                                  children: [
+                                                    RekomendasiContainer(
+                                                      index: index,
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(
-                                        height: 143,
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: 6,
-                                          padding: const EdgeInsets.only(left: 25),
-                                          itemBuilder: (context, index) {
-                                            return KemitraanContainer(
-                                              index: index,
-                                            );
-                                          },
+                                        height: 10,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                                        child: Container(
+                                          height: 100,
+                                          width: double.infinity,
+                                          padding: EdgeInsets.symmetric(horizontal: 20),
+                                          decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(0.35),
+                                                blurRadius: 18,
+                                                offset: const Offset(0, 8),
+                                              )
+                                            ],
+                                            gradient: LinearGradient(
+                                            colors: AppColors.heroGradientSecondary,
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                            borderRadius: BorderRadius.circular(15),
+                                          ),
+                                          
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: 55,
+                                                width: 55,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.primary,
+                                                  borderRadius: BorderRadius.circular(15)
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 190,
+                                                child: Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Text("Vana Plus",
+                                                        style: TextStyle(
+                                                        fontFamily: "Montserrat",
+                                                        fontSize: 15,
+                                                        color: AppColors.textOnPrimary,
+                                                        fontWeight: FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                      Text("Berkembang Lebih asik dengan Vana Plus",
+                                                        style: TextStyle(
+                                                          fontFamily: "Montserrat",
+                                                          fontSize: 13,
+                                                          color: AppColors.textOnPrimary,
+                                                          fontWeight: FontWeight.w400,
+                                                          ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Icon(
+                                                CupertinoIcons.arrow_right, 
+                                                color: AppColors.textOnPrimary,
+                                                size: 25,
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      )
-                                ],
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      StatefulBuilder(
+                                        builder: (context, setState) {
+                                          return Container(
+                                            height: 297,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(vertical: 15),
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                colors: AppColors.heroGradient,
+                                                begin: Alignment.topRight,
+                                                end: Alignment.bottomLeft,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  "Carousel",
+                                                  style: TextStyle(
+                                                    fontFamily: "Montserrat",
+                                                    fontSize: 17,
+                                                    color: AppColors.textOnPrimary,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Expanded(
+                                                  child: CarouselSlider(
+                                                    carouselController: carouselController,
+                                                    options: CarouselOptions(
+                                                      height: 260.0,
+                                                      viewportFraction: 0.74,
+                                                      autoPlay: true,
+                                                      onPageChanged: (index, reason) {
+                                                        setState(() {
+                                                          activeIndex = index;
+                                                        });
+                                                      },
+                                                    ),
+                                                    items: [1, 2, 3, 4].map((i) {
+                                                      return Builder(
+                                                        builder: (BuildContext context) {
+                                                          return CarouselContainer(
+                                                            index: i - 1,
+                                                          );
+                                                        },
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 12,
+                                                ),
+                                                AnimatedSmoothIndicator(
+                                                  activeIndex: activeIndex,
+                                                  count: 4,
+                                                  onDotClicked: (index) {
+                                                    carouselController.animateToPage(
+                                                      index,
+                                                      duration: const Duration(milliseconds: 300),
+                                                      curve: Curves.ease,
+                                                    );
+                                                  },
+                                                  effect: ExpandingDotsEffect(
+                                                    dotHeight: 8,
+                                                    dotWidth: 8,
+                                                    activeDotColor: AppColors.textOnPrimary,
+                                                    dotColor: AppColors.textOnPrimary.withOpacity(0.4),
+                                                    spacing: 8,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                                        child: Container(
+                                            height: 190,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.secondary,
+                                              borderRadius: BorderRadius.circular(15),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black.withOpacity(0.10),
+                                                  blurRadius: 10,
+                                                  offset: const Offset(0, 8),
+                                                )
+                                              ],
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          "AI Career Assistant",
+                                                          style: TextStyle(
+                                                            fontFamily: "Montserrat",
+                                                            fontSize: 18,
+                                                            color: AppColors.textOnPrimary,
+                                                            fontWeight: FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 190,
+                                                          child: Text(
+                                                            "Berkembang Lebih Asik dengan AI Career Assistant",
+                                                            style: TextStyle(
+                                                              fontFamily: "Montserrat",
+                                                              fontSize: 14,
+                                                              color: AppColors.textOnPrimary,
+                                                              fontWeight: FontWeight.w400,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Container(
+                                                      width: 60,
+                                                      height: 60,
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors.primary,
+                                                        borderRadius: BorderRadius.circular(15)
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                Container(
+                                                  width: double.infinity,
+                                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                  height: 40,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.primaryContainer,
+                                                    borderRadius: BorderRadius.circular(30),
+                                                  ),
+                                                  child: Row(
+                                                    children: [ 
+                                                      Icon(
+                                                        Icons.search,
+                                                        color: AppColors.textSecondary,
+                                                        ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        "Tanya ke AI",
+                                                        style: TextStyle(
+                                                          fontFamily: "Montserrat",
+                                                          fontSize: 14,
+                                                          color: AppColors.textSecondary,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 25),
+                                        child: 
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                      "Kemitraan",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontFamily: "Montserrat",
+                                                        color: AppColors.textSecondary,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                      ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                            height: 10,
+                                          ),
+                                          SizedBox(
+                                            height: 143,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: 6,
+                                              padding: const EdgeInsets.only(left: 25),
+                                              itemBuilder: (context, index) {
+                                                return KemitraanContainer(
+                                                  index: index,
+                                                );
+                                              },
+                                            ),
+                                          )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              top: -37,
+                              left: 0,
+                              right: 0,
+                              child: CourseProgressCarousel(
+                                courses: _getSampleCourses(),
                               ),
                             ),
                           ],
-                        ),
-                        Positioned(
-                          top: -37,
-                          left: 0,
-                          right: 0,
-                          child: CourseProgressCarousel(
-                            courses: _getSampleCourses(),
-                          ),
-                        ),
+                        )
                       ],
-                    )
+                    ),
                   ],
                 ),
-              ],
-            ),
-          
+              
+            ],
+          ),
+          BottomNavbar(currentIndex: 0)
         ],
       ),
-      bottomNavigationBar: const BottomNavbar(currentIndex: 0),
     );
   }
 }
