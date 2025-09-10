@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:karirvana/app/styles/app_colors.dart';class FeatureData {
+import 'package:karirvana/app/styles/app_colors.dart';
+
+class FeatureData {
   final IconData icon;
   final String title;
   final Color? backgroundColor;

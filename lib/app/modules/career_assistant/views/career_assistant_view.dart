@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:karirvana/app/modules/career_assistant/local_widgets/chatbot_chips.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 import 'package:karirvana/app/shared/widgets/bottom_navbar.dart';
 import '../controllers/career_assistant_controller.dart';
@@ -19,6 +20,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
             alignment: Alignment.bottomCenter,
             children: [
               Container(
+                width: double.infinity,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     colors: AppColors.heroGradient,
@@ -30,35 +32,43 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                   padding: const EdgeInsets.symmetric(vertical: 45),
                   child: Column(
                     children: [
-                      Text(
-                        "Career Assistant",
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: AppColors.textOnPrimary,
-                        ),
-                      ),
+                      // Header with conditional back button
+                      Obx(() => Row(
+                        children: [
+                          if (!controller.isWelcomeView.value)
+                            GestureDetector(
+                              onTap: () => controller.backToWelcome(),
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                child: Icon(
+                                  Icons.arrow_back,
+                                  color: AppColors.textOnPrimary,
+                                  size: 24,
+                                ),
+                              ),
+                            )
+                          else
+                            SizedBox(width: 40), // Placeholder when no back button
+                          Expanded(
+                            child: Text(
+                              "Career Assistant",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: AppColors.textOnPrimary,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 40), // Balance space
+                        ],
+                      )),
                       SizedBox(height: 20),
-                      Expanded(
-                        child: Obx(() => ListView.builder(
-                          controller: controller.scrollController,
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                          itemCount: controller.messages.length + (controller.isTyping.value ? 1 : 0),
-                          itemBuilder: (context, index) {
-                            if (index == controller.messages.length && controller.isTyping.value) {
-                              return _buildTypingIndicator(context);
-                            }
-                            
-                            final message = controller.messages[index];
-                            return Padding(
-                              padding: EdgeInsets.only(bottom: screenHeight * 0.03),
-                              child: message.isUser
-                                  ? _buildUserMessage(message.content, context)
-                                  : _buildBotMessage(message.content, context, isWelcome: index == 0),
-                            );
-                          },
-                        )),
+                      // Conditional content based on view state
+                      Obx(() => controller.isWelcomeView.value 
+                        ? _buildWelcomeView(context, screenWidth, screenHeight)
+                        : _buildChatView(context, screenHeight)
                       ),
                       SizedBox(height: 20),
                     ],
@@ -69,6 +79,17 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                 height: 50,
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 margin: const EdgeInsets.only(bottom: 100),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
                 child: TextFormField(
                   controller: controller.messageController,
                   onFieldSubmitted: (value) {
@@ -130,6 +151,91 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
           BottomNavbar(currentIndex: 1),
         ],
       ),
+    );
+  }
+
+  Widget _buildWelcomeView(BuildContext context, double screenWidth, double screenHeight) {
+    return Expanded(
+      child: Column(
+        children: [
+          SizedBox(
+            height: screenWidth * 0.3,
+          ),
+          Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Icon(
+              Icons.chat_bubble,
+              color: AppColors.textOnPrimary,
+              size: 25,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Mau tanya apa hari ini?",
+            style: TextStyle(
+              fontFamily: "Montserrat",
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+              color: AppColors.textOnPrimary,
+            ),
+          ),
+          SizedBox(
+            height: screenHeight * 0.04
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Wrap(
+              spacing: 8, 
+              runSpacing: 10, 
+              alignment: WrapAlignment.center,
+              children: [
+                chatbot_chips(
+                  chipsData: chatbotChipsData(name: "Roadmap Karir"),
+                  onTap: () => controller.sendMessage("Saya ingin mendapatkan roadmap karir yang sesuai dengan minat dan kemampuan saya"),
+                ),
+                chatbot_chips(
+                  chipsData: chatbotChipsData(name: "Jadwal Belajar"),
+                  onTap: () => controller.sendMessage("Bagaimana cara membuat jadwal belajar yang efektif untuk pengembangan karir?"),
+                ),
+                chatbot_chips(
+                  chipsData: chatbotChipsData(name: "konsultasi karir"),
+                  onTap: () => controller.sendMessage("Saya ingin berkonsultasi tentang pilihan karir yang tepat untuk saya"),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatView(BuildContext context, double screenHeight) {
+    return Expanded(
+      child: Obx(() => ListView.builder(
+        controller: controller.scrollController,
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        itemCount: controller.messages.length + (controller.isTyping.value ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index == controller.messages.length && controller.isTyping.value) {
+            return _buildTypingIndicator(context);
+          }
+          
+          final message = controller.messages[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: screenHeight * 0.03),
+            child: message.isUser
+                ? _buildUserMessage(message.content, context)
+                : _buildBotMessage(message.content, context, isWelcome: index == 0),
+          );
+        },
+      )),
     );
   }
 
@@ -309,3 +415,5 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
     );
   }
 }
+
+

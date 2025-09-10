@@ -4,6 +4,9 @@ import '../models/chat_message.dart';
 import '../../../services/groq_service.dart';
 
 class CareerAssistantController extends GetxController {
+  // View state management
+  final RxBool isWelcomeView = true.obs;
+  
   // Chat functionality
   final RxList<ChatMessage> messages = <ChatMessage>[].obs;
   final RxBool isLoading = false.obs;
@@ -24,7 +27,7 @@ class CareerAssistantController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initializeChat();
+    // Don't initialize chat on startup, only when transitioning to chat view
   }
 
   @override
@@ -40,14 +43,17 @@ class CareerAssistantController extends GetxController {
   }
 
   void _initializeChat() {
-    // Add welcome message
-    messages.add(ChatMessage.bot(
-      'Waalaikumassalam, hallo! Saya Career Assistant, asisten karir AI yang siap membantu Anda. Apa yang ingin Anda tanyakan hari ini tentang karir Anda?'
-    ));
+    // No welcome message - start with empty chat
   }
 
   Future<void> sendMessage(String text) async {
     if (text.trim().isEmpty) return;
+
+    // Transition to chat view if this is the first message
+    if (isWelcomeView.value) {
+      isWelcomeView.value = false;
+      _initializeChat();
+    }
 
     // Add user message
     final userMessage = ChatMessage.user(text.trim());
@@ -119,6 +125,12 @@ class CareerAssistantController extends GetxController {
   void clearChat() {
     messages.clear();
     _initializeChat();
+  }
+
+  void backToWelcome() {
+    isWelcomeView.value = true;
+    messages.clear();
+    messageController.clear();
   }
 
   // Test connection to Groq API
