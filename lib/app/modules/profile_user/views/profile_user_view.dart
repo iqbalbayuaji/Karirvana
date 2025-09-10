@@ -9,6 +9,8 @@ class ProfileUserView extends GetView<ProfileUserController> {
   const ProfileUserView({super.key});
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Stack(
         alignment: Alignment.bottomCenter,
@@ -21,175 +23,155 @@ class ProfileUserView extends GetView<ProfileUserController> {
                 end: Alignment.bottomRight,
               ),
             ),
-            child: SafeArea(
-              child: Column(
-                children: [
-                  // Header Section
-                  Padding(
-                    padding: const EdgeInsets.all(25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Profile User',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textOnPrimary,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                CupertinoIcons.settings,
-                                size: 27,
-                                color: AppColors.textOnPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Kelola profil dan pengaturan akun Anda',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.textOnPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Main Content
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: AppColors.surfaceVariant,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
-                        ),
-                      ),
-                      child: Padding(
+            child: Stack(
+              children: [
+                SafeArea(
+                  child: Column(
+                    children: [
+                      // Header Section
+                      Padding(
                         padding: const EdgeInsets.all(25),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Profile Card
-                            Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                color: AppColors.surface,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 2),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Profile User',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textOnPrimary,
                                   ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 35,
-                                    backgroundColor: AppColors.primary.withOpacity(0.1),
-                                    child: const Icon(
-                                      CupertinoIcons.person_fill,
-                                      size: 35,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 15),
-                                  const Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Nama User',
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.textPrimary,
-                                          ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Text(
-                                          'user@email.com',
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.textSecondary,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const Icon(
-                                    CupertinoIcons.chevron_right,
-                                    color: AppColors.textSecondary,
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 25),
-                            // Menu Items
-                            Expanded(
-                              child: ListView(
-                                children: [
-                                  _buildMenuItem(
-                                    'Edit Profile',
-                                    'Ubah informasi profil Anda',
-                                    CupertinoIcons.person_crop_circle,
-                                    AppColors.primary,
-                                  ),
-                                  _buildMenuItem(
-                                    'Riwayat Pembelajaran',
-                                    'Lihat progress dan riwayat course',
-                                    CupertinoIcons.book,
-                                    AppColors.secondary,
-                                  ),
-                                  _buildMenuItem(
-                                    'Sertifikat',
-                                    'Kelola sertifikat yang diperoleh',
-                                    CupertinoIcons.doc_text,
-                                    AppColors.tertiary,
-                                  ),
-                                  _buildMenuItem(
-                                    'Pengaturan',
-                                    'Notifikasi, bahasa, dan lainnya',
-                                    CupertinoIcons.settings,
-                                    const Color(0xFF10B981),
-                                  ),
-                                  _buildMenuItem(
-                                    'Bantuan',
-                                    'FAQ dan dukungan pelanggan',
-                                    CupertinoIcons.question_circle,
-                                    const Color(0xFFF59E0B),
-                                  ),
-                                  _buildMenuItem(
-                                    'Logout',
-                                    'Keluar dari akun',
-                                    CupertinoIcons.square_arrow_right,
-                                    const Color(0xFFEF4444),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                            ],
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: screenHeight * 0.02),
+                        width: double.infinity,
+                        height: 2000,
+                        decoration: const BoxDecoration(
+                          color: AppColors.surfaceVariant,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25),
+                            topRight: Radius.circular(25),
+                          ),
+                        ),
+                        child: SizedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 85,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Manage",
+                                      style: TextStyle(
+                                        fontFamily: "Montserrat",
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 15,
+                                    childAspectRatio: 1.0,
+                                  ),
+                                  itemCount: 5,
+                                  itemBuilder: (context, index) {
+                                    return _buildGridItem(index);
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                      ],
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Container(
+                          margin: EdgeInsets.only(top: screenHeight * 0.16),
+                          width: double.infinity,
+                          height: 90,
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black.withOpacity(0.10),
+                                                  blurRadius: 10,
+                                                  offset: const Offset(0, 8),
+                                                )
+                                              ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 7,),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.account_circle,
+                                  color: AppColors.textSecondary,
+                                  size: 70,
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Banon Kenta Oktora",
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontFamily: "Montserrat",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        "Pelajar",
+                                        style: TextStyle(
+                                          color: AppColors.textSecondary,
+                                          fontFamily: "Montserrat",
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                )
+              ],
             ),
           ),
           BottomNavbar(currentIndex: 2)
@@ -265,6 +247,107 @@ class ProfileUserView extends GetView<ProfileUserController> {
             size: 16,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildGridItem(int index) {
+    final items = [
+      {
+        'title': 'Roadmap',
+        'icon': Icons.map_outlined,
+        'color': AppColors.primary,
+        'gradient': [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+      },
+      {
+        'title': 'Jadwal',
+        'icon': Icons.schedule_outlined,
+        'color': AppColors.secondary,
+        'gradient': [Color(0xFF10B981), Color(0xFF059669)],
+      },
+      {
+        'title': 'Interview\nPractice',
+        'icon': Icons.psychology_outlined,
+        'color': Color(0xFFEF4444),
+        'gradient': [Color(0xFFEF4444), Color(0xFFDC2626)],
+      },
+      {
+        'title': 'Course',
+        'icon': Icons.school_outlined,
+        'color': Color(0xFFF59E0B),
+        'gradient': [Color(0xFFF59E0B), Color(0xFFD97706)],
+      },
+      {
+        'title': 'Certification',
+        'icon': Icons.verified_outlined,
+        'color': Color(0xFF8B5CF6),
+        'gradient': [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+      },
+    ];
+
+    final item = items[index];
+    
+    return GestureDetector(
+      onTap: () {
+        // Handle navigation based on index
+        switch (index) {
+          case 0:
+            // Navigate to Roadmap
+            break;
+          case 1:
+            // Navigate to Jadwal
+            break;
+          case 2:
+            // Navigate to Interview Practice
+            break;
+          case 3:
+            // Navigate to Course
+            break;
+          case 4:
+            // Navigate to Certification
+            break;
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: item['gradient'] as List<Color>,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: (item['color'] as Color).withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                item['icon'] as IconData,
+                color: Colors.white,
+                size: 40,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                item['title'] as String,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
