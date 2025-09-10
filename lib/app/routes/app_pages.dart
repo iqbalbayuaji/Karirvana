@@ -14,6 +14,8 @@ import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/personalization/bindings/personalization_binding.dart';
+import '../modules/personalization/views/personalization_view.dart';
 import '../modules/profile_user/bindings/profile_user_binding.dart';
 import '../modules/profile_user/views/profile_user_view.dart';
 import '../modules/register/bindings/register_binding.dart';
@@ -71,6 +73,11 @@ class AppPages {
       name: _Paths.PROFILE_USER,
       page: () => const ProfileUserView(),
       binding: ProfileUserBinding(),
+    ),
+    GetPage(
+      name: _Paths.PERSONALIZATION,
+      page: () => const PersonalizationView(),
+      binding: PersonalizationBinding(),
     ),
   ];
 }
