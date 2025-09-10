@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/chat_message.dart';
 import '../../../services/groq_service.dart';
+import '../../../services/speech_service.dart';
 
 class CareerAssistantController extends GetxController {
   // View state management
@@ -13,6 +14,11 @@ class CareerAssistantController extends GetxController {
   final RxBool isTyping = false.obs;
   final TextEditingController messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+
+  // Speech recognition functionality
+  final RxBool isListening = false.obs;
+  final RxBool isSpeechAvailable = false.obs;
+  final RxString partialSpeechResult = ''.obs;
 
   // Quick action topics
   final List<String> quickActions = [
@@ -28,6 +34,7 @@ class CareerAssistantController extends GetxController {
   void onInit() {
     super.onInit();
     // Don't initialize chat on startup, only when transitioning to chat view
+    _initializeSpeech();
   }
 
   @override
@@ -131,6 +138,61 @@ class CareerAssistantController extends GetxController {
     isWelcomeView.value = true;
     messages.clear();
     messageController.clear();
+  }
+
+  // Initialize speech recognition
+  Future<void> _initializeSpeech() async {
+    try {
+      final available = await SpeechService.initialize();
+      isSpeechAvailable.value = available;
+    } catch (e) {
+      print('Error initializing speech: $e');
+      isSpeechAvailable.value = false;
+    }
+  }
+
+  // Start speech recognition
+  Future<void> startListening() async {
+    if (!isSpeechAvailable.value) {
+      await _initializeSpeech();
+    }
+
+    if (isSpeechAvailable.value && !isListening.value) {
+      isListening.value = true;
+      partialSpeechResult.value = '';
+
+      await SpeechService.startListening(
+        onResult: (result) {
+          isListening.value = false;
+          partialSpeechResult.value = '';
+          if (result.isNotEmpty) {
+            messageController.text = result;
+            sendMessage(result);
+          }
+        },
+        onPartialResult: (partialResult) {
+          partialSpeechResult.value = partialResult;
+        },
+      );
+    }
+  }
+
+  // Stop speech recognition
+  Future<void> stopListening() async {
+    if (isListening.value) {
+      isListening.value = false;
+      partialSpeechResult.value = '';
+      await SpeechService.stopListening();
+    }
+  }
+
+  // Toggle speech recognition
+  Future<void> toggleListening() async {
+    if (isListening.value) {
+      await stopListening();
+    } else {
+      await startListening();
+    }
   }
 
   // Test connection to Groq API

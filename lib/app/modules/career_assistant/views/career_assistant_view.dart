@@ -90,7 +90,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                     ),
                   ],
                 ),
-                child: TextFormField(
+                child: Obx(() => TextFormField(
                   controller: controller.messageController,
                   onFieldSubmitted: (value) {
                     if (value.trim().isNotEmpty) {
@@ -98,7 +98,11 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                     }
                   },
                   decoration: InputDecoration(
-                    hintText: 'Tanyakan seputar karir...',
+                    hintText: controller.isListening.value 
+                      ? 'Mendengarkan...' 
+                      : (controller.partialSpeechResult.value.isNotEmpty 
+                          ? controller.partialSpeechResult.value 
+                          : 'Tanyakan seputar karir...'),
                     hintStyle: const TextStyle(
                       fontSize: 14,
                       color: AppColors.textSecondary,
@@ -109,19 +113,30 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                       color: AppColors.textSecondary,
                       size: 20,
                     ),
-                    suffixIcon: GestureDetector(
+                    suffixIcon: Obx(() => GestureDetector(
                       onTap: () {
                         final text = controller.messageController.text;
                         if (text.trim().isNotEmpty) {
                           controller.sendMessage(text);
+                        } else if (controller.isSpeechAvailable.value) {
+                          controller.toggleListening();
                         }
                       },
-                      child: Icon(
-                        Icons.keyboard_voice,
-                        color: AppColors.primary,
-                        size: 20,
+                      child: Container(
+                        padding: EdgeInsets.all(8),
+                        child: Icon(
+                          controller.isListening.value 
+                            ? Icons.mic 
+                            : (controller.messageController.text.trim().isNotEmpty 
+                                ? Icons.send 
+                                : Icons.mic_none),
+                          color: controller.isListening.value 
+                            ? Colors.red 
+                            : AppColors.primary,
+                          size: 20,
+                        ),
                       ),
-                    ),
+                    )),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50),
                       borderSide: const BorderSide(
@@ -144,7 +159,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                     filled: true,
                     fillColor: AppColors.surface,
                   ),
-                )
+                ))
               )
             ],
           ),
