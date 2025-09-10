@@ -46,68 +46,80 @@ class ProfileUserView extends GetView<ProfileUserController> {
                                     color: AppColors.textOnPrimary,
                                   ),
                                 ),
+                                GestureDetector(
+                                  onTap: () {
+                                    // Handle logout
+                                  },
+                                  child: Icon(
+                                    Icons.logout,
+                                    color: AppColors.textOnPrimary,
+                                    size: 30,
+                                  ),
+                                )
                               ],
                             ),
-                            ],
+                          ],
                         ),
                       ),
                       SizedBox(
                         height: 40,
                       ),
-                      Container(
-                        margin: EdgeInsets.only(top: screenHeight * 0.02),
-                        width: double.infinity,
-                        height: 2000,
-                        decoration: const BoxDecoration(
-                          color: AppColors.surfaceVariant,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            topRight: Radius.circular(25),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(top: screenHeight * 0.02),
+                          width: double.infinity,
+                          decoration: const BoxDecoration(
+                            color: AppColors.surfaceVariant,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
+                            ),
                           ),
-                        ),
-                        child: SizedBox(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 85,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Manage",
-                                      style: TextStyle(
-                                        fontFamily: "Montserrat",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.textSecondary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 20),
-                                GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: BouncingScrollPhysics(),
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 15,
-                                    mainAxisSpacing: 15,
-                                    childAspectRatio: 1.0,
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 85,
                                   ),
-                                  itemCount: 5,
-                                  itemBuilder: (context, index) {
-                                    return _buildGridItem(index);
-                                  },
-                                )
-                              ],
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Manage",
+                                        style: TextStyle(
+                                          fontFamily: "Montserrat",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+                                  GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 15,
+                                      mainAxisSpacing: 15,
+                                      childAspectRatio: 1.0,
+                                    ),
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) {
+                                      return _buildGridItem(index);
+                                    },
+                                  ),
+                                  SizedBox(height: 100), // Space for bottom navbar
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       )
-                      ],
+                    ],
                   ),
                 ),
                 Padding(
