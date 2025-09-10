@@ -39,7 +39,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                             GestureDetector(
                               onTap: () => controller.backToWelcome(),
                               child: Container(
-                                padding: EdgeInsets.all(8),
+                                padding: EdgeInsets.symmetric(horizontal: 25),
                                 child: Icon(
                                   Icons.arrow_back,
                                   color: AppColors.textOnPrimary,
@@ -109,7 +109,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                       fontFamily: 'Montserrat',
                     ),
                     prefixIcon: const Icon(
-                      Icons.search,
+                      Icons.chat_bubble_outline,
                       color: AppColors.textSecondary,
                       size: 20,
                     ),
@@ -349,7 +349,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
           child: Container(
             constraints: BoxConstraints(
               maxWidth: screenWidth * 0.75, 
-              minWidth: screenWidth * 0.2, 
+              minWidth: screenWidth * 0.1, 
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
