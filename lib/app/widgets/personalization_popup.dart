@@ -68,7 +68,15 @@ class PersonalizationPopup {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () async {
-                        await UserPreferencesService.markPersonalizationPopupAsShown();
+                        print('🔍 DEBUG: Skip button pressed');
+                        try {
+                          await UserPreferencesService.markPersonalizationPopupAsShown();
+                          print('✅ DEBUG: Popup marked as shown');
+                        } catch (e) {
+                          print('⚠️ DEBUG: SharedPreferences error in skip button: $e');
+                          // Continue anyway
+                        }
+                        print('🔍 DEBUG: Closing popup');
                         Get.back();
                       },
                       style: OutlinedButton.styleFrom(
@@ -95,7 +103,15 @@ class PersonalizationPopup {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
-                        await UserPreferencesService.markPersonalizationPopupAsShown();
+                        print('🔍 DEBUG: Continue button pressed');
+                        try {
+                          await UserPreferencesService.markPersonalizationPopupAsShown();
+                          print('✅ DEBUG: Popup marked as shown');
+                        } catch (e) {
+                          print('⚠️ DEBUG: SharedPreferences error in continue button: $e');
+                          // Continue anyway
+                        }
+                        print('🔍 DEBUG: Closing popup and navigating to personalization');
                         Get.back();
                         Get.toNamed('/personalization');
                       },

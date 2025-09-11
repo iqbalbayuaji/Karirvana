@@ -29,21 +29,32 @@ class HomepageView extends GetView<HomepageController> {
         id: "2", 
         title: "Flutter Advanced",
         lastActivity: "State Management",
-        lastTime: "14:30",
-        progress: 75.0,
+        lastTime: "14:32",
+        progress: 35.0,
       ),
       CourseData(
         id: "3",
-        title: "React Native Basics",
-        lastActivity: "Navigation",
+        title: "React Native Basics", 
+        lastActivity: "Components",
         lastTime: "09:15",
-        progress: 45.0,
+        progress: 80.0,
       ),
     ];
   }
   
   @override
   Widget build(BuildContext context) {
+    print('🔍 DEBUG: HomepageView build() called');
+    print('🔍 DEBUG: Controller instance: ${controller.runtimeType}');
+    
+    // Force controller initialization
+    Get.find<HomepageController>();
+    print('🔍 DEBUG: Controller found and accessed');
+    
+    return _buildOriginalView(context);
+  }
+  
+  Widget _buildOriginalView(BuildContext context) {
     final CarouselSliderController carouselController = CarouselSliderController();
     int activeIndex = 0;
     return Scaffold(
