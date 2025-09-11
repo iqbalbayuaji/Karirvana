@@ -77,7 +77,7 @@ class ProfileUserView extends GetView<ProfileUserController> {
                           ),
                           child: SingleChildScrollView(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                              padding: const EdgeInsets.symmetric(horizontal: 30),
                               child: Column(
                                 children: [
                                   SizedBox(
@@ -112,7 +112,7 @@ class ProfileUserView extends GetView<ProfileUserController> {
                                       return _buildGridItem(index);
                                     },
                                   ),
-                                  SizedBox(height: 100), // Space for bottom navbar
+                                  SizedBox(height: 120),
                                 ],
                               ),
                             ),

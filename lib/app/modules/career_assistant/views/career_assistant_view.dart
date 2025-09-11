@@ -213,7 +213,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
               children: [
                 chatbot_chips(
                   chipsData: chatbotChipsData(name: "Roadmap Karir"),
-                  onTap: () => controller.sendMessage("Saya ingin mendapatkan roadmap karir yang sesuai dengan minat dan kemampuan saya"),
+                  onTap: () => controller.startRoadmapMode(),
                 ),
                 chatbot_chips(
                   chipsData: chatbotChipsData(name: "Jadwal Belajar"),
@@ -289,23 +289,23 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
               children: [
                 Row(
                   children: [
-                    Icon(
-                      Icons.closed_caption_off_rounded,
+                    Obx(() => Icon(
+                      controller.isRoadmapMode.value ? Icons.route : Icons.closed_caption_off_rounded,
                       color: AppColors.textOnPrimary,
                       size: 25,
-                    ),
+                    )),
                     SizedBox(
                       width: 6,
                     ),
-                    Text(
-                      "Answer",
+                    Obx(() => Text(
+                      controller.isRoadmapMode.value ? "Roadmap Assistant" : "Answer",
                       style: TextStyle(
                         fontFamily: "Montserrat",
                         fontSize: 15,
                         color: AppColors.textOnPrimary,
                         fontWeight: FontWeight.w600,
                       ),
-                    ),
+                    )),
                   ],
                 ),
                 SizedBox(
@@ -398,21 +398,21 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.closed_caption_off_rounded,
+                Obx(() => Icon(
+                  controller.isRoadmapMode.value ? Icons.route : Icons.closed_caption_off_rounded,
                   color: AppColors.textOnPrimary,
                   size: 20,
-                ),
+                )),
                 SizedBox(width: 8),
-                Text(
-                  'Mengetik...',
+                Obx(() => Text(
+                  controller.isRoadmapMode.value ? 'Roadmap Assistant sedang mengetik...' : 'Mengetik...',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 14,
                     color: AppColors.textOnPrimary.withOpacity(0.7),
                     fontStyle: FontStyle.italic,
                   ),
-                ),
+                )),
                 SizedBox(width: 8),
                 SizedBox(
                   width: 20,

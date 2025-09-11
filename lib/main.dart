@@ -7,6 +7,7 @@ import 'app/routes/app_pages.dart';
 import 'app/services/firebase_auth_service.dart';
 import 'firebase_options.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   

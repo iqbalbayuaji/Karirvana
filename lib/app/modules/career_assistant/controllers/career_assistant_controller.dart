@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/chat_message.dart';
 import '../../../services/groq_service.dart';
+import '../../../services/groq_roadmap_service.dart';
 import '../../../services/speech_service.dart';
 
 class CareerAssistantController extends GetxController {
   // View state management
   final RxBool isWelcomeView = true.obs;
+  final RxBool isRoadmapMode = false.obs;
   
   // Chat functionality
   final RxList<ChatMessage> messages = <ChatMessage>[].obs;
@@ -72,8 +74,10 @@ class CareerAssistantController extends GetxController {
     _scrollToBottom();
 
     try {
-      // Get response from Groq API
-      final response = await GroqService.sendMessage(messages.toList());
+      // Choose service based on mode
+      final response = isRoadmapMode.value 
+          ? await GroqRoadmapService.sendMessage(messages.toList())
+          : await GroqService.sendMessage(messages.toList());
       
       // Add bot response
       messages.add(ChatMessage.bot(response));
@@ -136,8 +140,25 @@ class CareerAssistantController extends GetxController {
 
   void backToWelcome() {
     isWelcomeView.value = true;
+    isRoadmapMode.value = false;
     messages.clear();
     messageController.clear();
+  }
+
+  void startRoadmapMode() {
+    isRoadmapMode.value = true;
+    isWelcomeView.value = false;
+    messages.clear();
+    
+    // Add initial roadmap greeting
+    final initialMessage = ChatMessage(
+      content: "Halo! Saya Roadmap Assistant, siap membantu membuat roadmap karir yang tepat untuk Anda! 🚀\n\nSebelum saya buatkan roadmap yang detail, saya perlu memahami situasi Anda terlebih dahulu. Mari kita mulai:\n\n**Apa tujuan karir yang ingin Anda capai?** \nMisalnya: posisi tertentu, industri yang diminati, atau perubahan karir yang diinginkan.",
+      isUser: false,
+      timestamp: DateTime.now(),
+    );
+    
+    messages.add(initialMessage);
+    _scrollToBottom();
   }
 
   // Initialize speech recognition
