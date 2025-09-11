@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../services/firebase_auth_service.dart';
+import '../../../services/user_preferences_service.dart';
+import '../../../routes/app_pages.dart';
 
 class RegisterController extends GetxController {
   // Form controllers
@@ -66,8 +68,11 @@ class RegisterController extends GetxController {
   
   // Register method
   Future<void> register() async {
+    print('🔍 DEBUG: Register method called');
+    
     // Basic validation
     if (nameController.text.isEmpty) {
+      print('❌ DEBUG: Name is empty');
       Get.snackbar(
         'Error',
         'Nama tidak boleh kosong',
@@ -78,6 +83,7 @@ class RegisterController extends GetxController {
     }
     
     if (emailController.text.isEmpty) {
+      print('❌ DEBUG: Email is empty');
       Get.snackbar(
         'Error',
         'Email tidak boleh kosong',
@@ -88,6 +94,7 @@ class RegisterController extends GetxController {
     }
     
     if (passwordController.text.isEmpty) {
+      print('❌ DEBUG: Password is empty');
       Get.snackbar(
         'Error',
         'Password tidak boleh kosong',
@@ -98,6 +105,7 @@ class RegisterController extends GetxController {
     }
     
     if (passwordController.text != confirmPasswordController.text) {
+      print('❌ DEBUG: Passwords do not match');
       Get.snackbar(
         'Error',
         'Password dan konfirmasi password tidak sama',
@@ -108,6 +116,7 @@ class RegisterController extends GetxController {
     }
     
     if (passwordController.text.length < 6) {
+      print('❌ DEBUG: Password too short');
       Get.snackbar(
         'Error',
         'Password minimal 6 karakter',
@@ -117,16 +126,21 @@ class RegisterController extends GetxController {
       return;
     }
     
+    print('✅ DEBUG: All validations passed, starting registration...');
     isLoading.value = true;
     
     try {
+      print('🔄 DEBUG: Calling Firebase registerWithEmailAndPassword...');
       final userCredential = await _authService.registerWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text,
         name: nameController.text.trim(),
       );
       
+      print('🔍 DEBUG: Firebase response: ${userCredential != null ? "SUCCESS" : "NULL"}');
+      
       if (userCredential != null) {
+        print('✅ DEBUG: Registration successful, showing success message...');
         Get.snackbar(
           'Success',
           'Registrasi berhasil!',
@@ -134,10 +148,34 @@ class RegisterController extends GetxController {
           colorText: Colors.white,
         );
         
-        // Navigate to login page after successful registration
-        Get.offAllNamed('/login');
+        print('🔄 DEBUG: Marking user as not first time...');
+        try {
+          await UserPreferencesService.markUserAsNotFirstTime();
+          print('✅ DEBUG: User preferences updated successfully');
+        } catch (e) {
+          print('⚠️ DEBUG: SharedPreferences error (continuing anyway): $e');
+          // Continue with navigation even if SharedPreferences fails
+        }
+        
+        print('🔄 DEBUG: Adding delay...');
+        await Future.delayed(const Duration(milliseconds: 100));
+        
+        print('🔄 DEBUG: Navigating to homepage...');
+        Get.offAllNamed(Routes.HOMEPAGE);
+        print('✅ DEBUG: Navigation completed');
+      } else {
+        print('❌ DEBUG: UserCredential is null, registration failed');
       }
+    } catch (e) {
+      print('❌ DEBUG: Exception in register method: $e');
+      Get.snackbar(
+        'Error',
+        'Terjadi kesalahan: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
+      print('🔄 DEBUG: Setting loading to false');
       isLoading.value = false;
     }
   }

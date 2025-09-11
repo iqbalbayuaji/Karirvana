@@ -17,19 +17,26 @@ class FirebaseAuthService extends GetxService {
     required String name,
   }) async {
     try {
+      print('🔄 DEBUG: Firebase Auth - Starting createUserWithEmailAndPassword...');
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       
+      print('✅ DEBUG: Firebase Auth - User created successfully: ${userCredential.user?.uid}');
+      
       // Update display name
+      print('🔄 DEBUG: Firebase Auth - Updating display name...');
       await userCredential.user?.updateDisplayName(name);
+      print('✅ DEBUG: Firebase Auth - Display name updated');
       
       return userCredential;
     } on FirebaseAuthException catch (e) {
+      print('❌ DEBUG: Firebase Auth Exception: ${e.code} - ${e.message}');
       _handleAuthError(e);
       return null;
     } catch (e) {
+      print('❌ DEBUG: Firebase Auth General Exception: $e');
       Get.snackbar(
         'Error',
         'Terjadi kesalahan: ${e.toString()}',

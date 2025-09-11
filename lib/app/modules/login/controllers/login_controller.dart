@@ -76,7 +76,7 @@ class LoginController extends GetxController {
         );
         
         // Navigate to home page after successful login
-        Get.toNamed(Routes.HOMEPAGE);
+        Get.offAllNamed(Routes.HOMEPAGE);
       }
     } finally {
       isLoading.value = false;

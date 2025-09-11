@@ -51,6 +51,9 @@ dependencies:
   # Speech to Text dependency
   speech_to_text: ^7.0.0
   permission_handler: ^11.3.1
+  
+  # SharedPreferences for storing user preferences
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
