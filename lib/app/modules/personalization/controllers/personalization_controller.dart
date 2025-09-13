@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../services/cloudinary_service.dart';
 import '../../../services/firestore_service.dart';
+import '../../../routes/app_pages.dart';
+import '../../../services/user_preferences_service.dart';
 
 class PersonalizationController extends GetxController {
   // Form controllers
@@ -64,10 +66,8 @@ class PersonalizationController extends GetxController {
         bioController.text = profileData['bio'] ?? '';
         profileImageUrl.value = profileData['profileImageUrl'];
         
-        // If username is empty, pre-fill with name from registration
-        if (usernameController.text.isEmpty && profileData['name'] != null) {
-          usernameController.text = profileData['name'];
-        }
+        // Username is independent from name - don't auto-fill
+        // User can choose their own unique username
       }
     } catch (e) {
       Get.snackbar(
@@ -274,8 +274,9 @@ class PersonalizationController extends GetxController {
           colorText: Colors.white,
         );
         
-        // Navigate back or to main page
-        Get.back();
+        // Mark personalization as complete and navigate to Homepage
+        await UserPreferencesService.markPersonalizationPopupAsShown();
+        Get.offAllNamed(Routes.HOMEPAGE);
       } else {
         Get.snackbar(
           'Error',

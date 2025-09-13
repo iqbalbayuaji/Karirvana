@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../widgets/personalization_popup.dart';
+import '../../../services/firestore_service.dart';
 
 class HomepageController extends GetxController {
   final count = 0.obs;
@@ -30,36 +31,32 @@ class HomepageController extends GetxController {
     print('🔍 DEBUG: _checkAndShowPersonalizationPopup() method called');
     
     // Wait a bit for the page to fully load
-    print('🔍 DEBUG: Waiting 500ms for page to load...');
     await Future.delayed(const Duration(milliseconds: 500));
-    print('🔍 DEBUG: Wait completed, checking popup conditions...');
     
-    // For now, let's just show the popup directly to test if it works
-    print('✅ DEBUG: Force showing personalization popup for testing');
-    PersonalizationPopup.show();
-    
-    // Original logic commented out for debugging
-    /*
     try {
-      final hasBeenShown = await UserPreferencesService.hasPersonalizationPopupBeenShown();
-      final isFirstTime = await UserPreferencesService.isFirstTimeUser();
+      // Check if user profile is complete
+      final firestoreService = FirestoreService.instance;
+      final profileData = await firestoreService.getUserProfile();
       
-      print('🔍 DEBUG: Popup check - hasBeenShown: $hasBeenShown, isFirstTime: $isFirstTime');
+      print('🔍 DEBUG: Profile data: $profileData');
       
-      // Show popup if it hasn't been shown before (regardless of first time status)
-      // This ensures popup shows for newly registered users
-      if (!hasBeenShown) {
-        print('✅ DEBUG: Showing personalization popup');
+      // If profile exists and is complete, don't show popup
+      if (profileData != null && profileData['isProfileComplete'] == true) {
+        print('ℹ️ DEBUG: Profile is complete, not showing popup');
+        return;
+      }
+      
+      // If profile doesn't exist or is not complete, show popup
+      // This ensures new users always see the popup
+      if (profileData == null || profileData['isProfileComplete'] != true) {
+        print('✅ DEBUG: Profile incomplete or missing, showing personalization popup');
         PersonalizationPopup.show();
-      } else {
-        print('ℹ️ DEBUG: Popup not shown - already been shown before');
       }
     } catch (e) {
-      print('⚠️ DEBUG: SharedPreferences error in popup check: $e');
-      // If SharedPreferences fails, show popup anyway for new users
-      print('✅ DEBUG: Showing popup as fallback due to SharedPreferences error');
+      print('⚠️ DEBUG: Error checking profile status: $e');
+      // On error, show popup for safety (better to show than not show for new users)
+      print('✅ DEBUG: Showing popup as fallback due to error');
       PersonalizationPopup.show();
     }
-    */
   }
 }
