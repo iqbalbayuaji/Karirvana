@@ -11,236 +11,294 @@ class PersonalizationView extends GetView<PersonalizationController> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
+                padding: EdgeInsets.only(
+                  left: 25,
+                  right: 25,
+                  bottom: MediaQuery.of(context).viewInsets.bottom ,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-              const SizedBox(height: 40),
-              const Text(
-                'Personalisasi Profil',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Montserrat',
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Lengkapi informasi untuk pengalaman yang lebih personal',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Montserrat',
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height:15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.account_circle,
-                    color: AppColors.textSecondary,
-                    size: 90,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                controller: controller.usernameController,
-                decoration: InputDecoration(
-                  hintText: "Username",
-                  hintStyle: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                    fontFamily: 'Montserrat',
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.outline),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.outline),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.primary),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                ),
-              ),
-              const SizedBox(height: 25),
-              Obx(() => Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => controller.selectGender('Laki-laki'),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: controller.selectedGender.value == 'Laki-laki' 
-                            ? AppColors.primary.withOpacity(0.1) 
-                            : Colors.transparent,
-                        border: Border.all(
-                          color: controller.selectedGender.value == 'Laki-laki' 
-                              ? AppColors.primary 
-                              : AppColors.outline,
-                          width: controller.selectedGender.value == 'Laki-laki' ? 2 : 1,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
+                    const SizedBox(height: 40),
+                    const Text(
+                      'Personalisasi Profil',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Montserrat',
+                        color: AppColors.textPrimary,
                       ),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.male,
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Lengkapi informasi untuk pengalaman yang lebih personal',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Montserrat',
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height:15),
+                    // Profile Image Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Obx(() => GestureDetector(
+                          onTap: controller.showImagePickerOptions,
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: 90,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.textSecondary.withOpacity(0.1),
+                                  border: Border.all(
+                                    color: AppColors.outline,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child: _buildProfileImage(),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                ),
+                              ),
+                              if (controller.isUploadingImage.value)
+                                Container(
+                                  width: 90,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black.withOpacity(0.5),
+                                  ),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        )),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    TextFormField(
+                      controller: controller.usernameController,
+                      decoration: InputDecoration(
+                        hintText: "Username",
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                          fontFamily: 'Montserrat',
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.outline),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.outline),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.primary),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    Obx(() => Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () => controller.selectGender('Laki-laki'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                            decoration: BoxDecoration(
                               color: controller.selectedGender.value == 'Laki-laki' 
-                                  ? AppColors.primary 
-                                  : AppColors.textSecondary,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Laki-laki',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Montserrat',
+                                  ? AppColors.primary.withOpacity(0.1) 
+                                  : Colors.transparent,
+                              border: Border.all(
                                 color: controller.selectedGender.value == 'Laki-laki' 
                                     ? AppColors.primary 
-                                    : AppColors.textPrimary,
-                                fontWeight: controller.selectedGender.value == 'Laki-laki' 
-                                    ? FontWeight.w600 
-                                    : FontWeight.normal,
+                                    : AppColors.outline,
+                                width: controller.selectedGender.value == 'Laki-laki' ? 2 : 1,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.male,
+                                    color: controller.selectedGender.value == 'Laki-laki' 
+                                        ? AppColors.primary 
+                                        : AppColors.textSecondary,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Laki-laki',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Montserrat',
+                                      color: controller.selectedGender.value == 'Laki-laki' 
+                                          ? AppColors.primary 
+                                          : AppColors.textPrimary,
+                                      fontWeight: controller.selectedGender.value == 'Laki-laki' 
+                                          ? FontWeight.w600 
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  GestureDetector(
-                    onTap: () => controller.selectGender('Perempuan'),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: controller.selectedGender.value == 'Perempuan' 
-                            ? AppColors.primary.withOpacity(0.1) 
-                            : Colors.transparent,
-                        border: Border.all(
-                          color: controller.selectedGender.value == 'Perempuan' 
-                              ? AppColors.primary 
-                              : AppColors.outline,
-                          width: controller.selectedGender.value == 'Perempuan' ? 2 : 1,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.female,
+                        const SizedBox(width: 12),
+                        GestureDetector(
+                          onTap: () => controller.selectGender('Perempuan'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                            decoration: BoxDecoration(
                               color: controller.selectedGender.value == 'Perempuan' 
-                                  ? AppColors.primary 
-                                  : AppColors.textSecondary,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Perempuan',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'Montserrat',
+                                  ? AppColors.primary.withOpacity(0.1) 
+                                  : Colors.transparent,
+                              border: Border.all(
                                 color: controller.selectedGender.value == 'Perempuan' 
                                     ? AppColors.primary 
-                                    : AppColors.textPrimary,
-                                fontWeight: controller.selectedGender.value == 'Perempuan' 
-                                    ? FontWeight.w600 
-                                    : FontWeight.normal,
+                                    : AppColors.outline,
+                                width: controller.selectedGender.value == 'Perempuan' ? 2 : 1,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.female,
+                                    color: controller.selectedGender.value == 'Perempuan' 
+                                        ? AppColors.primary 
+                                        : AppColors.textSecondary,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Perempuan',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Montserrat',
+                                      color: controller.selectedGender.value == 'Perempuan' 
+                                          ? AppColors.primary 
+                                          : AppColors.textPrimary,
+                                      fontWeight: controller.selectedGender.value == 'Perempuan' 
+                                          ? FontWeight.w600 
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
+                          ),
                         ),
+                        SizedBox(
+                          width: screenWidth * 0.01,
+                        )
+                      ],
+                    )),
+                    const SizedBox(height: 25),
+                    TextFormField(
+                      controller: controller.locationController,
+                      decoration: InputDecoration(
+                        hintText: "Lokasi",
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                          fontFamily: 'Montserrat',
+                        ),
+                        suffixIcon: const Icon(
+                          Icons.location_on,
+                          color: AppColors.textSecondary,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.outline),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.outline),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.primary),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: screenWidth * 0.01,
-                  )
-                ],
-              )),
-              const SizedBox(height: 25),
-              TextFormField(
-                controller: controller.locationController,
-                decoration: InputDecoration(
-                  hintText: "Lokasi",
-                  hintStyle: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                    fontFamily: 'Montserrat',
-                  ),
-                  suffixIcon: const Icon(
-                    Icons.location_on,
-                    color: AppColors.textSecondary,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.outline),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.outline),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.primary),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                ),
-              ),
-              const SizedBox(height: 25),
-              TextFormField(
-                controller: controller.bioController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  hintText: "Bio",
-                  hintStyle: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
-                    fontFamily: 'Montserrat',
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.outline),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.outline),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.primary),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                ),
-              ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 25),
+                    TextFormField(
+                      controller: controller.bioController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        hintText: "Bio",
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.textSecondary,
+                          fontFamily: 'Montserrat',
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.outline),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.outline),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: AppColors.primary),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
+            // Button at the bottom
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
               child: SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: controller.saveProfile,
+                child: Obx(() => ElevatedButton(
+                  onPressed: controller.isLoading.value ? null : controller.saveProfile,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -248,21 +306,80 @@ class PersonalizationView extends GetView<PersonalizationController> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Simpan',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Montserrat',
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                  child: controller.isLoading.value
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Simpan',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Montserrat',
+                            color: Colors.white,
+                          ),
+                        ),
+                )),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildProfileImage() {
+    // Show selected image from file
+    if (controller.selectedImage.value != null) {
+      return Image.file(
+        controller.selectedImage.value!,
+        width: 90,
+        height: 90,
+        fit: BoxFit.cover,
+      );
+    }
+    
+    // Show profile image from URL
+    if (controller.profileImageUrl.value != null && 
+        controller.profileImageUrl.value!.isNotEmpty) {
+      return Image.network(
+        controller.profileImageUrl.value!,
+        width: 90,
+        height: 90,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+              color: AppColors.primary,
+              strokeWidth: 2,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(
+            Icons.account_circle,
+            color: AppColors.textSecondary,
+            size: 90,
+          );
+        },
+      );
+    }
+    
+    // Default icon
+    return const Icon(
+      Icons.account_circle,
+      color: AppColors.textSecondary,
+      size: 90,
     );
   }
 }

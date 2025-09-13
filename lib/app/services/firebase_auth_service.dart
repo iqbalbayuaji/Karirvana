@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'firestore_service.dart';
 
 class FirebaseAuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -29,6 +30,20 @@ class FirebaseAuthService extends GetxService {
       print('🔄 DEBUG: Firebase Auth - Updating display name...');
       await userCredential.user?.updateDisplayName(name);
       print('✅ DEBUG: Firebase Auth - Display name updated');
+      
+      // Create initial user profile in Firestore
+      print('🔄 DEBUG: Firebase Auth - Creating initial user profile...');
+      final firestoreService = FirestoreService.instance;
+      final profileCreated = await firestoreService.createInitialUserProfile(
+        name: name,
+        email: email,
+      );
+      
+      if (profileCreated) {
+        print('✅ DEBUG: Firebase Auth - Initial user profile created');
+      } else {
+        print('❌ DEBUG: Firebase Auth - Failed to create initial user profile');
+      }
       
       return userCredential;
     } on FirebaseAuthException catch (e) {

@@ -43,6 +43,7 @@ dependencies:
   # Firebase dependencies
   firebase_core: ^3.6.0
   firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
   
   # HTTP and Environment dependencies
   http: ^1.1.0
@@ -54,6 +55,10 @@ dependencies:
   
   # SharedPreferences for storing user preferences
   shared_preferences: ^2.2.2
+  
+  # Image picker and Cloudinary dependencies
+  image_picker: ^1.0.4
+  cloudinary_public: ^0.21.0
 
 dev_dependencies:
   flutter_test:
