@@ -5,6 +5,7 @@ import '../services/user_preferences_service.dart';
 
 class PersonalizationPopup {
   static void show() {
+    final screenWidth = MediaQuery.of(Get.context!).size.width;
     Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(
@@ -18,89 +19,35 @@ class PersonalizationPopup {
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // Icon
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.person_outline,
-                  size: 40,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(height: 20),
-              
-              // Title
-              const Text(
-                'Personalisasi Profil',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Montserrat',
-                  color: AppColors.textPrimary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              
-              // Description
-              const Text(
-                'Lengkapi profil Anda untuk mendapatkan pengalaman yang lebih personal dan rekomendasi karir yang sesuai.',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Montserrat',
-                  color: AppColors.textSecondary,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              
-              // Buttons
               Row(
                 children: [
-                  // Skip Button
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () async {
-                        print('🔍 DEBUG: Skip button pressed');
-                        try {
-                          await UserPreferencesService.markPersonalizationPopupAsShown();
-                          print('✅ DEBUG: Popup marked as shown');
-                        } catch (e) {
-                          print('⚠️ DEBUG: SharedPreferences error in skip button: $e');
-                          // Continue anyway
-                        }
-                        print('🔍 DEBUG: Closing popup');
-                        Get.back();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.outline),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                    child: Text(
+                      'apakah Anda ingin mempersonalisasi akun?',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.045, // Responsive font size
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Montserrat',
+                        color: AppColors.textPrimary,
                       ),
-                      child: const Text(
-                        'Nanti Saja',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Montserrat',
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
+                      textAlign: TextAlign.start,
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  
+                  SizedBox(
+                    width: screenWidth * 0.2,
+                  )
+                ],
+              ),
+              const SizedBox(height: 40),
+              
+              // Buttons
+              Column(
+                children: [
                   // Continue Button
-                  Expanded(
+                  SizedBox(
+                    width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
                         print('🔍 DEBUG: Continue button pressed');
@@ -129,6 +76,42 @@ class PersonalizationPopup {
                           fontWeight: FontWeight.w600,
                           fontFamily: 'Montserrat',
                           color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+                  // Skip Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        print('🔍 DEBUG: Skip button pressed');
+                        try {
+                          await UserPreferencesService.markPersonalizationPopupAsShown();
+                          print('✅ DEBUG: Popup marked as shown');
+                        } catch (e) {
+                          print('⚠️ DEBUG: SharedPreferences error in skip button: $e');
+                          // Continue anyway
+                        }
+                        print('🔍 DEBUG: Closing popup');
+                        Get.back();
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.outline),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Nanti Saja',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ),

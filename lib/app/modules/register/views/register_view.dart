@@ -32,7 +32,7 @@ class RegisterView extends GetView<RegisterController> {
           
           SafeArea(
             child: SingleChildScrollView(
-              padding: EdgeInsets.only(bottom: keyboardHeight),
+              // padding: EdgeInsets.only(bottom: keyboardHeight),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
                   minHeight: size.height - MediaQuery.of(context).padding.top,
