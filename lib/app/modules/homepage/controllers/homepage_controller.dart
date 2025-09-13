@@ -6,6 +6,9 @@ class HomepageController extends GetxController {
   final count = 0.obs;
   final activeIndex = 0.obs;
   
+  // Static variable to track if popup has been shown in this session
+  static bool _hasShownPopupInSession = false;
+  
   @override
   void onInit() {
     super.onInit();
@@ -30,6 +33,12 @@ class HomepageController extends GetxController {
   Future<void> _checkAndShowPersonalizationPopup() async {
     print('🔍 DEBUG: _checkAndShowPersonalizationPopup() method called');
     
+    // If popup has already been shown in this session, don't show again
+    if (_hasShownPopupInSession) {
+      print('ℹ️ DEBUG: Popup already shown in this session, skipping');
+      return;
+    }
+    
     // Wait a bit for the page to fully load
     await Future.delayed(const Duration(milliseconds: 500));
     
@@ -50,13 +59,20 @@ class HomepageController extends GetxController {
       // This ensures new users always see the popup
       if (profileData == null || profileData['isProfileComplete'] != true) {
         print('✅ DEBUG: Profile incomplete or missing, showing personalization popup');
+        _hasShownPopupInSession = true; // Mark as shown
         PersonalizationPopup.show();
       }
     } catch (e) {
       print('⚠️ DEBUG: Error checking profile status: $e');
       // On error, show popup for safety (better to show than not show for new users)
       print('✅ DEBUG: Showing popup as fallback due to error');
+      _hasShownPopupInSession = true; // Mark as shown
       PersonalizationPopup.show();
     }
+  }
+  
+  // Method to reset popup session state (can be called when user completes personalization)
+  static void resetPopupSession() {
+    _hasShownPopupInSession = false;
   }
 }

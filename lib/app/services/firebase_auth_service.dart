@@ -11,6 +11,9 @@ class FirebaseAuthService extends GetxService {
   // Stream of auth state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
   
+  // Check if user is authenticated
+  bool get isAuthenticated => _auth.currentUser != null;
+  
   // Register with email and password
   Future<UserCredential?> registerWithEmailAndPassword({
     required String email,

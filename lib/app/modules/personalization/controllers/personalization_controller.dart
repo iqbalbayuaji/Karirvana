@@ -6,6 +6,7 @@ import '../../../services/cloudinary_service.dart';
 import '../../../services/firestore_service.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/user_preferences_service.dart';
+import '../../homepage/controllers/homepage_controller.dart';
 
 class PersonalizationController extends GetxController {
   // Form controllers
@@ -276,6 +277,10 @@ class PersonalizationController extends GetxController {
         
         // Mark personalization as complete and navigate to Homepage
         await UserPreferencesService.markPersonalizationPopupAsShown();
+        
+        // Reset popup session state so it won't show again in this session
+        HomepageController.resetPopupSession();
+        
         Get.offAllNamed(Routes.HOMEPAGE);
       } else {
         Get.snackbar(

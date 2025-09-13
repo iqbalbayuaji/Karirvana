@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app/routes/app_pages.dart';
 import 'app/services/firebase_auth_service.dart';
 import 'app/services/cloudinary_service.dart';
+import 'app/widgets/auth_wrapper.dart';
 import 'firebase_options.dart';
 
 
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: Routes.LOGIN,
+      home: const AuthWrapper(),
       getPages: AppPages.routes,
     );
   }
