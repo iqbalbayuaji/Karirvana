@@ -186,7 +186,7 @@ class HomepageView extends GetView<HomepageController> {
                                                 title: "Interview Practice",
                                                 width: 60,
                                                 onTap: () {
-                                                  // TODO: Navigate to interview practice
+                                                  Get.toNamed('/interview-practice');
                                                 },
                                               ),
                                             ),
