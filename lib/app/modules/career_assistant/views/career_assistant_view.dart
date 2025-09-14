@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:karirvana/app/modules/career_assistant/local_widgets/chatbot_chips.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
-import 'package:karirvana/app/shared/widgets/bottom_navbar.dart';
+import 'package:karirvana/app/widgets/bottom_navbar.dart';
 import '../controllers/career_assistant_controller.dart';
 
 class CareerAssistantView extends GetView<CareerAssistantController> {

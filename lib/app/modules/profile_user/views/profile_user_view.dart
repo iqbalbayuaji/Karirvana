@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import '../../../styles/app_colors.dart';
-import '../../../shared/widgets/bottom_navbar.dart';
+import '../../../widgets/bottom_navbar.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/profile_user_controller.dart';
 
