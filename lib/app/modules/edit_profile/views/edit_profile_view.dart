@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:io';
 import 'package:karirvana/app/styles/app_colors.dart';
 import '../controllers/edit_profile_controller.dart';
 
