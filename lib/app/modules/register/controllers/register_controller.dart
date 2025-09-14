@@ -147,16 +147,15 @@ class RegisterController extends GetxController {
           colorText: Colors.white,
         );
         
-        print('🔄 DEBUG: Skipping SharedPreferences for now...');
-        // Skip SharedPreferences to avoid the platform exception
-        // The popup will show anyway since hasPersonalizationPopupBeenShown will be false
+        print('✅ DEBUG: Registration completed - waiting for AuthWrapper to detect auth state...');
+        // Give a small delay to ensure Firebase Auth state propagates
+        await Future.delayed(const Duration(milliseconds: 500));
         
-        print('🔄 DEBUG: Adding delay...');
-        await Future.delayed(const Duration(milliseconds: 100));
-        
-        print('🔄 DEBUG: Navigating to homepage...');
-        Get.offAllNamed(Routes.HOMEPAGE);
-        print('✅ DEBUG: Navigation completed');
+        // If AuthWrapper hasn't navigated yet, force navigation as fallback
+        if (Get.currentRoute == '/register') {
+          print('🔄 DEBUG: AuthWrapper hasn\'t navigated yet, forcing navigation to homepage');
+          Get.offAllNamed(Routes.HOMEPAGE);
+        }
       } else {
         print('❌ DEBUG: UserCredential is null, registration failed');
       }

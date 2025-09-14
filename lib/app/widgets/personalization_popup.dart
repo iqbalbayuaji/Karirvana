@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../styles/app_colors.dart';
-import '../services/user_preferences_service.dart';
+import '../services/firestore_service.dart';
 
 class PersonalizationPopup {
   static void show() {
@@ -52,10 +52,12 @@ class PersonalizationPopup {
                       onPressed: () async {
                         print('🔍 DEBUG: Continue button pressed');
                         try {
-                          await UserPreferencesService.markPersonalizationPopupAsShown();
-                          print('✅ DEBUG: Popup marked as shown');
+                          // Mark popup as seen in Firestore
+                          final firestoreService = FirestoreService.instance;
+                          await firestoreService.markPersonalizationPopupAsSeen();
+                          print('✅ DEBUG: Popup marked as seen in Firestore');
                         } catch (e) {
-                          print('⚠️ DEBUG: SharedPreferences error in continue button: $e');
+                          print('⚠️ DEBUG: Firestore error in continue button: $e');
                           // Continue anyway
                         }
                         print('🔍 DEBUG: Closing popup and navigating to personalization');
@@ -89,10 +91,12 @@ class PersonalizationPopup {
                       onPressed: () async {
                         print('🔍 DEBUG: Skip button pressed');
                         try {
-                          await UserPreferencesService.markPersonalizationPopupAsShown();
-                          print('✅ DEBUG: Popup marked as shown');
+                          // Mark popup as seen in Firestore
+                          final firestoreService = FirestoreService.instance;
+                          await firestoreService.markPersonalizationPopupAsSeen();
+                          print('✅ DEBUG: Popup marked as seen in Firestore');
                         } catch (e) {
-                          print('⚠️ DEBUG: SharedPreferences error in skip button: $e');
+                          print('⚠️ DEBUG: Firestore error in skip button: $e');
                           // Continue anyway
                         }
                         print('🔍 DEBUG: Closing popup');

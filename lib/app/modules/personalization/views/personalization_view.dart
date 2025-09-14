@@ -4,11 +4,24 @@ import 'package:get/get.dart';
 
 import '../../../styles/app_colors.dart';
 import '../controllers/personalization_controller.dart';
+import 'personalization_stage2_view.dart';
 
 class PersonalizationView extends GetView<PersonalizationController> {
   const PersonalizationView({super.key});
   @override
   Widget build(BuildContext context) {
+    return Obx(() {
+      // Show different stages based on currentStage
+      if (controller.currentStage.value == 2) {
+        return const PersonalizationStage2View();
+      }
+      
+      // Stage 1 (original personalization)
+      return _buildStage1View(context);
+    });
+  }
+  
+  Widget _buildStage1View(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -25,25 +38,83 @@ class PersonalizationView extends GetView<PersonalizationController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 40),
-                    const Text(
-                      'Personalisasi Profil',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Montserrat',
-                        color: AppColors.textPrimary,
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Container(
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: AppColors.outline,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // const SizedBox(height: 20),
+                    // Header section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => Get.offNamed('/homepage'),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.surface,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: AppColors.outline),
+                              ),
+                              child: const Icon(
+                                Icons.arrow_back,
+                                color: AppColors.textPrimary,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          const Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Personalisasi Profil',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Montserrat',
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  'Lengkapi Personalisasi Profil Anda',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontFamily: 'Montserrat',
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Lengkapi informasi untuk pengalaman yang lebih personal',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'Montserrat',
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
+                    // const SizedBox(height: 20),
+                    
                     const SizedBox(height:15),
                     // Profile Image Section
                     Row(
@@ -316,7 +387,7 @@ class PersonalizationView extends GetView<PersonalizationController> {
                           ),
                         )
                       : const Text(
-                          'Simpan',
+                          'Lanjutkan',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

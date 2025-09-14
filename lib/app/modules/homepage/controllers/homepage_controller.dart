@@ -19,6 +19,7 @@ class HomepageController extends GetxController {
   void onReady() {
     super.onReady();
     print('🔍 DEBUG: HomepageController onReady() called');
+    print('🔍 DEBUG: Session popup flag: $_hasShownPopupInSession');
     _checkAndShowPersonalizationPopup();
   }
 
@@ -28,6 +29,11 @@ class HomepageController extends GetxController {
   }
 
   void increment() => count.value++;
+
+  // Public method to check personalization popup (can be called from view)
+  Future<void> checkPersonalizationPopup() async {
+    await _checkAndShowPersonalizationPopup();
+  }
 
   // Check if personalization popup should be shown
   Future<void> _checkAndShowPersonalizationPopup() async {
@@ -40,7 +46,7 @@ class HomepageController extends GetxController {
     }
     
     // Wait a bit for the page to fully load
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 1000));
     
     try {
       // Check if user profile is complete
@@ -49,24 +55,38 @@ class HomepageController extends GetxController {
       
       print('🔍 DEBUG: Profile data: $profileData');
       
+      // For new users, always show popup regardless of other conditions
+      if (profileData == null) {
+        print('✅ DEBUG: New user (no profile data), showing popup');
+        _hasShownPopupInSession = true;
+        PersonalizationPopup.show();
+        return;
+      }
+      
       // If profile exists and is complete, don't show popup
-      if (profileData != null && profileData['isProfileComplete'] == true) {
+      if (profileData['isProfileComplete'] == true) {
         print('ℹ️ DEBUG: Profile is complete, not showing popup');
         return;
       }
       
-      // If profile doesn't exist or is not complete, show popup
-      // This ensures new users always see the popup
-      if (profileData == null || profileData['isProfileComplete'] != true) {
-        print('✅ DEBUG: Profile incomplete or missing, showing personalization popup');
-        _hasShownPopupInSession = true; // Mark as shown
-        PersonalizationPopup.show();
+      // Check if user has ever seen the popup before (persistent flag)
+      if (profileData['hasSeenPersonalizationPopup'] == true) {
+        print('ℹ️ DEBUG: User has already seen popup before, not showing again');
+        return;
       }
+      
+      // If we reach here, user has incomplete profile and hasn't seen popup
+      print('✅ DEBUG: User has incomplete profile and hasn\'t seen popup, showing it');
+      print('🔍 DEBUG: hasSeenPersonalizationPopup: ${profileData['hasSeenPersonalizationPopup']}');
+      print('🔍 DEBUG: isProfileComplete: ${profileData['isProfileComplete']}');
+      _hasShownPopupInSession = true;
+      PersonalizationPopup.show();
+      
     } catch (e) {
       print('⚠️ DEBUG: Error checking profile status: $e');
-      // On error, show popup for safety (better to show than not show for new users)
-      print('✅ DEBUG: Showing popup as fallback due to error');
-      _hasShownPopupInSession = true; // Mark as shown
+      // For new users, show popup on error as fallback
+      print('✅ DEBUG: Showing popup as fallback for potential new user');
+      _hasShownPopupInSession = true;
       PersonalizationPopup.show();
     }
   }

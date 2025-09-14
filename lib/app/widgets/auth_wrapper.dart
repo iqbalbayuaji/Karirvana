@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:karirvana/app/modules/personalization/views/personalization_view.dart';
 import '../services/firebase_auth_service.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/controllers/login_controller.dart';

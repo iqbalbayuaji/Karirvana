@@ -51,6 +51,14 @@ class HomepageView extends GetView<HomepageController> {
     Get.find<HomepageController>();
     print('🔍 DEBUG: Controller found and accessed');
     
+    // Ensure popup check runs even if onReady wasn't called
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Get.isRegistered<HomepageController>()) {
+        final controller = Get.find<HomepageController>();
+        controller.checkPersonalizationPopup();
+      }
+    });
+    
     return _buildOriginalView(context);
   }
   

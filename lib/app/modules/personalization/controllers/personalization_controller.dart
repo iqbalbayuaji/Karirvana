@@ -21,9 +21,58 @@ class PersonalizationController extends GetxController {
   final selectedImage = Rxn<File>();
   final profileImageUrl = RxnString();
   
+  // Stage navigation
+  final currentStage = 1.obs;
+  
+  // Stage 2 fields
+  final selectedPurposes = <String>[].obs;
+  final selectedReadiness = ''.obs;
+  final selectedStatus = ''.obs;
+  final selectedInterestFields = <String>[].obs;
+  
   // Loading states
   final isLoading = false.obs;
   final isUploadingImage = false.obs;
+  
+  // Options for stage 2
+  final List<String> purposeOptions = [
+    'Mencari pekerjaan',
+    'Mengembangkan skill',
+    'Networking',
+    'Belajar hal baru',
+    'Meningkatkan karir',
+    'Mencari mentor',
+    'Berbagi pengalaman',
+  ];
+  
+  final List<String> readinessOptions = [
+    'Sangat siap',
+    'Cukup siap',
+    'Perlu persiapan',
+    'Belum siap',
+  ];
+  
+  final List<String> statusOptions = [
+    'Pelajar',
+    'Mahasiswa',
+    'Pekerja',
+    'Tidak bekerja',
+  ];
+  
+  final List<String> interestFieldOptions = [
+    'Teknologi Informasi',
+    'Digital Marketing',
+    'Data Analytics',
+    'Desain Grafis',
+    'UI/UX Design',
+    'Keuangan',
+    'Sumber Daya Manusia',
+    'Penjualan',
+    'Manajemen',
+    'Pendidikan',
+    'Kesehatan',
+    'Hukum',
+  ];
   
   // Services
   final _cloudinaryService = CloudinaryService.instance;
@@ -53,6 +102,40 @@ class PersonalizationController extends GetxController {
     selectedGender.value = gender;
   }
   
+  // Stage navigation methods
+  void goToStage1() {
+    currentStage.value = 1;
+  }
+  
+  void goToStage2() {
+    currentStage.value = 2;
+  }
+  
+  // Stage 2 selection methods
+  void selectReadiness(String readiness) {
+    selectedReadiness.value = readiness;
+  }
+  
+  void selectStatus(String status) {
+    selectedStatus.value = status;
+  }
+  
+  void togglePurpose(String purpose) {
+    if (selectedPurposes.contains(purpose)) {
+      selectedPurposes.remove(purpose);
+    } else {
+      selectedPurposes.add(purpose);
+    }
+  }
+  
+  void toggleInterestField(String field) {
+    if (selectedInterestFields.contains(field)) {
+      selectedInterestFields.remove(field);
+    } else {
+      selectedInterestFields.add(field);
+    }
+  }
+  
   // Load existing user profile
   Future<void> _loadUserProfile() async {
     try {
@@ -60,12 +143,18 @@ class PersonalizationController extends GetxController {
       final profileData = await _firestoreService.getUserProfile();
       
       if (profileData != null) {
-        // Load existing profile data
+        // Load existing profile data - Stage 1
         usernameController.text = profileData['username'] ?? '';
         selectedGender.value = profileData['gender'] ?? '';
         locationController.text = profileData['location'] ?? '';
         bioController.text = profileData['bio'] ?? '';
         profileImageUrl.value = profileData['profileImageUrl'];
+        
+        // Load existing profile data - Stage 2
+        selectedPurposes.value = List<String>.from(profileData['purposes'] ?? []);
+        selectedReadiness.value = profileData['workReadiness'] ?? '';
+        selectedStatus.value = profileData['currentStatus'] ?? '';
+        selectedInterestFields.value = List<String>.from(profileData['interestFields'] ?? []);
         
         // Username is independent from name - don't auto-fill
         // User can choose their own unique username
@@ -234,7 +323,7 @@ class PersonalizationController extends GetxController {
     return true;
   }
   
-  // Save profile
+  // Save profile (Stage 1) and proceed to Stage 2
   Future<void> saveProfile() async {
     if (!_validateForm()) return;
     
@@ -258,8 +347,8 @@ class PersonalizationController extends GetxController {
         imageUrl = profileImageUrl.value;
       }
       
-      // Save to Firestore
-      final success = await _firestoreService.saveUserProfile(
+      // Save Stage 1 data to Firestore (without marking as complete)
+      final success = await _firestoreService.saveUserProfileStage1(
         username: usernameController.text.trim(),
         gender: selectedGender.value,
         location: locationController.text.trim(),
@@ -268,20 +357,8 @@ class PersonalizationController extends GetxController {
       );
       
       if (success) {
-        Get.snackbar(
-          'Berhasil',
-          'Profil berhasil disimpan',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-        
-        // Mark personalization as complete and navigate to Homepage
-        await UserPreferencesService.markPersonalizationPopupAsShown();
-        
-        // Reset popup session state so it won't show again in this session
-        HomepageController.resetPopupSession();
-        
-        Get.offAllNamed(Routes.HOMEPAGE);
+        // Proceed to Stage 2
+        goToStage2();
       } else {
         Get.snackbar(
           'Error',
@@ -300,5 +377,105 @@ class PersonalizationController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+  
+  // Complete personalization (Stage 2)
+  Future<void> completePersonalization() async {
+    if (!_validateStage2Form()) return;
+    
+    try {
+      isLoading.value = true;
+      
+      // Save complete profile data to Firestore
+      final success = await _firestoreService.saveCompleteUserProfile(
+        username: usernameController.text.trim(),
+        gender: selectedGender.value,
+        location: locationController.text.trim(),
+        bio: bioController.text.trim(),
+        profileImageUrl: profileImageUrl.value,
+        purposes: selectedPurposes.toList(),
+        workReadiness: selectedReadiness.value,
+        currentStatus: selectedStatus.value,
+        interestFields: selectedInterestFields.toList(),
+      );
+      
+      if (success) {
+        Get.snackbar(
+          'Berhasil',
+          'Personalisasi berhasil diselesaikan!',
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+        
+        // Mark personalization as complete and navigate to Homepage
+        await UserPreferencesService.markPersonalizationPopupAsShown();
+        
+        // Reset popup session state so it won't show again in this session
+        HomepageController.resetPopupSession();
+        
+        Get.offAllNamed(Routes.HOMEPAGE);
+      } else {
+        Get.snackbar(
+          'Error',
+          'Gagal menyelesaikan personalisasi',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Terjadi kesalahan: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  // Validate Stage 2 form
+  bool _validateStage2Form() {
+    if (selectedPurposes.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Pilih minimal satu tujuan bergabung',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+    
+    if (selectedReadiness.value.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Pilih tingkat kesiapan kerja',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+    
+    if (selectedStatus.value.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Pilih status saat ini',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+    
+    if (selectedInterestFields.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Pilih minimal satu bidang minat',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+    
+    return true;
   }
 }

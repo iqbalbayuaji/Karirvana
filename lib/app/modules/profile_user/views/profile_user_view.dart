@@ -48,7 +48,7 @@ class ProfileUserView extends GetView<ProfileUserController> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    // Handle logout
+                                    controller.showLogoutConfirmation();
                                   },
                                   child: Icon(
                                     Icons.logout,
@@ -178,6 +178,22 @@ class ProfileUserView extends GetView<ProfileUserController> {
                                     ],
                                   ),
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 24),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        Icons.edit,
+                                        color: AppColors.textSecondary,
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: screenWidth * 0.04,
+                                )
                               ],
                             ),
                           ),
@@ -187,77 +203,6 @@ class ProfileUserView extends GetView<ProfileUserController> {
             ),
           ),
           BottomNavbar(currentIndex: 2)
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem(
-    String title,
-    String subtitle,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(
-            CupertinoIcons.chevron_right,
-            color: AppColors.textSecondary,
-            size: 16,
-          ),
         ],
       ),
     );

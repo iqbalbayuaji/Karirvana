@@ -35,6 +35,7 @@ class FirestoreService {
         'bio': '',
         'profileImageUrl': null,
         'isProfileComplete': false,
+        'hasSeenPersonalizationPopup': false,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
@@ -47,7 +48,7 @@ class FirestoreService {
     }
   }
   
-  // Save user profile data
+  // Save user profile data (legacy method - kept for compatibility)
   Future<bool> saveUserProfile({
     required String username,
     required String gender,
@@ -78,6 +79,87 @@ class FirestoreService {
       return true;
     } catch (e) {
       print('Error saving user profile: $e');
+      return false;
+    }
+  }
+  
+  // Save user profile Stage 1 data (without marking as complete)
+  Future<bool> saveUserProfileStage1({
+    required String username,
+    required String gender,
+    required String location,
+    required String bio,
+    String? profileImageUrl,
+  }) async {
+    try {
+      if (currentUserId == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      final userData = {
+        'username': username,
+        'gender': gender,
+        'location': location,
+        'bio': bio,
+        'profileImageUrl': profileImageUrl,
+        'isProfileComplete': false, // Still incomplete until stage 2
+        'stage1Complete': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      
+      await _usersCollection.doc(currentUserId).set(
+        userData,
+        SetOptions(merge: true),
+      );
+      
+      return true;
+    } catch (e) {
+      print('Error saving user profile stage 1: $e');
+      return false;
+    }
+  }
+  
+  // Save complete user profile with Stage 2 data
+  Future<bool> saveCompleteUserProfile({
+    required String username,
+    required String gender,
+    required String location,
+    required String bio,
+    String? profileImageUrl,
+    required List<String> purposes,
+    required String workReadiness,
+    required String currentStatus,
+    required List<String> interestFields,
+  }) async {
+    try {
+      if (currentUserId == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      final userData = {
+        'username': username,
+        'gender': gender,
+        'location': location,
+        'bio': bio,
+        'profileImageUrl': profileImageUrl,
+        'purposes': purposes,
+        'workReadiness': workReadiness,
+        'currentStatus': currentStatus,
+        'interestFields': interestFields,
+        'isProfileComplete': true,
+        'stage1Complete': true,
+        'stage2Complete': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      
+      await _usersCollection.doc(currentUserId).set(
+        userData,
+        SetOptions(merge: true),
+      );
+      
+      return true;
+    } catch (e) {
+      print('Error saving complete user profile: $e');
       return false;
     }
   }
@@ -132,6 +214,25 @@ class FirestoreService {
       return doc.exists;
     } catch (e) {
       print('Error checking user profile existence: $e');
+      return false;
+    }
+  }
+  
+  // Mark personalization popup as seen
+  Future<bool> markPersonalizationPopupAsSeen() async {
+    try {
+      if (currentUserId == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      await _usersCollection.doc(currentUserId).update({
+        'hasSeenPersonalizationPopup': true,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+      
+      return true;
+    } catch (e) {
+      print('Error marking personalization popup as seen: $e');
       return false;
     }
   }
