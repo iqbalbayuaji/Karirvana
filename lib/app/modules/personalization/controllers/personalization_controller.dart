@@ -11,8 +11,11 @@ import '../../homepage/controllers/homepage_controller.dart';
 class PersonalizationController extends GetxController {
   // Form controllers
   final usernameController = TextEditingController();
-  final locationController = TextEditingController();
+  final birthDateController = TextEditingController();
   final bioController = TextEditingController();
+  
+  // Birth date selection
+  final selectedBirthDate = Rx<DateTime?>(null);
   
   // Gender selection
   final selectedGender = ''.obs;
@@ -93,13 +96,28 @@ class PersonalizationController extends GetxController {
   @override
   void onClose() {
     usernameController.dispose();
-    locationController.dispose();
+    birthDateController.dispose();
     bioController.dispose();
     super.onClose();
   }
 
   void selectGender(String gender) {
     selectedGender.value = gender;
+  }
+  
+  // Select birth date
+  Future<void> selectBirthDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedBirthDate.value ?? DateTime.now().subtract(const Duration(days: 6570)), // 18 years ago
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+    );
+    
+    if (picked != null && picked != selectedBirthDate.value) {
+      selectedBirthDate.value = picked;
+      birthDateController.text = "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year.toString().substring(2)}";
+    }
   }
   
   // Stage navigation methods
@@ -146,7 +164,7 @@ class PersonalizationController extends GetxController {
         // Load existing profile data - Stage 1
         usernameController.text = profileData['username'] ?? '';
         selectedGender.value = profileData['gender'] ?? '';
-        locationController.text = profileData['location'] ?? '';
+        birthDateController.text = profileData['birthDate'] ?? '';
         bioController.text = profileData['bio'] ?? '';
         profileImageUrl.value = profileData['profileImageUrl'];
         
@@ -310,10 +328,10 @@ class PersonalizationController extends GetxController {
       return false;
     }
     
-    if (locationController.text.trim().isEmpty) {
+    if (birthDateController.text.trim().isEmpty) {
       Get.snackbar(
         'Error',
-        'Lokasi tidak boleh kosong',
+        'Tanggal lahir tidak boleh kosong',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -351,7 +369,7 @@ class PersonalizationController extends GetxController {
       final success = await _firestoreService.saveUserProfileStage1(
         username: usernameController.text.trim(),
         gender: selectedGender.value,
-        location: locationController.text.trim(),
+        birthDate: birthDateController.text.trim(),
         bio: bioController.text.trim(),
         profileImageUrl: imageUrl,
       );
@@ -390,7 +408,7 @@ class PersonalizationController extends GetxController {
       final success = await _firestoreService.saveCompleteUserProfile(
         username: usernameController.text.trim(),
         gender: selectedGender.value,
-        location: locationController.text.trim(),
+        birthDate: birthDateController.text.trim(),
         bio: bioController.text.trim(),
         profileImageUrl: profileImageUrl.value,
         purposes: selectedPurposes.toList(),

@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app/routes/app_pages.dart';
 import 'app/services/firebase_auth_service.dart';
+import 'app/services/firestore_service.dart';
 import 'app/services/cloudinary_service.dart';
 import 'app/widgets/auth_wrapper.dart';
 import 'firebase_options.dart';
@@ -31,6 +32,9 @@ void main() async {
   
   // Register Firebase Auth Service
   Get.put(FirebaseAuthService());
+  
+  // Register Firestore Service
+  Get.put(FirestoreService.instance);
   
   // Initialize Cloudinary Service
   try {

@@ -1,22 +1,56 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../services/firebase_auth_service.dart';
+import '../../../services/firestore_service.dart';
 import '../../../routes/app_pages.dart';
 import '../../homepage/controllers/homepage_controller.dart';
 
 class ProfileUserController extends GetxController {
   final count = 0.obs;
   
-  // Firebase Auth Service
+  // Firebase Services
   final FirebaseAuthService _authService = Get.find<FirebaseAuthService>();
+  final FirestoreService _firestoreService = Get.find<FirestoreService>();
+  
+  // User data observables
+  final RxString userName = ''.obs;
+  final RxString userEmail = ''.obs;
+  final RxString profileImageUrl = ''.obs;
+  final RxBool isLoading = true.obs;
   @override
   void onInit() {
     super.onInit();
+    loadUserData();
   }
 
   @override
   void onReady() {
     super.onReady();
+  }
+  
+  // Load user data from Firebase
+  Future<void> loadUserData() async {
+    try {
+      isLoading.value = true;
+      
+      final userData = await _firestoreService.getUserProfile();
+      if (userData != null) {
+        userName.value = userData['name'] ?? '';
+        userEmail.value = userData['email'] ?? '';
+        profileImageUrl.value = userData['profileImageUrl'] ?? '';
+      }
+    } catch (e) {
+      print('Error loading user data: $e');
+      Get.snackbar(
+        'Error',
+        'Gagal memuat data profil',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   @override

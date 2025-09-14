@@ -29,9 +29,9 @@ class FirestoreService {
       final userData = {
         'name': name,
         'email': email,
-        'username': '', // Will be filled in personalization
+        'username': '',
         'gender': '',
-        'location': '',
+        'birthDate': '',
         'bio': '',
         'profileImageUrl': null,
         'isProfileComplete': false,
@@ -52,7 +52,7 @@ class FirestoreService {
   Future<bool> saveUserProfile({
     required String username,
     required String gender,
-    required String location,
+    required String birthDate,
     required String bio,
     String? profileImageUrl,
   }) async {
@@ -64,7 +64,7 @@ class FirestoreService {
       final userData = {
         'username': username,
         'gender': gender,
-        'location': location,
+        'birthDate': birthDate,
         'bio': bio,
         'profileImageUrl': profileImageUrl,
         'isProfileComplete': true,
@@ -83,11 +83,11 @@ class FirestoreService {
     }
   }
   
-  // Save user profile Stage 1 data (without marking as complete)
+  // Save user profile Stage 1 data only
   Future<bool> saveUserProfileStage1({
     required String username,
     required String gender,
-    required String location,
+    required String birthDate,
     required String bio,
     String? profileImageUrl,
   }) async {
@@ -99,7 +99,7 @@ class FirestoreService {
       final userData = {
         'username': username,
         'gender': gender,
-        'location': location,
+        'birthDate': birthDate,
         'bio': bio,
         'profileImageUrl': profileImageUrl,
         'isProfileComplete': false, // Still incomplete until stage 2
@@ -123,7 +123,7 @@ class FirestoreService {
   Future<bool> saveCompleteUserProfile({
     required String username,
     required String gender,
-    required String location,
+    required String birthDate,
     required String bio,
     String? profileImageUrl,
     required List<String> purposes,
@@ -139,7 +139,7 @@ class FirestoreService {
       final userData = {
         'username': username,
         'gender': gender,
-        'location': location,
+        'birthDate': birthDate,
         'bio': bio,
         'profileImageUrl': profileImageUrl,
         'purposes': purposes,

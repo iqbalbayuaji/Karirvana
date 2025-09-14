@@ -20,6 +20,8 @@ import '../modules/profile_user/bindings/profile_user_binding.dart';
 import '../modules/profile_user/views/profile_user_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/edit_profile/bindings/edit_profile_binding.dart';
+import '../modules/edit_profile/views/edit_profile_view.dart';
 
 part 'app_routes.dart';
 
@@ -78,6 +80,11 @@ class AppPages {
       name: _Paths.PERSONALIZATION,
       page: () => const PersonalizationView(),
       binding: PersonalizationBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PROFILE,
+      page: () => const EditProfileView(),
+      binding: EditProfileBinding(),
     ),
   ];
 }

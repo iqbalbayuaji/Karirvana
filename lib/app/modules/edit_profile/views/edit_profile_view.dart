@@ -1,27 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'dart:io';
+import 'package:karirvana/app/styles/app_colors.dart';
+import '../controllers/edit_profile_controller.dart';
 
-import '../../../styles/app_colors.dart';
-import '../controllers/personalization_controller.dart';
-import 'personalization_stage2_view.dart';
+class EditProfileView extends GetView<EditProfileController> {
+  const EditProfileView({super.key});
 
-class PersonalizationView extends GetView<PersonalizationController> {
-  const PersonalizationView({super.key});
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      // Show different stages based on currentStage
-      if (controller.currentStage.value == 2) {
-        return const PersonalizationStage2View();
-      }
-      
-      // Stage 1 (original personalization)
-      return _buildStage1View(context);
-    });
-  }
-  
-  Widget _buildStage1View(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -38,38 +25,13 @@ class PersonalizationView extends GetView<PersonalizationController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 30),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Container(
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: AppColors.outline,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    // const SizedBox(height: 20),
                     // Header section
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Row(
                         children: [
                           GestureDetector(
-                            onTap: () => Get.offNamed('/homepage'),
+                            onTap: () => Get.back(),
                             child: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -180,7 +142,7 @@ class PersonalizationView extends GetView<PersonalizationController> {
                         )),
                       ],
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 25),
                     TextFormField(
                       controller: controller.usernameController,
                       decoration: InputDecoration(
@@ -407,52 +369,47 @@ class PersonalizationView extends GetView<PersonalizationController> {
   }
 
   Widget _buildProfileImage() {
-    // Show selected image from file
-    if (controller.selectedImage.value != null) {
-      return Image.file(
-        controller.selectedImage.value!,
-        width: 90,
-        height: 90,
-        fit: BoxFit.cover,
-      );
-    }
-    
-    // Show profile image from URL
-    if (controller.profileImageUrl.value != null && 
-        controller.profileImageUrl.value!.isNotEmpty) {
-      return Image.network(
-        controller.profileImageUrl.value!,
-        width: 90,
-        height: 90,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
-                  : null,
-              color: AppColors.primary,
-              strokeWidth: 2,
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return const Icon(
-            Icons.account_circle,
-            color: AppColors.textSecondary,
-            size: 90,
-          );
-        },
-      );
-    }
-    
-    // Default icon
-    return const Icon(
-      Icons.account_circle,
-      color: AppColors.textSecondary,
-      size: 90,
-    );
+    return Obx(() {
+      if (controller.selectedImage.value != null) {
+        // Show selected image
+        return Image.file(
+          controller.selectedImage.value!,
+          width: 90,
+          height: 90,
+          fit: BoxFit.cover,
+        );
+      } else if (controller.profileImageUrl.value != null && controller.profileImageUrl.value!.isNotEmpty) {
+        // Show existing profile image from URL
+        return Image.network(
+          controller.profileImageUrl.value!,
+          width: 90,
+          height: 90,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return const Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: AppColors.primary,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(
+              Icons.person,
+              size: 45,
+              color: AppColors.textSecondary,
+            );
+          },
+        );
+      } else {
+        // Show default icon
+        return const Icon(
+          Icons.person,
+          size: 45,
+          color: AppColors.textSecondary,
+        );
+      }
+    });
   }
 }
