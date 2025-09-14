@@ -6,7 +6,7 @@ class AppColors {
   static const Color primaryContainer = Color(0xFFC7D2FE);
   static const Color secondary = Color(0xFF3B82F6); // Blue 500
   static const Color secondaryContainer = Color(0xFFBFDBFE);
-  static const Color tertiary = Color(0xFFA855F7); // Purple 500
+  static const Color tertiary = Color(0xFFA855F7);
 
   // Layout Colors
   static const Color background = Color(0xFFF7F8FC);
