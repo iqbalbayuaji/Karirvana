@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/Interview_Practice/bindings/interview_practice_binding.dart';
+import '../modules/Interview_Practice/views/interview_practice_view.dart';
 import '../modules/career_assistant/bindings/career_assistant_binding.dart';
 import '../modules/career_assistant/views/career_assistant_view.dart';
 import '../modules/certification_store_main/bindings/certification_store_main_binding.dart';
@@ -10,6 +12,8 @@ import '../modules/course_store_main/bindings/course_store_main_binding.dart';
 import '../modules/course_store_main/views/course_store_main_view.dart';
 import '../modules/course_user/bindings/course_user_binding.dart';
 import '../modules/course_user/views/course_user_view.dart';
+import '../modules/edit_profile/bindings/edit_profile_binding.dart';
+import '../modules/edit_profile/views/edit_profile_view.dart';
 import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -20,8 +24,6 @@ import '../modules/profile_user/bindings/profile_user_binding.dart';
 import '../modules/profile_user/views/profile_user_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
-import '../modules/edit_profile/bindings/edit_profile_binding.dart';
-import '../modules/edit_profile/views/edit_profile_view.dart';
 
 part 'app_routes.dart';
 
@@ -85,6 +87,11 @@ class AppPages {
       name: _Paths.EDIT_PROFILE,
       page: () => const EditProfileView(),
       binding: EditProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.INTERVIEW_PRACTICE,
+      page: () => const InterviewPracticeView(),
+      binding: InterviewPracticeBinding(),
     ),
   ];
 }

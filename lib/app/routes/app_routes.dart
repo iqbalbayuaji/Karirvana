@@ -14,6 +14,7 @@ abstract class Routes {
   static const PROFILE_USER = _Paths.PROFILE_USER;
   static const PERSONALIZATION = _Paths.PERSONALIZATION;
   static const EDIT_PROFILE = _Paths.EDIT_PROFILE;
+  static const INTERVIEW_PRACTICE = _Paths.INTERVIEW_PRACTICE;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const PROFILE_USER = '/profile-user';
   static const PERSONALIZATION = '/personalization';
   static const EDIT_PROFILE = '/edit-profile';
+  static const INTERVIEW_PRACTICE = '/interview-practice';
 }
