@@ -5,6 +5,7 @@ import '../../../styles/app_colors.dart';
 import '../../../widgets/bottom_navbar.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/profile_user_controller.dart';
+import '../local_widgets/build_grid_item.dart';
 
 class ProfileUserView extends GetView<ProfileUserController> {
   const ProfileUserView({super.key});
@@ -107,7 +108,6 @@ class ProfileUserView extends GetView<ProfileUserController> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20),
                                   GridView.builder(
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
@@ -115,11 +115,11 @@ class ProfileUserView extends GetView<ProfileUserController> {
                                       crossAxisCount: 2,
                                       crossAxisSpacing: 15,
                                       mainAxisSpacing: 15,
-                                      childAspectRatio: 1.0,
+                                      childAspectRatio: 1.4,
                                     ),
                                     itemCount: 5,
                                     itemBuilder: (context, index) {
-                                      return _buildGridItem(index);
+                                      return buildGridItem(index);
                                     },
                                   ),
                                   SizedBox(height: 120),
@@ -239,107 +239,6 @@ class ProfileUserView extends GetView<ProfileUserController> {
           ),
           BottomNavbar(currentIndex: 2)
         ],
-      ),
-    );
-  }
-
-  Widget _buildGridItem(int index) {
-    final items = [
-      {
-        'title': 'Roadmap',
-        'icon': Icons.map_outlined,
-        'color': AppColors.primary,
-        'gradient': [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-      },
-      {
-        'title': 'Jadwal',
-        'icon': Icons.schedule_outlined,
-        'color': AppColors.secondary,
-        'gradient': [Color(0xFF10B981), Color(0xFF059669)],
-      },
-      {
-        'title': 'Interview\nPractice',
-        'icon': Icons.psychology_outlined,
-        'color': Color(0xFFEF4444),
-        'gradient': [Color(0xFFEF4444), Color(0xFFDC2626)],
-      },
-      {
-        'title': 'Course',
-        'icon': Icons.school_outlined,
-        'color': Color(0xFFF59E0B),
-        'gradient': [Color(0xFFF59E0B), Color(0xFFD97706)],
-      },
-      {
-        'title': 'Certification',
-        'icon': Icons.verified_outlined,
-        'color': Color(0xFF8B5CF6),
-        'gradient': [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
-      },
-    ];
-
-    final item = items[index];
-    
-    return GestureDetector(
-      onTap: () {
-        // Handle navigation based on index
-        switch (index) {
-          case 0:
-            // Navigate to Roadmap
-            break;
-          case 1:
-            // Navigate to Jadwal
-            break;
-          case 2:
-            // Navigate to Interview Practice
-            break;
-          case 3:
-            // Navigate to Course
-            break;
-          case 4:
-            // Navigate to Certification
-            break;
-        }
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: item['gradient'] as List<Color>,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: (item['color'] as Color).withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                item['icon'] as IconData,
-                color: Colors.white,
-                size: 40,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                item['title'] as String,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

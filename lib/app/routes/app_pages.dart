@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
 
 import '../modules/Interview_Practice/bindings/interview_practice_binding.dart';
-import '../modules/Interview_Practice/views/interview_practice_view.dart';
+import '../modules/Interview_Practice/views/interview_practice_setup_view.dart';
+import '../modules/Interview_Practice_Chat/bindings/interview_practice_chat_binding.dart';
+import '../modules/Interview_Practice_Chat/views/interview_practice_chat_view.dart';
 import '../modules/career_assistant/bindings/career_assistant_binding.dart';
 import '../modules/career_assistant/views/career_assistant_view.dart';
 import '../modules/certification_store_main/bindings/certification_store_main_binding.dart';
@@ -92,6 +94,11 @@ class AppPages {
       name: _Paths.INTERVIEW_PRACTICE,
       page: () => const InterviewPracticeView(),
       binding: InterviewPracticeBinding(),
+    ),
+    GetPage(
+      name: _Paths.INTERVIEW_PRACTICE_CHAT,
+      page: () => const InterviewPracticeChatView(),
+      binding: InterviewPracticeChatBinding(),
     ),
   ];
 }
