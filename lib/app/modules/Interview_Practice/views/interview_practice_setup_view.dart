@@ -113,7 +113,7 @@ class InterviewPracticeView extends GetView<InterviewPracticeController> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    
+                    Get.toNamed(Routes.INTERVIEW_PRACTICE_CHAT);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,

@@ -18,7 +18,7 @@ class AdditionalPromptsFieldWidget extends GetView<InterviewPracticeController> 
         controller: controller.additionalPromptsController,
         maxLines: 4,
         decoration: const InputDecoration(
-          hintText: 'Add any specific requirements or context for your interview practice...',
+          hintText: 'Atur agar sesuai dengan mau kamu',
           hintStyle: TextStyle(
             fontSize: 14,
             fontFamily: 'Montserrat',
