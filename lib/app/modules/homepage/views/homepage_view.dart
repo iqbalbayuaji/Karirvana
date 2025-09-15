@@ -182,20 +182,20 @@ class HomepageView extends GetView<HomepageController> {
                                             ),
                                             IconFeatures(
                                               featureData: FeatureData(
-                                                icon: CupertinoIcons.person_2,
-                                                title: "Interview Practice",
-                                                width: 60,
+                                                icon: CupertinoIcons.chart_bar,
+                                                title: "Job Interview",
                                                 onTap: () {
-                                                  Get.toNamed('/interview-practice');
+                                                  // TODO: Navigate to progress tracking
                                                 },
                                               ),
                                             ),
                                             IconFeatures(
                                               featureData: FeatureData(
-                                                icon: CupertinoIcons.chart_bar,
-                                                title: "Progress",
+                                                icon: CupertinoIcons.person_2,
+                                                title: "Interview Practice",
+                                                width: 60,
                                                 onTap: () {
-                                                  // TODO: Navigate to progress tracking
+                                                  Get.toNamed('/interview-practice');
                                                 },
                                               ),
                                             ),

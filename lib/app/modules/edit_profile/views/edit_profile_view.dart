@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 import '../controllers/edit_profile_controller.dart';
+import '../../Interview_Practice/local_widgets/section_title_widget.dart';
 
 class EditProfileView extends GetView<EditProfileController> {
   const EditProfileView({super.key});
@@ -10,6 +11,7 @@ class EditProfileView extends GetView<EditProfileController> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
@@ -76,8 +78,9 @@ class EditProfileView extends GetView<EditProfileController> {
                     ),
                     // const SizedBox(height: 20),
                     
-                    const SizedBox(height:15),
                     // Profile Image Section
+                    const SectionTitleWidget(title: 'Foto Profil'),
+                    const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -141,10 +144,17 @@ class EditProfileView extends GetView<EditProfileController> {
                         )),
                       ],
                     ),
-                    const SizedBox(height: 25),
+                    
+                    const SizedBox(height: 30),
+                    
+                    // Username Section
+                    const SectionTitleWidget(title: 'Username'),
+                    const SizedBox(height: 12),
                     TextFormField(
                       controller: controller.usernameController,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.surface,
                         hintText: "Username",
                         hintStyle: const TextStyle(
                           fontSize: 14,
@@ -166,7 +176,12 @@ class EditProfileView extends GetView<EditProfileController> {
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    
+                    const SizedBox(height: 30),
+                    
+                    // Gender Section
+                    const SectionTitleWidget(title: 'Jenis Kelamin'),
+                    const SizedBox(height: 12),
                     Obx(() => Row(
                       children: [
                         GestureDetector(
@@ -175,8 +190,8 @@ class EditProfileView extends GetView<EditProfileController> {
                             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                             decoration: BoxDecoration(
                               color: controller.selectedGender.value == 'Laki-laki' 
-                                  ? AppColors.primary.withOpacity(0.1) 
-                                  : Colors.transparent,
+                                  ? AppColors.primary 
+                                  : AppColors.surface,
                               border: Border.all(
                                 color: controller.selectedGender.value == 'Laki-laki' 
                                     ? AppColors.primary 
@@ -192,7 +207,7 @@ class EditProfileView extends GetView<EditProfileController> {
                                   Icon(
                                     Icons.male,
                                     color: controller.selectedGender.value == 'Laki-laki' 
-                                        ? AppColors.primary 
+                                        ? AppColors.textOnPrimary 
                                         : AppColors.textSecondary,
                                   ),
                                   const SizedBox(width: 4),
@@ -202,7 +217,7 @@ class EditProfileView extends GetView<EditProfileController> {
                                       fontSize: 14,
                                       fontFamily: 'Montserrat',
                                       color: controller.selectedGender.value == 'Laki-laki' 
-                                          ? AppColors.primary 
+                                          ? AppColors.textOnPrimary 
                                           : AppColors.textPrimary,
                                       fontWeight: controller.selectedGender.value == 'Laki-laki' 
                                           ? FontWeight.w600 
@@ -221,8 +236,8 @@ class EditProfileView extends GetView<EditProfileController> {
                             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                             decoration: BoxDecoration(
                               color: controller.selectedGender.value == 'Perempuan' 
-                                  ? AppColors.primary.withOpacity(0.1) 
-                                  : Colors.transparent,
+                                  ? AppColors.primary
+                                  : AppColors.surface,
                               border: Border.all(
                                 color: controller.selectedGender.value == 'Perempuan' 
                                     ? AppColors.primary 
@@ -238,7 +253,7 @@ class EditProfileView extends GetView<EditProfileController> {
                                   Icon(
                                     Icons.female,
                                     color: controller.selectedGender.value == 'Perempuan' 
-                                        ? AppColors.primary 
+                                        ? AppColors.textOnPrimary 
                                         : AppColors.textSecondary,
                                   ),
                                   const SizedBox(width: 4),
@@ -248,7 +263,7 @@ class EditProfileView extends GetView<EditProfileController> {
                                       fontSize: 14,
                                       fontFamily: 'Montserrat',
                                       color: controller.selectedGender.value == 'Perempuan' 
-                                          ? AppColors.primary 
+                                          ? AppColors.textOnPrimary 
                                           : AppColors.textPrimary,
                                       fontWeight: controller.selectedGender.value == 'Perempuan' 
                                           ? FontWeight.w600 
@@ -265,12 +280,20 @@ class EditProfileView extends GetView<EditProfileController> {
                         )
                       ],
                     )),
-                    const SizedBox(height: 25),
+                    
+                    const SizedBox(height: 30),
+                    
+                    // Birth Date Section
+                    const SectionTitleWidget(title: 'Tanggal Lahir'),
+                    const SizedBox(height: 12),
                     TextFormField(
+                      
                       controller: controller.birthDateController,
                       readOnly: true,
                       onTap: () => controller.selectBirthDate(context),
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.surface,
                         hintText: "Tanggal Lahir (DD/MM/YY)",
                         hintStyle: const TextStyle(
                           fontSize: 14,
@@ -296,15 +319,22 @@ class EditProfileView extends GetView<EditProfileController> {
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    
+                    const SizedBox(height: 30),
+                    
+                    // Bio Section
+                    const SectionTitleWidget(title: 'Bio'),
+                    const SizedBox(height: 12),
                     TextFormField(
                       controller: controller.bioController,
                       maxLines: 3,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.surface,
                         hintText: "Bio",
                         hintStyle: const TextStyle(
                           fontSize: 14,
-                          color: AppColors.textSecondary,
+                          color: AppColors.surface,
                           fontFamily: 'Montserrat',
                         ),
                         border: OutlineInputBorder(
@@ -322,6 +352,8 @@ class EditProfileView extends GetView<EditProfileController> {
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       ),
                     ),
+                    
+                    const SizedBox(height: 32),
                   ],
                 ),
               ),

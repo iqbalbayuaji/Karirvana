@@ -184,6 +184,8 @@ class PersonalizationView extends GetView<PersonalizationController> {
                     TextFormField(
                       controller: controller.usernameController,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.surface,
                         hintText: "Username",
                         hintStyle: const TextStyle(
                           fontSize: 14,
@@ -214,8 +216,8 @@ class PersonalizationView extends GetView<PersonalizationController> {
                             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                             decoration: BoxDecoration(
                               color: controller.selectedGender.value == 'Laki-laki' 
-                                  ? AppColors.primary.withOpacity(0.1) 
-                                  : Colors.transparent,
+                                  ? AppColors.primary 
+                                  : AppColors.surface,
                               border: Border.all(
                                 color: controller.selectedGender.value == 'Laki-laki' 
                                     ? AppColors.primary 
@@ -231,7 +233,7 @@ class PersonalizationView extends GetView<PersonalizationController> {
                                   Icon(
                                     Icons.male,
                                     color: controller.selectedGender.value == 'Laki-laki' 
-                                        ? AppColors.primary 
+                                        ? AppColors.textOnPrimary 
                                         : AppColors.textSecondary,
                                   ),
                                   const SizedBox(width: 4),
@@ -241,7 +243,7 @@ class PersonalizationView extends GetView<PersonalizationController> {
                                       fontSize: 14,
                                       fontFamily: 'Montserrat',
                                       color: controller.selectedGender.value == 'Laki-laki' 
-                                          ? AppColors.primary 
+                                          ? AppColors.textOnPrimary 
                                           : AppColors.textPrimary,
                                       fontWeight: controller.selectedGender.value == 'Laki-laki' 
                                           ? FontWeight.w600 
@@ -260,8 +262,8 @@ class PersonalizationView extends GetView<PersonalizationController> {
                             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
                             decoration: BoxDecoration(
                               color: controller.selectedGender.value == 'Perempuan' 
-                                  ? AppColors.primary.withOpacity(0.1) 
-                                  : Colors.transparent,
+                                  ? AppColors.primary 
+                                  : AppColors.surface,
                               border: Border.all(
                                 color: controller.selectedGender.value == 'Perempuan' 
                                     ? AppColors.primary 
@@ -277,7 +279,7 @@ class PersonalizationView extends GetView<PersonalizationController> {
                                   Icon(
                                     Icons.female,
                                     color: controller.selectedGender.value == 'Perempuan' 
-                                        ? AppColors.primary 
+                                        ? AppColors.textOnPrimary 
                                         : AppColors.textSecondary,
                                   ),
                                   const SizedBox(width: 4),
@@ -287,7 +289,7 @@ class PersonalizationView extends GetView<PersonalizationController> {
                                       fontSize: 14,
                                       fontFamily: 'Montserrat',
                                       color: controller.selectedGender.value == 'Perempuan' 
-                                          ? AppColors.primary 
+                                          ? AppColors.textOnPrimary 
                                           : AppColors.textPrimary,
                                       fontWeight: controller.selectedGender.value == 'Perempuan' 
                                           ? FontWeight.w600 
@@ -310,6 +312,8 @@ class PersonalizationView extends GetView<PersonalizationController> {
                       readOnly: true,
                       onTap: () => controller.selectBirthDate(context),
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.surface,
                         hintText: "Tanggal Lahir (DD/MM/YY)",
                         hintStyle: const TextStyle(
                           fontSize: 14,
@@ -340,6 +344,8 @@ class PersonalizationView extends GetView<PersonalizationController> {
                       controller: controller.bioController,
                       maxLines: 3,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.surface,
                         hintText: "Bio",
                         hintStyle: const TextStyle(
                           fontSize: 14,

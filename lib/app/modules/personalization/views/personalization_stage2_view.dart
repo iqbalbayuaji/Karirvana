@@ -255,8 +255,8 @@ class PersonalizationStage2View extends GetView<PersonalizationController> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               color: isSelected 
-                  ? AppColors.primary.withOpacity(0.1) 
-                  : Colors.transparent,
+                  ? AppColors.primary 
+                  : AppColors.surface,
               border: Border.all(
                 color: isSelected 
                     ? AppColors.primary 
@@ -271,7 +271,7 @@ class PersonalizationStage2View extends GetView<PersonalizationController> {
                 fontSize: 14,
                 fontFamily: 'Montserrat',
                 color: isSelected 
-                    ? AppColors.primary 
+                    ? AppColors.textOnPrimary 
                     : AppColors.textPrimary,
                 fontWeight: isSelected 
                     ? FontWeight.w600 
