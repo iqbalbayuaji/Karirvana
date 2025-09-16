@@ -10,125 +10,148 @@ class AnimatedCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<InterviewPracticeChatController>();
     
-    return SizedBox(
-      width: 280,
-      height: 280,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Ripple effects for listening state
-          Obx(() => controller.isListening.value
-              ? AnimatedBuilder(
-                  animation: controller.rippleAnimation,
-                  builder: (context, child) {
-                    return Stack(
-                      alignment: Alignment.center,
-                      children: List.generate(3, (index) {
-                        final delay = index * 0.3;
-                        final animationValue = (controller.rippleAnimation.value - delay).clamp(0.0, 1.0);
-                        return Container(
-                          width: 280 * (0.5 + animationValue * 0.5),
-                          height: 280 * (0.5 + animationValue * 0.5),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.textOnPrimary.withOpacity(0.3 * (1 - animationValue)),
-                              width: 2,
+    return Obx(() => GestureDetector(
+      onTap: () {
+        if (controller.isListening.value) {
+          controller.stopListening();
+        } else if (!controller.isAISpeaking.value && !controller.isLoading.value) {
+          controller.startListening();
+        }
+      },
+      child: SizedBox(
+        width: 250,
+        height: 250,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Ripple effects for listening state
+            controller.isListening.value
+                ? AnimatedBuilder(
+                    animation: controller.rippleAnimation,
+                    builder: (context, child) {
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: List.generate(3, (index) {
+                          final delay = index * 0.3;
+                          final animationValue = (controller.rippleAnimation.value - delay).clamp(0.0, 1.0);
+                          return Container(
+                            width: 250 * (0.5 + animationValue * 0.5),
+                            height: 250 * (0.5 + animationValue * 0.5),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.textOnPrimary.withOpacity(0.3 * (1 - animationValue)),
+                                width: 2,
+                              ),
                             ),
-                          ),
-                        );
-                      }),
-                    );
-                  },
-                )
-              : const SizedBox()),
+                          );
+                        }),
+                      );
+                    },
+                  )
+                : const SizedBox(),
 
-          // Main pulsing circle
-          AnimatedBuilder(
-            animation: controller.pulseAnimation,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: controller.pulseAnimation.value,
-                child: Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.textOnPrimary.withOpacity(0.1),
-                    border: Border.all(
-                      color: AppColors.textOnPrimary.withOpacity(0.3),
-                      width: 2,
+            // Main pulsing circle with scale animation
+            AnimatedBuilder(
+              animation: Listenable.merge([controller.pulseAnimation, controller.scaleAnimation]),
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: controller.pulseAnimation.value * controller.scaleAnimation.value,
+                  child: Container(
+                    width: 200,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.textOnPrimary.withOpacity(0.1),
+                      border: Border.all(
+                        color: AppColors.textOnPrimary.withOpacity(0.3),
+                        width: 2,
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-
-          // Inner circle - indicates AI response only
-          Obx(() => Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: controller.isAISpeaking.value 
-                  ? Colors.blue.withOpacity(0.8)
-                  : AppColors.textOnPrimary,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
+                );
+              },
             ),
-            child: Icon(
-              controller.isAISpeaking.value ? Icons.psychology : Icons.psychology,
-              size: 48,
-              color: controller.isAISpeaking.value 
-                  ? Colors.white
-                  : AppColors.primary,
-            ),
-          )),
 
-          // Speaking indicator
-          Obx(() => controller.isAISpeaking.value
-              ? Positioned(
-                  bottom: 20,
+            // Inner circle - changes color based on state with scale animation
+            AnimatedBuilder(
+              animation: controller.scaleAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: controller.scaleAnimation.value,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    width: 120,
+                    height: 120,
                     decoration: BoxDecoration(
-                      color: AppColors.textOnPrimary.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'AI Berbicara...',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.primary,
-                          ),
+                      shape: BoxShape.circle,
+                      color: controller.isListening.value
+                          ? AppColors.primary.withOpacity(0.8)
+                          : controller.isAISpeaking.value 
+                              ? Colors.blue.withOpacity(0.8)
+                              : AppColors.textOnPrimary,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
                         ),
                       ],
                     ),
+                    child: Icon(
+                      controller.isListening.value
+                          ? Icons.mic
+                          : controller.isAISpeaking.value 
+                              ? Icons.psychology 
+                              : Icons.psychology,
+                      size: 48,
+                      color: controller.isListening.value || controller.isAISpeaking.value
+                          ? Colors.white
+                          : AppColors.primary,
+                    ),
                   ),
-                )
-              : const SizedBox()),
-        ],
+                );
+              },
+            ),
+
+            // Speaking indicator
+            controller.isAISpeaking.value
+                ? Positioned(
+                    bottom: 20,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.textOnPrimary.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'AI Berbicara...',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : const SizedBox(),
+          ],
+        ),
       ),
-    );
+    ));
   }
 }

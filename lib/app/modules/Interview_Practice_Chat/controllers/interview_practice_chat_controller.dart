@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../services/speech_service.dart';
+import '../../../services/interview_groq_service.dart';
+import '../../../services/text_to_speech_service.dart';
+import '../../Interview_Practice/controllers/interview_practice_controller.dart';
 
 class InterviewPracticeChatController extends GetxController with GetTickerProviderStateMixin {
   // Animation controllers
   late AnimationController _pulseController;
   late AnimationController _rippleController;
+  late AnimationController _scaleController;
   late Animation<double> pulseAnimation;
   late Animation<double> rippleAnimation;
+  late Animation<double> scaleAnimation;
 
   // Speech and chat state
   final isListening = false.obs;
@@ -16,16 +22,60 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
   final isInterviewActive = false.obs;
   final interviewQuestion = ''.obs;
   final responseCount = 0.obs;
+  final isLoading = false.obs;
+  final partialSpeechResult = ''.obs;
+  final isSpeechAvailable = false.obs;
+
+  // Conversation history
+  final List<Map<String, String>> conversationHistory = [];
+
+  // Interview settings
+  String _difficulty = 'Medium';
+  String _style = 'Friendly';
+  String? _additionalPrompts;
 
   // Animation getters
   AnimationController get pulseController => _pulseController;
   AnimationController get rippleController => _rippleController;
+  AnimationController get scaleController => _scaleController;
 
   @override
   void onInit() {
     super.onInit();
     _initializeAnimations();
-    _startInterview();
+    _initializeServices();
+    _loadInterviewSettings();
+    
+    // Start the interview automatically
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _startInterview();
+    });
+  }
+
+  Future<void> _initializeServices() async {
+    try {
+      print('Initializing speech recognition...');
+      final speechAvailable = await SpeechService.initialize();
+      isSpeechAvailable.value = speechAvailable;
+      print('Speech recognition available: $speechAvailable');
+    } catch (e) {
+      print('Error initializing services: $e');
+      isSpeechAvailable.value = false;
+    }
+  }
+
+  void _loadInterviewSettings() {
+    // Try to get settings from Interview Practice Setup
+    try {
+      final setupController = Get.find<InterviewPracticeController>();
+      final settings = setupController.getInterviewSettings();
+      _difficulty = settings['difficulty'] ?? 'Medium';
+      _style = settings['style'] ?? 'Friendly';
+      _additionalPrompts = settings['additionalPrompts'];
+    } catch (e) {
+      // Use default settings if setup controller not found
+      print('Using default interview settings: $e');
+    }
   }
 
   void _initializeAnimations() {
@@ -55,72 +105,141 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       curve: Curves.easeOut,
     ));
 
+    // Scale animation for listening state
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.15,
+    ).animate(CurvedAnimation(
+      parent: _scaleController,
+      curve: Curves.easeInOut,
+    ));
+
     // Start continuous pulse animation
     _pulseController.repeat(reverse: true);
   }
 
-  void _startInterview() {
+  Future<void> _startInterview() async {
     isInterviewActive.value = true;
-    currentAIResponse.value = "Halo! Saya HR Assistant. Mari kita mulai sesi interview. Perkenalkan diri Anda terlebih dahulu.";
-    _simulateAISpeaking();
+    
+    try {
+      // Get initial interview question from Groq API
+      final response = await InterviewGroqService.startInterview(
+        difficulty: _difficulty,
+        style: _style,
+        additionalPrompt: _additionalPrompts,
+      );
+      
+      currentAIResponse.value = response;
+      conversationHistory.add({
+        'role': 'assistant',
+        'content': response,
+      });
+      
+      await _speakAIResponse(response);
+    } catch (e) {
+      print('Error starting interview: $e');
+      currentAIResponse.value = "Halo! Saya HR Assistant. Mari kita mulai sesi interview. Perkenalkan diri Anda terlebih dahulu.";
+      await _speakAIResponse(currentAIResponse.value);
+    }
   }
 
-  void startListening() {
-    if (isAISpeaking.value) return;
+  Future<void> startListening() async {
+    if (isAISpeaking.value || isLoading.value) return;
     
     isListening.value = true;
+    partialSpeechResult.value = '';
     _rippleController.repeat();
+    _scaleController.forward();
     
-    // Simulate speech recognition
-    Future.delayed(const Duration(seconds: 3), () {
+    try {
+      await SpeechService.startListening(
+        onResult: (result) {
+          _processUserSpeech(result);
+        },
+        onPartialResult: (partial) {
+          partialSpeechResult.value = partial;
+        },
+      );
+    } catch (e) {
+      print('Error starting speech recognition: $e');
       stopListening();
-      _processUserResponse();
-    });
+    }
   }
 
-  void stopListening() {
+  Future<void> stopListening() async {
     isListening.value = false;
+    partialSpeechResult.value = '';
     _rippleController.stop();
     _rippleController.reset();
+    _scaleController.reverse();
+    
+    try {
+      await SpeechService.stopListening();
+    } catch (e) {
+      print('Error stopping speech recognition: $e');
+    }
   }
 
-  void _processUserResponse() {
-    // Simulate AI processing and generate new response
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _generateAIResponse();
-    });
+  Future<void> _processUserSpeech(String userInput) async {
+    if (userInput.trim().isEmpty) return;
+    
+    // Stop listening
+    await stopListening();
+    
+    isLoading.value = true;
+    
+    try {
+      // Add user message to conversation history
+      conversationHistory.add({
+        'role': 'user',
+        'content': userInput,
+      });
+      
+      // Get AI response
+      final response = await InterviewGroqService.generateResponse(
+        conversationHistory: conversationHistory,
+        difficulty: _difficulty,
+        style: _style,
+        additionalPrompt: _additionalPrompts,
+      );
+      
+      // Add AI response to conversation history
+      conversationHistory.add({
+        'role': 'assistant',
+        'content': response,
+      });
+      
+      // Update UI with animation
+      previousAIResponse.value = currentAIResponse.value;
+      currentAIResponse.value = response;
+      responseCount.value++;
+      
+      await _speakAIResponse(response);
+      
+    } catch (e) {
+      print('Error processing user speech: $e');
+      previousAIResponse.value = currentAIResponse.value;
+      currentAIResponse.value = "Maaf, saya tidak dapat memproses jawaban Anda. Silakan coba lagi.";
+      responseCount.value++;
+    } finally {
+      isLoading.value = false;
+    }
   }
 
-  void _generateAIResponse() {
-    final responses = [
-      "Terima kasih atas perkenalan Anda. Sekarang, ceritakan tentang pengalaman kerja Anda yang paling relevan dengan posisi ini.",
-      "Bagus! Apa yang memotivasi Anda untuk melamar posisi di perusahaan kami?",
-      "Menarik. Bagaimana Anda menangani situasi di bawah tekanan?",
-      "Ceritakan tentang pencapaian terbesar Anda dalam karier.",
-      "Apa rencana karier Anda dalam 5 tahun ke depan?",
-      "Terima kasih atas jawaban yang luar biasa. Interview telah selesai!"
-    ];
-    
-    // Store previous response before updating
-    previousAIResponse.value = currentAIResponse.value;
-    
-    // Generate new response
-    final randomResponse = responses[DateTime.now().millisecond % responses.length];
-    currentAIResponse.value = randomResponse;
-    
-    // Increment response count to trigger animation
-    responseCount.value++;
-    
-    _simulateAISpeaking();
-  }
-
-  void _simulateAISpeaking() {
+  Future<void> _speakAIResponse(String text) async {
     isAISpeaking.value = true;
     
-    // Simulate text-to-speech duration
-    Future.delayed(Duration(milliseconds: currentAIResponse.value.length * 50), () {
+    try {
+      await TextToSpeechService.speak(text);
+    } catch (e) {
+      print('Error speaking AI response: $e');
+    } finally {
       isAISpeaking.value = false;
-    });
+    }
   }
 
   void endInterview() {

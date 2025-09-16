@@ -53,6 +53,9 @@ dependencies:
   speech_to_text: ^7.0.0
   permission_handler: ^11.3.1
   
+  # Text to Speech dependency
+  flutter_tts: ^4.0.2
+  
   # SharedPreferences for storing user preferences
   shared_preferences: ^2.2.2
   
