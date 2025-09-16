@@ -241,9 +241,17 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       // Speak the final message
       await _speakAIResponse(cleanResponse);
       
-      // Wait a moment then end the interview
+      // Wait a moment then navigate to feedback
       await Future.delayed(const Duration(milliseconds: 2000));
-      endInterview();
+      
+      // Update states
+      isInterviewActive.value = false;
+      isListening.value = false;
+      isAISpeaking.value = false;
+      isLoading.value = false;
+      
+      // Navigate to feedback page
+      Get.offNamed('/interview-practice-feedback');
       return;
     }
     
@@ -321,9 +329,9 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       print('Error speaking end message: $e');
     }
     
-    // Navigate back to previous page after a short delay
+    // Navigate to feedback page after a short delay
     Future.delayed(const Duration(milliseconds: 1500), () {
-      Get.back();
+      Get.offNamed('/interview-practice-feedback');
     });
   }
 

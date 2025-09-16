@@ -4,7 +4,6 @@ import '../../../styles/app_colors.dart';
 import '../controllers/interview_practice_chat_controller.dart';
 import '../local_widgets/anim_circle.dart';
 import '../local_widgets/ai_respons.dart';
-import '../local_widgets/control_button.dart';
 
 class InterviewPracticeChatView extends GetView<InterviewPracticeChatController> {
   const InterviewPracticeChatView({super.key});
