@@ -112,43 +112,6 @@ class AnimatedCircle extends StatelessWidget {
                 );
               },
             ),
-
-            // Speaking indicator
-            controller.isAISpeaking.value
-                ? Positioned(
-                    bottom: 20,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.textOnPrimary.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'AI Berbicara...',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : const SizedBox(),
           ],
         ),
       ),

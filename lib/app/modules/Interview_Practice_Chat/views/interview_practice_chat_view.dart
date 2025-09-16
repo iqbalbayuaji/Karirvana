@@ -38,71 +38,71 @@ class InterviewPracticeChatView extends GetView<InterviewPracticeChatController>
                     // Animated circle area
                     const AnimatedCircle(),
                     SizedBox(
-                      height: 15,
+                      height: 17,
                     ),
-                    Obx(() => controller.isListening.value
-                    ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        // color: AppColors.primary.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.mic,
-                            size: 16,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Mendengarkan...',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    : const SizedBox(height: 33,)),
-
-                    Obx(() => controller.isAISpeaking.value
-                    ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.textOnPrimary.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'AI Berbicara...',
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    : const SizedBox(height: 40,)),
                     
+                    // Status indicator - single position for both states
+                    Obx(() {
+                      // Priority: AI Speaking > Listening > Default
+                      if (controller.isAISpeaking.value && !controller.isListening.value) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.volume_up,
+                                size: 16,
+                                color: AppColors.textOnPrimary,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'AI Berbicara...',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textOnPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (controller.isListening.value) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.mic,
+                                size: 16,
+                                color: AppColors.textOnPrimary,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Mendengarkan...',
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textOnPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return const SizedBox(height: 33);
+                      }
+                    }),
+                    SizedBox(height: 20),
                     
                     // AI Response area
                     const AIResponseArea(),

@@ -186,8 +186,11 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
   Future<void> _processUserSpeech(String userInput) async {
     if (userInput.trim().isEmpty) return;
     
-    // Stop listening
+    // Stop listening first
     await stopListening();
+    
+    // Ensure listening state is completely off before processing
+    await Future.delayed(const Duration(milliseconds: 100));
     
     isLoading.value = true;
     
@@ -244,16 +247,17 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
     
     // If multiple paragraphs, display them sequentially
     for (int i = 0; i < paragraphs.length; i++) {
+      // Update UI with current paragraph
       previousAIResponse.value = currentAIResponse.value;
       currentAIResponse.value = paragraphs[i];
       responseCount.value++;
       
-      // Speak each paragraph
+      // Wait for TTS to complete before showing next paragraph
       await _speakAIResponse(paragraphs[i]);
       
-      // Add delay between paragraphs (except for the last one)
+      // Add small delay between paragraphs for better UX (except for the last one)
       if (i < paragraphs.length - 1) {
-        await Future.delayed(const Duration(milliseconds: 1500));
+        await Future.delayed(const Duration(milliseconds: 800));
       }
     }
   }

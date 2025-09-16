@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class TextToSpeechService {
@@ -37,8 +38,28 @@ class TextToSpeechService {
         // Stop any ongoing speech
         await _flutterTts!.stop();
         
+        // Create a completer to wait for speech completion
+        final completer = Completer<void>();
+        
+        // Set completion handler
+        _flutterTts!.setCompletionHandler(() {
+          if (!completer.isCompleted) {
+            completer.complete();
+          }
+        });
+        
+        // Set error handler
+        _flutterTts!.setErrorHandler((message) {
+          if (!completer.isCompleted) {
+            completer.completeError(Exception('TTS Error: $message'));
+          }
+        });
+        
         // Speak the text
         await _flutterTts!.speak(text);
+        
+        // Wait for completion
+        await completer.future;
       }
     } catch (e) {
       print('Error speaking text: $e');
