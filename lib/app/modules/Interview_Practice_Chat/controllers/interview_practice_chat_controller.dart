@@ -229,6 +229,24 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
   }
 
   Future<void> _processAIResponse(String response) async {
+    // Check if AI wants to end the interview
+    if (response.contains('[END_INTERVIEW]')) {
+      // Remove the end interview marker and display the message
+      String cleanResponse = response.replaceAll('[END_INTERVIEW]', '').trim();
+      
+      previousAIResponse.value = currentAIResponse.value;
+      currentAIResponse.value = cleanResponse;
+      responseCount.value++;
+      
+      // Speak the final message
+      await _speakAIResponse(cleanResponse);
+      
+      // Wait a moment then end the interview
+      await Future.delayed(const Duration(milliseconds: 2000));
+      endInterview();
+      return;
+    }
+    
     // Split response by paragraphs (double line breaks or single line breaks)
     List<String> paragraphs = response
         .split(RegExp(r'\n\s*\n|\n'))
@@ -274,11 +292,39 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
     }
   }
 
-  void endInterview() {
+  Future<void> endInterview() async {
+    // Stop any ongoing speech or listening
+    if (isListening.value) {
+      await stopListening();
+    }
+    
+    if (isAISpeaking.value) {
+      await TextToSpeechService.stop();
+      isAISpeaking.value = false;
+    }
+    
+    // Update states
     isInterviewActive.value = false;
     isListening.value = false;
     isAISpeaking.value = false;
-    currentAIResponse.value = "Interview telah berakhir. Terima kasih!";
+    isLoading.value = false;
+    
+    // Show end message
+    previousAIResponse.value = currentAIResponse.value;
+    currentAIResponse.value = "Interview telah berakhir. Terima kasih atas partisipasi Anda!";
+    responseCount.value++;
+    
+    // Speak the end message
+    try {
+      await _speakAIResponse("Interview telah berakhir. Terima kasih atas partisipasi Anda!");
+    } catch (e) {
+      print('Error speaking end message: $e');
+    }
+    
+    // Navigate back to previous page after a short delay
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      Get.back();
+    });
   }
 
   @override

@@ -23,7 +23,13 @@ INSTRUKSI PENTING:
 - Fokus pada kompetensi, pengalaman, dan kesesuaian kandidat
 - Gunakan bahasa Indonesia yang formal namun ramah
 - Tidak boleh menjawab lebih dari 1 kalimat
-- Jangan terlalu panjang dalam merespons, maksimal 1 kalimat per pertanyaan''';
+- Jangan terlalu panjang dalam merespons, maksimal 1 kalimat per pertanyaan
+
+AKHIRI INTERVIEW:
+- Jika sudah menanyakan 5-7 pertanyaan yang cukup komprehensif, akhiri interview
+- Untuk mengakhiri interview, awali respons Anda dengan "[END_INTERVIEW]"
+- Contoh: "[END_INTERVIEW] Terima kasih atas waktu Anda. Berdasarkan diskusi kita, Anda menunjukkan potensi yang baik untuk posisi ini."
+- Berikan kesimpulan singkat dan profesional saat mengakhiri''';
 
     if (additionalPrompt != null && additionalPrompt.isNotEmpty) {
       basePrompt += '\n\nINSTRUKSI TAMBAHAN: $additionalPrompt';

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../../../routes/app_pages.dart';
 import '../../../styles/app_colors.dart';
+import '../../../widgets/interview_practice_popup.dart';
 import '../controllers/interview_practice_controller.dart';
 import '../local_widgets/section_title_widget.dart';
 import '../local_widgets/difficulty_selector_widget.dart';
@@ -113,7 +113,7 @@ class InterviewPracticeView extends GetView<InterviewPracticeController> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.toNamed(Routes.INTERVIEW_PRACTICE_CHAT);
+                    InterviewPracticePopup.show();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
