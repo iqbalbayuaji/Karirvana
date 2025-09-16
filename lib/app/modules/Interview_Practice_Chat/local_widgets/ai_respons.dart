@@ -14,7 +14,7 @@ class AIResponseArea extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: SingleChildScrollView(
         child: SizedBox(
-          height: 300, // Fixed height for the response area
+          height: 250, // Fixed height for the response area
           child: ClipRect(
             child: Obx(() {
               final currentCount = controller.responseCount.value;

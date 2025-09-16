@@ -33,7 +33,7 @@ class InterviewPracticeChatView extends GetView<InterviewPracticeChatController>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 80),
 
                     // Animated circle area
                     const AnimatedCircle(),
@@ -101,7 +101,7 @@ class InterviewPracticeChatView extends GetView<InterviewPracticeChatController>
                         ],
                       ),
                     )
-                    : const SizedBox(height: 33,)),
+                    : const SizedBox(height: 40,)),
                     
                     
                     // AI Response area

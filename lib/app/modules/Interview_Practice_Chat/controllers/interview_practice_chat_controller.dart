@@ -133,13 +133,12 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
         additionalPrompt: _additionalPrompts,
       );
       
-      currentAIResponse.value = response;
       conversationHistory.add({
         'role': 'assistant',
         'content': response,
       });
       
-      await _speakAIResponse(response);
+      await _processAIResponse(response);
     } catch (e) {
       print('Error starting interview: $e');
       currentAIResponse.value = "Halo! Saya HR Assistant. Mari kita mulai sesi interview. Perkenalkan diri Anda terlebih dahulu.";
@@ -213,12 +212,8 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
         'content': response,
       });
       
-      // Update UI with animation
-      previousAIResponse.value = currentAIResponse.value;
-      currentAIResponse.value = response;
-      responseCount.value++;
-      
-      await _speakAIResponse(response);
+      // Process response - split if multiple paragraphs
+      await _processAIResponse(response);
       
     } catch (e) {
       print('Error processing user speech: $e');
@@ -227,6 +222,39 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       responseCount.value++;
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> _processAIResponse(String response) async {
+    // Split response by paragraphs (double line breaks or single line breaks)
+    List<String> paragraphs = response
+        .split(RegExp(r'\n\s*\n|\n'))
+        .where((p) => p.trim().isNotEmpty)
+        .map((p) => p.trim())
+        .toList();
+    
+    // If only one paragraph, display normally
+    if (paragraphs.length <= 1) {
+      previousAIResponse.value = currentAIResponse.value;
+      currentAIResponse.value = response;
+      responseCount.value++;
+      await _speakAIResponse(response);
+      return;
+    }
+    
+    // If multiple paragraphs, display them sequentially
+    for (int i = 0; i < paragraphs.length; i++) {
+      previousAIResponse.value = currentAIResponse.value;
+      currentAIResponse.value = paragraphs[i];
+      responseCount.value++;
+      
+      // Speak each paragraph
+      await _speakAIResponse(paragraphs[i]);
+      
+      // Add delay between paragraphs (except for the last one)
+      if (i < paragraphs.length - 1) {
+        await Future.delayed(const Duration(milliseconds: 1500));
+      }
     }
   }
 
