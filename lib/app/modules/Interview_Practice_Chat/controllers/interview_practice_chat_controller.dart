@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../services/speech_service.dart';
 import '../../../services/interview_groq_service.dart';
 import '../../../services/text_to_speech_service.dart';
+import '../../../services/interview_storage_service.dart';
 import '../../Interview_Practice/controllers/interview_practice_controller.dart';
 
 class InterviewPracticeChatController extends GetxController with GetTickerProviderStateMixin {
@@ -28,6 +29,9 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
 
   // Conversation history
   final List<Map<String, String>> conversationHistory = [];
+
+  // Interview session storage
+  String? _currentSessionId;
 
   // Interview settings
   String _difficulty = 'Medium';
@@ -126,6 +130,15 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
     isInterviewActive.value = true;
     
     try {
+      // Create new interview session in Firebase
+      _currentSessionId = await InterviewStorageService.createInterviewSession(
+        settings: {
+          'difficulty': _difficulty,
+          'style': _style,
+          'additionalPrompts': _additionalPrompts,
+        },
+      );
+      
       // Get initial interview question from Groq API
       final response = await InterviewGroqService.startInterview(
         difficulty: _difficulty,
@@ -137,6 +150,14 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
         'role': 'assistant',
         'content': response,
       });
+      
+      // Save AI message to Firebase
+      if (_currentSessionId != null) {
+        await InterviewStorageService.addAIMessage(
+          sessionId: _currentSessionId!,
+          content: response,
+        );
+      }
       
       await _processAIResponse(response);
     } catch (e) {
@@ -201,6 +222,16 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
         'content': userInput,
       });
       
+      // Save user message to Firebase (from speech-to-text)
+      if (_currentSessionId != null) {
+        await InterviewStorageService.addUserMessage(
+          sessionId: _currentSessionId!,
+          content: userInput,
+          originalSpeechText: userInput, // This is the speech-to-text result
+          speechConfidence: 0.9, // You can get this from SpeechService if available
+        );
+      }
+      
       // Get AI response
       final response = await InterviewGroqService.generateResponse(
         conversationHistory: conversationHistory,
@@ -214,6 +245,14 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
         'role': 'assistant',
         'content': response,
       });
+      
+      // Save AI response to Firebase
+      if (_currentSessionId != null) {
+        await InterviewStorageService.addAIMessage(
+          sessionId: _currentSessionId!,
+          content: response,
+        );
+      }
       
       // Process response - split if multiple paragraphs
       await _processAIResponse(response);
@@ -241,8 +280,21 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       // Speak the final message
       await _speakAIResponse(cleanResponse);
       
-      // Wait a moment then navigate to feedback
+      // Wait a moment then complete interview session
       await Future.delayed(const Duration(milliseconds: 2000));
+      
+      // Complete interview session with feedback
+      if (_currentSessionId != null) {
+        final feedback = InterviewStorageService.generateSampleFeedback(
+          _currentSessionId!,
+          [], // Will be enhanced to pass actual messages
+        );
+        
+        await InterviewStorageService.completeInterviewSession(
+          sessionId: _currentSessionId!,
+          feedback: feedback,
+        );
+      }
       
       // Update states
       isInterviewActive.value = false;
@@ -316,6 +368,19 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
     isListening.value = false;
     isAISpeaking.value = false;
     isLoading.value = false;
+    
+    // Complete interview session with feedback (manual end)
+    if (_currentSessionId != null) {
+      final feedback = InterviewStorageService.generateSampleFeedback(
+        _currentSessionId!,
+        [], // Will be enhanced to pass actual messages
+      );
+      
+      await InterviewStorageService.completeInterviewSession(
+        sessionId: _currentSessionId!,
+        feedback: feedback,
+      );
+    }
     
     // Show end message
     previousAIResponse.value = currentAIResponse.value;
