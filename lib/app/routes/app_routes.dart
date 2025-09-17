@@ -17,6 +17,7 @@ abstract class Routes {
   static const INTERVIEW_PRACTICE = _Paths.INTERVIEW_PRACTICE;
   static const INTERVIEW_PRACTICE_CHAT = _Paths.INTERVIEW_PRACTICE_CHAT;
   static const INTERVIEW_PRACTICE_FEEDBACK = _Paths.INTERVIEW_PRACTICE_FEEDBACK;
+  static const INTERVIEW_PRACTICE_HISTORY = _Paths.INTERVIEW_PRACTICE_HISTORY;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const INTERVIEW_PRACTICE = '/interview-practice';
   static const INTERVIEW_PRACTICE_CHAT = '/interview-practice-chat';
   static const INTERVIEW_PRACTICE_FEEDBACK = '/interview-practice-feedback';
+  static const INTERVIEW_PRACTICE_HISTORY = '/interview-practice-history';
 }
