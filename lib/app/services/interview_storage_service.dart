@@ -108,22 +108,51 @@ class InterviewStorageService {
     }
   }
   
-  /// Complete the interview session and save feedback
+  /// Complete interview session with feedback and AI-generated title
   static Future<void> completeInterviewSession({
     required String sessionId,
     required InterviewFeedback feedback,
   }) async {
     try {
+      // Get session to extract conversation for title generation
+      final session = await getInterviewSession(sessionId);
+      String generatedTitle = 'Interview Practice';
+      
+      if (session != null && session.messages.isNotEmpty) {
+        // Generate title using Groq API
+        try {
+          print('🎯 Generating AI title for session: $sessionId');
+          
+          // Convert messages to conversation history
+          List<Map<String, String>> conversationHistory = session.messages.map((message) {
+            return {
+              'role': message.type == 'user' ? 'user' : 'assistant',
+              'content': message.content,
+            };
+          }).toList();
+          
+          generatedTitle = await InterviewGroqService.generateInterviewTitle(
+            conversationHistory: conversationHistory,
+          );
+          
+          print('✅ Generated title: $generatedTitle');
+        } catch (e) {
+          print('❌ Error generating title: $e');
+          generatedTitle = 'Interview Practice'; // Fallback title
+        }
+      }
+      
       await _firestore
           .collection(_interviewCollection)
           .doc(sessionId)
           .update({
         'status': 'completed',
         'feedback': feedback.toJson(),
-        'completedAt': DateTime.now().toIso8601String(), // ✅ Set completion timestamp
+        'completedAt': DateTime.now().toIso8601String(),
+        'title': generatedTitle, // Save AI-generated title
       });
       
-      print('✅ Interview session completed: $sessionId');
+      print('✅ Interview session completed with title: $generatedTitle');
     } catch (e) {
       print('❌ Error completing interview session: $e');
       throw Exception('Failed to complete interview session: $e');

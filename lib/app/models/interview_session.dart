@@ -7,6 +7,7 @@ class InterviewSession {
   final List<ChatMessage> messages;
   final InterviewFeedback? feedback;
   final Map<String, dynamic>? settings; // difficulty, style, etc.
+  final String? title; // AI-generated title based on conversation
 
   InterviewSession({
     required this.id,
@@ -17,6 +18,7 @@ class InterviewSession {
     required this.messages,
     this.feedback,
     this.settings,
+    this.title,
   });
 
   factory InterviewSession.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class InterviewSession {
           ? InterviewFeedback.fromJson(json['feedback']) 
           : null,
       settings: json['settings'] as Map<String, dynamic>?,
+      title: json['title'],
     );
   }
 
@@ -48,6 +51,7 @@ class InterviewSession {
       'messages': messages.map((msg) => msg.toJson()).toList(),
       'feedback': feedback?.toJson(),
       'settings': settings,
+      'title': title,
     };
   }
 
@@ -82,6 +86,7 @@ class InterviewSession {
     List<ChatMessage>? messages,
     InterviewFeedback? feedback,
     Map<String, dynamic>? settings,
+    String? title,
   }) {
     return InterviewSession(
       id: id ?? this.id,
@@ -92,6 +97,7 @@ class InterviewSession {
       messages: messages ?? this.messages,
       feedback: feedback ?? this.feedback,
       settings: settings ?? this.settings,
+      title: title ?? this.title,
     );
   }
 }

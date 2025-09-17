@@ -291,4 +291,74 @@ PENTING:
       ],
     };
   }
+
+  static Future<String> generateInterviewTitle({
+    required List<Map<String, String>> conversationHistory,
+  }) async {
+    try {
+      if (_apiKey.isEmpty) {
+        throw Exception('GROQ_API_KEY tidak ditemukan dalam file .env');
+      }
+
+      // Create system prompt specifically for title generation
+      String titleSystemPrompt = '''Anda adalah asisten AI yang bertugas membuat judul singkat untuk sesi wawancara kerja berdasarkan percakapan yang terjadi.
+
+INSTRUKSI:
+- Analisis percakapan interview yang diberikan
+- Buat judul yang singkat, jelas, dan menggambarkan posisi atau bidang yang dibahas
+- Maksimal 4-5 kata
+- Gunakan bahasa Indonesia
+- Format: "[Posisi/Bidang] Interview" atau "[Skill/Area] Interview"
+- Contoh: "Frontend Developer Interview", "Data Analyst Interview", "Marketing Manager Interview"
+- Jika tidak jelas posisinya, gunakan "General Interview" atau berdasarkan skill yang paling dominan dibahas
+
+HANYA BERIKAN JUDUL SAJA, TANPA PENJELASAN TAMBAHAN.''';
+
+      // Prepare conversation summary for title generation
+      String conversationSummary = conversationHistory
+          .where((msg) => msg['role'] != 'system')
+          .map((msg) => '${msg['role'] == 'user' ? 'KANDIDAT' : 'INTERVIEWER'}: ${msg['content']}')
+          .join('\n\n');
+
+      List<Map<String, String>> titleMessages = [
+        {'role': 'system', 'content': titleSystemPrompt},
+        {
+          'role': 'user', 
+          'content': 'Berdasarkan percakapan interview berikut, buatkan judul yang tepat:\n\n$conversationSummary'
+        },
+      ];
+
+      final response = await http.post(
+        Uri.parse(_baseUrl),
+        headers: {
+          'Authorization': 'Bearer $_apiKey',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'model': _model,
+          'messages': titleMessages,
+          'temperature': 0.3, // Lower temperature for more consistent titles
+          'max_tokens': 50, // Short response for title only
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final content = data['choices'][0]['message']['content'];
+        String title = content?.toString().trim() ?? 'Interview Practice';
+        
+        // Clean up the title (remove quotes, extra spaces, etc.)
+        title = title.replaceAll('"', '').replaceAll("'", '');
+        title = title.trim();
+        
+        return title.isNotEmpty ? title : 'Interview Practice';
+      } else {
+        print('Groq API Error for title generation: ${response.statusCode} - ${response.body}');
+        return 'Interview Practice';
+      }
+    } catch (e) {
+      print('Error generating interview title: $e');
+      return 'Interview Practice';
+    }
+  }
 }
