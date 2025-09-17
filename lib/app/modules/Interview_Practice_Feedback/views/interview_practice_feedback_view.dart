@@ -35,6 +35,15 @@ class InterviewPracticeFeedbackView
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              "Feedback Interview",
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+                color: AppColors.textPrimary,
+              ),
+            ),
             // Overall Performance Section
             _buildOverallPerformanceSection(),
             

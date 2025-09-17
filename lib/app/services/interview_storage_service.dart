@@ -14,7 +14,12 @@ class InterviewStorageService {
   }) async {
     try {
       final user = _auth.currentUser;
-      if (user == null) throw Exception('User not authenticated');
+      if (user == null) {
+        print('❌ User not authenticated. Please login first.');
+        throw Exception('User not authenticated. Please login first.');
+      }
+      
+      print('✅ User authenticated: ${user.uid}');
       
       final sessionId = _firestore.collection(_interviewCollection).doc().id;
       

@@ -4,6 +4,7 @@ import '../../../services/speech_service.dart';
 import '../../../services/interview_groq_service.dart';
 import '../../../services/text_to_speech_service.dart';
 import '../../../services/interview_storage_service.dart';
+import '../../../services/debug_interview_service.dart';
 import '../../Interview_Practice/controllers/interview_practice_controller.dart';
 
 class InterviewPracticeChatController extends GetxController with GetTickerProviderStateMixin {
@@ -151,12 +152,12 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
         'content': response,
       });
       
-      // Save AI message to Firebase
+      // Save AI message to Firebase (async, non-blocking)
       if (_currentSessionId != null) {
-        await InterviewStorageService.addAIMessage(
+        InterviewStorageService.addAIMessage(
           sessionId: _currentSessionId!,
           content: response,
-        );
+        ).catchError((e) => print('Background save error: $e'));
       }
       
       await _processAIResponse(response);
@@ -222,14 +223,14 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
         'content': userInput,
       });
       
-      // Save user message to Firebase (from speech-to-text)
+      // Save user message to Firebase (async, non-blocking)
       if (_currentSessionId != null) {
-        await InterviewStorageService.addUserMessage(
+        InterviewStorageService.addUserMessage(
           sessionId: _currentSessionId!,
           content: userInput,
           originalSpeechText: userInput, // This is the speech-to-text result
           speechConfidence: 0.9, // You can get this from SpeechService if available
-        );
+        ).catchError((e) => print('Background save error: $e'));
       }
       
       // Get AI response
@@ -246,12 +247,12 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
         'content': response,
       });
       
-      // Save AI response to Firebase
+      // Save AI response to Firebase (async, non-blocking)
       if (_currentSessionId != null) {
-        await InterviewStorageService.addAIMessage(
+        InterviewStorageService.addAIMessage(
           sessionId: _currentSessionId!,
           content: response,
-        );
+        ).catchError((e) => print('Background save error: $e'));
       }
       
       // Process response - split if multiple paragraphs
@@ -283,7 +284,7 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       // Wait a moment then complete interview session
       await Future.delayed(const Duration(milliseconds: 2000));
       
-      // Complete interview session with feedback
+      // Complete interview session with feedback (manual end)
       if (_currentSessionId != null) {
         final feedback = InterviewStorageService.generateSampleFeedback(
           _currentSessionId!,
@@ -294,6 +295,10 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
           sessionId: _currentSessionId!,
           feedback: feedback,
         );
+        
+        // Debug: Print session details
+        print('🎯 Interview completed by AI. Session ID: $_currentSessionId');
+        await DebugInterviewService.printLatestSession();
       }
       
       // Update states
