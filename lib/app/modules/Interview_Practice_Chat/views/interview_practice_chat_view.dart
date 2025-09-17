@@ -126,16 +126,8 @@ class InterviewPracticeChatView extends GetView<InterviewPracticeChatController>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              child: const Icon(
-                Icons.arrow_back,
-                color: AppColors.textOnPrimary,
-                size: 24,
-              ),
-            ),
+          SizedBox(
+            width: 30,
           ),
 
           const Text(

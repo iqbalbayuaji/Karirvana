@@ -308,7 +308,9 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       isLoading.value = false;
       
       // Navigate to feedback page
-      Get.offNamed('/interview-practice-feedback');
+      Get.offNamed('/interview-practice-feedback', arguments: {
+        'sessionId': _currentSessionId,
+      });
       return;
     }
     
@@ -401,7 +403,9 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
     
     // Navigate to feedback page after a short delay
     Future.delayed(const Duration(milliseconds: 1500), () {
-      Get.offNamed('/interview-practice-feedback');
+      Get.offNamed('/interview-practice-feedback', arguments: {
+        'sessionId': _currentSessionId,
+      });
     });
   }
 

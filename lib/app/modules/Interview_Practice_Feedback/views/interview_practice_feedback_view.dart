@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pie_chart/pie_chart.dart' as pie;
+
 import '../../../styles/app_colors.dart';
 import '../controllers/interview_practice_feedback_controller.dart';
 
@@ -12,187 +13,111 @@ class InterviewPracticeFeedbackView
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-          onPressed: () => Get.back(),
-        ),
-        title: const Text(
-          'Feedback Interview',
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontFamily: 'Montserrat',
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Feedback Interview",
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-                color: AppColors.textPrimary,
+      body: Obx(() => controller.isLoading.value
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 30, 0, 25),
+                    child: Center(
+                      child: Text(
+                        "Feedback Interview",
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Overall Performance Section
+                  _buildOverallPerformanceSection(),
+                  
+                  const SizedBox(height: 25),
+                  
+                  // Detailed Performance Section
+                  _buildDetailedPerformanceSection(),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // Improvement & Strengths Section
+                  _buildImprovementSection(),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // Action Buttons
+                  _buildActionButtons(),
+                ],
               ),
             ),
-            // Overall Performance Section
-            _buildOverallPerformanceSection(),
-            
-            const SizedBox(height: 32),
-            
-            // Detailed Performance Section
-            _buildDetailedPerformanceSection(),
-            
-            const SizedBox(height: 32),
-            
-            // Improvement & Strengths Section
-            _buildImprovementSection(),
-            
-            const SizedBox(height: 32),
-            
-            // Action Buttons
-            _buildActionButtons(),
-          ],
-        ),
       ),
     );
   }
 
   Widget _buildOverallPerformanceSection() {
-    // Sample data - will be replaced with actual data from controller
-    final Map<String, double> dataMap = {
-      "Excellent": 35,
-      "Good": 40,
-      "Needs Improvement": 25,
-    };
+    return Obx(() {
+      final dataMap = controller.performanceData;
+      final colorList = controller.getPerformanceColors();
+      final overallScore = controller.overallScore.value;
 
-    final colorList = <Color>[
-      AppColors.primary,
-      Colors.green.shade400,
-      Colors.orange.shade400,
-    ];
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Performa Keseluruhan',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Montserrat',
-              color: AppColors.textPrimary,
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 20),
+            SizedBox(
+              height: 150,
+              child: pie.PieChart(
+                dataMap: dataMap,
+                colorList: colorList,
+                initialAngleInDegree: 0,
+                chartType: pie.ChartType.ring,
+                ringStrokeWidth: 26,
+                centerText: "$overallScore%",
+                centerTextStyle: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Montserrat',
+                  color: AppColors.textPrimary,
+                ),
+                legendOptions: const pie.LegendOptions(
+                  showLegends: false,
+                ),
+                chartValuesOptions: const pie.ChartValuesOptions(
+                  showChartValueBackground: false,
+                  showChartValues: false,
+                ),
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          
-          // Pie Chart
-          SizedBox(
-            height: 200,
-            child: pie.PieChart(
-              dataMap: dataMap,
-              animationDuration: const Duration(milliseconds: 800),
-              chartLegendSpacing: 32,
-              chartRadius: MediaQuery.of(Get.context!).size.width / 3.2,
-              colorList: colorList,
-              initialAngleInDegree: 0,
-              chartType: pie.ChartType.ring,
-              ringStrokeWidth: 32,
-              centerText: "75%",
-              centerTextStyle: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            
+            SizedBox(height: 30),
+            // Overall Score
+            Text(
+              'Skor Keseluruhan: $overallScore/100',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
                 fontFamily: 'Montserrat',
                 color: AppColors.textPrimary,
               ),
-              legendOptions: const pie.LegendOptions(
-                showLegendsInRow: false,
-                legendPosition: pie.LegendPosition.right,
-                showLegends: true,
-                legendTextStyle: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontFamily: 'Montserrat',
-                  fontSize: 12,
-                ),
-              ),
-              chartValuesOptions: const pie.ChartValuesOptions(
-                showChartValueBackground: false,
-                showChartValues: false,
-                showChartValuesInPercentage: true,
-                showChartValuesOutside: false,
-              ),
             ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Overall Score
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.star,
-                  color: AppColors.primary,
-                  size: 24,
-                ),
-                const SizedBox(width: 8),
-                const Text(
-                  'Skor Keseluruhan: 75/100',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Montserrat',
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+            SizedBox(height: 15),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildDetailedPerformanceSection() {
-    // Sample performance data
-    final performanceData = [
-      {'label': 'Kelancaran Berbicara', 'score': 80, 'color': Colors.blue.shade400},
-      {'label': 'Kepercayaan Diri', 'score': 70, 'color': Colors.green.shade400},
-      {'label': 'Durasi Berbicara', 'score': 85, 'color': Colors.purple.shade400},
-      {'label': 'Power Words Usage', 'score': 60, 'color': Colors.orange.shade400},
-      {'label': 'Struktur Jawaban', 'score': 75, 'color': Colors.red.shade400},
-    ];
+    return Obx(() {
+      final detailedScores = controller.detailedScores;
 
-    return Container(
+      return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -213,26 +138,27 @@ class InterviewPracticeFeedbackView
             'Rincian Performa',
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               fontFamily: 'Montserrat',
               color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 20),
           
-          ...performanceData.map((data) => _buildPerformanceBar(
-            data['label'] as String,
-            data['score'] as int,
-            data['color'] as Color,
+          ...detailedScores.entries.map((entry) => _buildPerformanceBar(
+            entry.key,
+            entry.value,
+            controller.getScoreColor(entry.value),
           )),
         ],
       ),
     );
+    });
   }
 
   Widget _buildPerformanceBar(String label, int score, Color color) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -252,9 +178,9 @@ class InterviewPracticeFeedbackView
                 '$score%',
                 style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   fontFamily: 'Montserrat',
-                  color: color,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -283,120 +209,85 @@ class InterviewPracticeFeedbackView
   }
 
   Widget _buildImprovementSection() {
-    return Column(
-      children: [
-        // Strengths Section
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
+    return Obx(() {
+      final strengths = controller.strengths;
+      final improvements = controller.improvements;
+      
+      return Column(
+        children: [
+          // Strengths Section
+          _buildExpandableSection(
+            title: 'Yang Perlu Dipertahankan',
+            icon: Icons.thumb_up,
+            iconColor: Colors.green.shade400,
+            items: strengths.map((item) => '✓  $item').toList(),
+            itemColor: Colors.green.shade400,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.thumb_up,
-                    color: Colors.green.shade400,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Yang Perlu Dipertahankan',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Montserrat',
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              
-              _buildFeedbackItem(
-                '✓ Durasi berbicara sudah optimal dan tidak terlalu panjang',
-                Colors.green.shade400,
-              ),
-              _buildFeedbackItem(
-                '✓ Struktur jawaban cukup terorganisir dengan baik',
-                Colors.green.shade400,
-              ),
-              _buildFeedbackItem(
-                '✓ Penggunaan bahasa formal sudah tepat',
-                Colors.green.shade400,
-              ),
-            ],
+          
+          const SizedBox(height: 16),
+          
+          // Improvement Section
+          _buildExpandableSection(
+            title: 'Yang Perlu Diperbaiki',
+            icon: Icons.trending_up,
+            iconColor: Colors.orange.shade400,
+            items: improvements.map((item) => '•  $item').toList(),
+            itemColor: Colors.orange.shade400,
           ),
+        ],
+      );
+    });
+  }
+
+  Widget _buildExpandableSection({
+    required String title,
+    required IconData icon,
+    required Color iconColor,
+    required List<String> items,
+    required Color itemColor,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Theme(
+        data: ThemeData().copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+          childrenPadding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          leading: Icon(
+            icon,
+            color: iconColor,
+            size: 20,
+          ),
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Montserrat',
+              color: AppColors.textPrimary,
+            ),
+          ),
+          iconColor: AppColors.textPrimary,
+          collapsedIconColor: AppColors.textPrimary,
+          children: items.map((item) => 
+            Padding(
+              padding: const EdgeInsets.only(bottom: 3),
+              child: _buildFeedbackItem(item, itemColor),
+            )
+          ).toList(),
         ),
-        
-        const SizedBox(height: 16),
-        
-        // Improvement Section
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.trending_up,
-                    color: Colors.orange.shade400,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Yang Perlu Diperbaiki',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Montserrat',
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              
-              _buildFeedbackItem(
-                '• Tingkatkan kepercayaan diri dengan berlatih lebih sering',
-                Colors.orange.shade400,
-              ),
-              _buildFeedbackItem(
-                '• Gunakan lebih banyak power words untuk memperkuat jawaban',
-                Colors.orange.shade400,
-              ),
-              _buildFeedbackItem(
-                '• Kurangi penggunaan filler words seperti "ehm", "anu"',
-                Colors.orange.shade400,
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -421,17 +312,14 @@ class InterviewPracticeFeedbackView
         // Practice Again Button
         SizedBox(
           width: double.infinity,
-          height: 50,
           child: ElevatedButton(
             onPressed: () {
-              // Navigate back to practice setup
-              Get.back();
-              Get.back();
+              // Navigate back to interview practice
+              Get.offAllNamed('/interview-practice');
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              elevation: 0,
+              padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -442,6 +330,7 @@ class InterviewPracticeFeedbackView
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Montserrat',
+                color: AppColors.textOnPrimary,
               ),
             ),
           ),
@@ -452,14 +341,14 @@ class InterviewPracticeFeedbackView
         // Back to Home Button
         SizedBox(
           width: double.infinity,
-          height: 50,
           child: OutlinedButton(
             onPressed: () {
-              // Navigate to home
-              Get.offAllNamed('/homepage');
+              // Navigate back to home
+              Get.offAllNamed('/home');
             },
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: AppColors.outline),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              side: const BorderSide(color: AppColors.primary),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

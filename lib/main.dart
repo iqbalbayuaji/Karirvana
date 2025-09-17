@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:karirvana/app/modules/Interview_Practice/views/interview_practice_setup_view.dart';
+// import 'package:karirvana/app/modules/Interview_Practice/views/interview_practice_setup_view.dart';
 
 import 'app/routes/app_pages.dart';
 import 'app/services/firebase_auth_service.dart';
