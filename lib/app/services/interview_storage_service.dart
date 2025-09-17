@@ -219,21 +219,47 @@ class InterviewStorageService {
   static Future<List<InterviewSession>> getCompletedInterviewSessions() async {
     try {
       final user = _auth.currentUser;
-      if (user == null) throw Exception('User not authenticated');
+      if (user == null) {
+        print('❌ User not authenticated');
+        throw Exception('User not authenticated');
+      }
       
+      print('🔍 Fetching completed sessions for user: ${user.uid}');
+      
+      // First, try to get all completed sessions without orderBy to avoid index issues
       final querySnapshot = await _firestore
           .collection(_interviewCollection)
           .where('userId', isEqualTo: user.uid)
           .where('status', isEqualTo: 'completed')
-          .orderBy('completedAt', descending: true)
           .get();
       
-      return querySnapshot.docs
-          .map((doc) => InterviewSession.fromJson(doc.data()))
-          .toList();
+      print('📊 Found ${querySnapshot.docs.length} completed sessions');
+      
+      // Convert to InterviewSession objects and filter out invalid ones
+      List<InterviewSession> sessions = [];
+      
+      for (var doc in querySnapshot.docs) {
+        try {
+          final session = InterviewSession.fromJson(doc.data());
+          sessions.add(session);
+          print('✅ Loaded session: ${session.id} - ${session.title ?? "No title"}');
+        } catch (e) {
+          print('⚠️ Skipping invalid session ${doc.id}: $e');
+        }
+      }
+      
+      // Sort manually by createdAt (descending)
+      sessions.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      
+      print('✅ Successfully loaded ${sessions.length} valid sessions');
+      return sessions;
+      
     } catch (e) {
       print('❌ Error getting completed interview sessions: $e');
-      throw Exception('Failed to get completed interview sessions: $e');
+      print('❌ Error details: ${e.toString()}');
+      
+      // Return empty list instead of throwing exception to prevent UI crash
+      return [];
     }
   }
   

@@ -43,58 +43,22 @@ class InterviewPracticeHistoryView
                   ],
                 ),
                 SizedBox(height: 25),
-                Column(
-                  children: [
-                    // Session Card 1
-                    _buildSessionCard(
-                      sessionTitle: "Frontend Developer Interview",
-                      date: "15 September 2024",
-                      duration: "25 menit",
-                      score: "85",
-                      status: "Selesai",
-                      onOpen: () {
-                        // Navigate to session details
-                        print("Open session 1");
-                      },
-                      onDelete: () {
-                        // Delete session
-                        print("Delete session 1");
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    
-                    // Session Card 2
-                    _buildSessionCard(
-                      sessionTitle: "Backend Developer Interview",
-                      date: "12 September 2024",
-                      duration: "30 menit",
-                      score: "78",
-                      status: "Selesai",
-                      onOpen: () {
-                        print("Open session 2");
-                      },
-                      onDelete: () {
-                        print("Delete session 2");
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    
-                    // Session Card 3
-                    _buildSessionCard(
-                      sessionTitle: "UI/UX Designer Interview",
-                      date: "10 September 2024",
-                      duration: "20 menit",
-                      score: "92",
-                      status: "Selesai",
-                      onOpen: () {
-                        print("Open session 3");
-                      },
-                      onDelete: () {
-                        print("Delete session 3");
-                      },
-                    ),
-                  ],
-                )
+                // ✅ Dynamic content based on controller state
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return _buildLoadingState();
+                  }
+                  
+                  if (controller.hasError.value) {
+                    return _buildErrorState();
+                  }
+                  
+                  if (!controller.hasSessions) {
+                    return _buildEmptyState();
+                  }
+                  
+                  return _buildSessionsList();
+                })
             ],
           ),
         ),
@@ -239,6 +203,256 @@ class InterviewPracticeHistoryView
           ),
         ],
       ),
+    );
+  }
+
+  /// Build loading state widget
+  Widget _buildLoadingState() {
+    return Container(
+      height: 300,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: AppColors.primary,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Memuat riwayat interview...',
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build error state widget
+  Widget _buildErrorState() {
+    return Container(
+      height: 500,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: Colors.red.withOpacity(0.6),
+            ),
+            SizedBox(height: 16),
+            Text(
+              controller.errorMessage.value,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => controller.refreshHistory(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(
+                'Coba Lagi',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build empty state widget (no data, but no error)
+  Widget _buildEmptyState() {
+    return Container(
+      height: 500,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.history,
+              size: 64,
+              color: AppColors.textSecondary.withOpacity(0.5),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Belum ada riwayat interview.\nMulai interview practice untuk melihat riwayat di sini.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 14,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Build sessions list widget
+  Widget _buildSessionsList() {
+    return Column(
+      children: controller.interviewSessions.map((session) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: _buildSessionCard(
+            sessionTitle: controller.getSessionTitle(session),
+            date: controller.formatDate(session.createdAt),
+            duration: session.formattedDuration,
+            score: controller.getSessionScore(session),
+            status: "Selesai",
+            onOpen: () => controller.openFeedbackPage(session.id),
+            onDelete: () => _showDeleteConfirmation(session.id),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  /// Show delete confirmation dialog
+  void _showDeleteConfirmation(String sessionId) {
+    final screenWidth = MediaQuery.of(Get.context!).size.width;
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Hapus Riwayat Interview?',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                            color: AppColors.textPrimary,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SizedBox(
+                        width: screenWidth * 0.2,
+                      )
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+                  // Description text
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Riwayat interview yang dihapus tidak dapat dikembalikan. Apakah Anda yakin ingin melanjutkan?',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.textSecondary,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SizedBox(
+                        width: screenWidth * 0.05,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 30),
+              
+              // Buttons
+              Column(
+                children: [
+                  // Delete Button (Red)
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                        controller.deleteInterviewSession(sessionId);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Hapus Riwayat',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+                  // Cancel Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.outline),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Batal',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: true,
     );
   }
 
