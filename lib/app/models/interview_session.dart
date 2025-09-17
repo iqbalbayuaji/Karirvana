@@ -51,6 +51,28 @@ class InterviewSession {
     };
   }
 
+  // ✅ Presisi duration calculation (round to nearest minute)
+  int get durationMinutes {
+    if (completedAt == null) return 0;
+    final totalSeconds = completedAt!.difference(createdAt).inSeconds;
+    return (totalSeconds / 60).round(); // Round ke menit terdekat
+  }
+  
+  // ✅ Clean format tanpa detik
+  String get formattedDuration {
+    final minutes = durationMinutes;
+    
+    if (minutes == 0) return '0 menit';
+    if (minutes < 60) return '$minutes menit';
+    
+    final hours = minutes ~/ 60;
+    final remainingMinutes = minutes % 60;
+    
+    return remainingMinutes == 0 
+        ? '$hours jam' 
+        : '$hours jam $remainingMinutes menit';
+  }
+
   InterviewSession copyWith({
     String? id,
     String? userId,

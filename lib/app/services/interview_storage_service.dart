@@ -119,8 +119,8 @@ class InterviewStorageService {
           .doc(sessionId)
           .update({
         'status': 'completed',
-        'completedAt': DateTime.now().toIso8601String(),
         'feedback': feedback.toJson(),
+        'completedAt': DateTime.now().toIso8601String(), // ✅ Set completion timestamp
       });
       
       print('✅ Interview session completed: $sessionId');
