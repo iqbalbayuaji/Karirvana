@@ -344,7 +344,7 @@ class InterviewPracticeFeedbackView
           child: OutlinedButton(
             onPressed: () {
               // Navigate back to home
-              Get.offAllNamed('/home');
+              Get.offAllNamed('/homepage');
             },
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),

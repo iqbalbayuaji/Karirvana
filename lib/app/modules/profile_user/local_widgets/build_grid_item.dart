@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
 import '../../../styles/app_colors.dart';
 
 Widget buildGridItem(int index) {
@@ -42,7 +44,10 @@ Widget buildGridItem(int index) {
             // Navigate to Jadwal
             break;
           case 2:
-            // Navigate to Interview Practice
+            // Navigate to Interview Practice History
+            if (Get.context != null) {
+              Get.toNamed(Routes.INTERVIEW_PRACTICE_HISTORY);
+            }
             break;
           case 3:
             // Navigate to Course
