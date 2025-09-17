@@ -122,6 +122,8 @@ class InterviewFeedback {
   final List<String> improvements;
   final Map<String, double> performanceBreakdown; // For pie chart
   final DateTime generatedAt;
+  final String? detailedAnalysis; // AI-generated detailed analysis
+  final List<String>? recommendedActions; // AI-generated action items
 
   InterviewFeedback({
     required this.id,
@@ -131,6 +133,8 @@ class InterviewFeedback {
     required this.improvements,
     required this.performanceBreakdown,
     required this.generatedAt,
+    this.detailedAnalysis,
+    this.recommendedActions,
   });
 
   factory InterviewFeedback.fromJson(Map<String, dynamic> json) {
@@ -142,6 +146,10 @@ class InterviewFeedback {
       improvements: List<String>.from(json['improvements'] ?? []),
       performanceBreakdown: Map<String, double>.from(json['performanceBreakdown'] ?? {}),
       generatedAt: DateTime.parse(json['generatedAt']),
+      detailedAnalysis: json['detailedAnalysis'],
+      recommendedActions: json['recommendedActions'] != null 
+          ? List<String>.from(json['recommendedActions']) 
+          : null,
     );
   }
 
@@ -154,6 +162,8 @@ class InterviewFeedback {
       'improvements': improvements,
       'performanceBreakdown': performanceBreakdown,
       'generatedAt': generatedAt.toIso8601String(),
+      'detailedAnalysis': detailedAnalysis,
+      'recommendedActions': recommendedActions,
     };
   }
 }

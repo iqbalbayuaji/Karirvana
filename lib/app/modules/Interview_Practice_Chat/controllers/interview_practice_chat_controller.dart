@@ -284,20 +284,32 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       // Wait a moment then complete interview session
       await Future.delayed(const Duration(milliseconds: 2000));
       
-      // Complete interview session with feedback (manual end)
+      // Complete interview session with AI-generated feedback
       if (_currentSessionId != null) {
-        final feedback = InterviewStorageService.generateSampleFeedback(
-          _currentSessionId!,
-          [], // Will be enhanced to pass actual messages
-        );
+        // Get session data to extract messages
+        final session = await InterviewStorageService.getInterviewSession(_currentSessionId!);
         
-        await InterviewStorageService.completeInterviewSession(
-          sessionId: _currentSessionId!,
-          feedback: feedback,
-        );
+        if (session != null) {
+          // Generate AI feedback based on conversation
+          final feedback = await InterviewStorageService.generateAIFeedback(
+            sessionId: _currentSessionId!,
+            messages: session.messages,
+            difficulty: _difficulty,
+            style: _style,
+            additionalPrompt: _additionalPrompts,
+          );
+          
+          await InterviewStorageService.completeInterviewSession(
+            sessionId: _currentSessionId!,
+            feedback: feedback,
+          );
+          
+          print('🎯 Interview completed by AI with AI-generated feedback. Session ID: $_currentSessionId');
+        } else {
+          print('❌ Could not retrieve session data for feedback generation');
+        }
         
         // Debug: Print session details
-        print('🎯 Interview completed by AI. Session ID: $_currentSessionId');
         await DebugInterviewService.printLatestSession();
       }
       
@@ -376,17 +388,30 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
     isAISpeaking.value = false;
     isLoading.value = false;
     
-    // Complete interview session with feedback (manual end)
+    // Complete interview session with AI-generated feedback (manual end)
     if (_currentSessionId != null) {
-      final feedback = InterviewStorageService.generateSampleFeedback(
-        _currentSessionId!,
-        [], // Will be enhanced to pass actual messages
-      );
+      // Get session data to extract messages
+      final session = await InterviewStorageService.getInterviewSession(_currentSessionId!);
       
-      await InterviewStorageService.completeInterviewSession(
-        sessionId: _currentSessionId!,
-        feedback: feedback,
-      );
+      if (session != null) {
+        // Generate AI feedback based on conversation
+        final feedback = await InterviewStorageService.generateAIFeedback(
+          sessionId: _currentSessionId!,
+          messages: session.messages,
+          difficulty: _difficulty,
+          style: _style,
+          additionalPrompt: _additionalPrompts,
+        );
+        
+        await InterviewStorageService.completeInterviewSession(
+          sessionId: _currentSessionId!,
+          feedback: feedback,
+        );
+        
+        print('🎯 Interview completed manually with AI-generated feedback. Session ID: $_currentSessionId');
+      } else {
+        print('❌ Could not retrieve session data for feedback generation');
+      }
     }
     
     // Show end message

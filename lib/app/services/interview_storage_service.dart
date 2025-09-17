@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/interview_session.dart';
+import 'interview_groq_service.dart';
 
 class InterviewStorageService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -222,9 +223,78 @@ class InterviewStorageService {
     }
   }
   
-  /// Generate sample feedback (will be replaced with AI-generated feedback later)
+  /// Generate AI-powered feedback using Groq API
+  static Future<InterviewFeedback> generateAIFeedback({
+    required String sessionId,
+    required List<ChatMessage> messages,
+    required String difficulty,
+    required String style,
+    String? additionalPrompt,
+  }) async {
+    try {
+      print('🤖 Generating AI feedback for session: $sessionId');
+      
+      // Convert ChatMessage to conversation history format
+      List<Map<String, String>> conversationHistory = messages.map((message) {
+        return {
+          'role': message.type == 'user' ? 'user' : 'assistant',
+          'content': message.content,
+        };
+      }).toList();
+      
+      // Generate feedback using Groq API
+      final aiFeeback = await InterviewGroqService.generateInterviewFeedback(
+        conversationHistory: conversationHistory,
+        difficulty: difficulty,
+        style: style,
+        additionalPrompt: additionalPrompt,
+      );
+      
+      final feedbackId = _firestore.collection(_interviewCollection).doc().id;
+      
+      print('✅ AI feedback generated successfully');
+      
+      return InterviewFeedback(
+        id: feedbackId,
+        overallScore: aiFeeback['overallScore'] ?? 75,
+        detailedScores: Map<String, int>.from(aiFeeback['detailedScores'] ?? {
+          'fluency': 75,
+          'confidence': 75,
+          'structure': 75,
+          'content': 75,
+          'communication': 75,
+        }),
+        strengths: List<String>.from(aiFeeback['strengths'] ?? [
+          'Menunjukkan antusiasme dalam menjawab pertanyaan',
+          'Mampu memberikan contoh yang relevan',
+          'Komunikasi cukup jelas dan terstruktur'
+        ]),
+        improvements: List<String>.from(aiFeeback['improvements'] ?? [
+          'Tingkatkan kepercayaan diri saat berbicara',
+          'Berikan detail lebih spesifik dalam jawaban',
+          'Latih struktur jawaban yang lebih sistematis'
+        ]),
+        performanceBreakdown: Map<String, double>.from(aiFeeback['performanceBreakdown'] ?? {
+          'Excellent': 30.0,
+          'Good': 45.0,
+          'Needs Improvement': 25.0,
+        }),
+        generatedAt: DateTime.now(),
+        // Add new AI-specific fields
+        detailedAnalysis: aiFeeback['detailedAnalysis'],
+        recommendedActions: List<String>.from(aiFeeback['recommendedActions'] ?? []),
+      );
+      
+    } catch (e) {
+      print('❌ Error generating AI feedback: $e');
+      // Fallback to basic feedback if AI generation fails
+      return generateSampleFeedback(sessionId, messages);
+    }
+  }
+
+  /// Generate sample feedback (fallback when AI fails)
   static InterviewFeedback generateSampleFeedback(String sessionId, List<ChatMessage> messages) {
-    // Sample feedback generation - this will be enhanced with AI analysis later
+    // Fallback feedback generation when AI is not available
     final feedbackId = _firestore.collection(_interviewCollection).doc().id;
     
     return InterviewFeedback(
@@ -233,9 +303,9 @@ class InterviewStorageService {
       detailedScores: {
         'fluency': 80,
         'confidence': 70,
-        'duration': 85,
-        'powerWords': 60,
         'structure': 75,
+        'content': 75,
+        'communication': 75,
       },
       strengths: [
         'Durasi berbicara sudah optimal dan tidak terlalu panjang',
@@ -245,7 +315,7 @@ class InterviewStorageService {
       improvements: [
         'Tingkatkan kepercayaan diri dengan berlatih lebih sering',
         'Gunakan lebih banyak power words untuk memperkuat jawaban',
-        'Kurangi penggunaan filler words seperti "ehm", "anu"',
+        'Latih struktur jawaban yang lebih sistematis'
       ],
       performanceBreakdown: {
         'Excellent': 35.0,

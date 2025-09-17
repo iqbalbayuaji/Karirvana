@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../services/interview_storage_service.dart';
 
 class InterviewPracticeFeedbackController extends GetxController {
   // Reactive variables for feedback data
@@ -11,6 +12,8 @@ class InterviewPracticeFeedbackController extends GetxController {
   final strengths = <String>[].obs;
   final improvements = <String>[].obs;
   final feedbackText = ''.obs;
+  final detailedAnalysis = ''.obs;
+  final recommendedActions = <String>[].obs;
 
   @override
   void onInit() {
@@ -28,14 +31,75 @@ class InterviewPracticeFeedbackController extends GetxController {
     try {
       isLoading.value = true;
       
-      // For now, use sample data until Firebase integration is complete
-      _loadSampleData();
+      // Try to load real data from Firebase
+      final session = await InterviewStorageService.getInterviewSession(sessionId.value);
+      
+      if (session != null && session.feedback != null) {
+        // Load real feedback data
+        _loadRealFeedbackData(session.feedback!);
+        print('✅ Loaded real feedback data for session: ${sessionId.value}');
+      } else {
+        // Fallback to sample data if no real data available
+        print('📝 No feedback found for session ${sessionId.value}, using sample data');
+        _loadSampleData();
+      }
     } catch (e) {
-      print('Error loading feedback data: $e');
+      print('❌ Error loading feedback data: $e');
       _loadSampleData();
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// Load real feedback data from Firebase
+  void _loadRealFeedbackData(dynamic feedback) {
+    // Handle both InterviewFeedback object and Map
+    Map<String, dynamic> feedbackData;
+    
+    if (feedback is Map<String, dynamic>) {
+      feedbackData = feedback;
+    } else {
+      // Assume it's InterviewFeedback object with toJson method
+      feedbackData = feedback.toJson();
+    }
+    
+    overallScore.value = feedbackData['overallScore'] ?? 75;
+    
+    // Convert detailed scores to performance breakdown
+    final breakdown = feedbackData['performanceBreakdown'] as Map<String, dynamic>?;
+    if (breakdown != null) {
+      performanceData.value = Map<String, double>.from(breakdown);
+    } else {
+      performanceData.value = {
+        'Good': 60.0,
+        'Needs Improvement': 40.0,
+      };
+    }
+    
+    detailedScores.value = Map<String, int>.from(feedbackData['detailedScores'] ?? {
+      'Komunikasi': 75,
+      'Kepercayaan Diri': 70,
+      'Struktur Jawaban': 75,
+      'Relevansi': 80,
+    });
+    
+    strengths.value = List<String>.from(feedbackData['strengths'] ?? [
+      'Menunjukkan antusiasme dalam menjawab pertanyaan',
+      'Mampu memberikan contoh yang relevan',
+    ]);
+    
+    improvements.value = List<String>.from(feedbackData['improvements'] ?? [
+      'Tingkatkan kepercayaan diri saat berbicara',
+      'Berikan detail lebih spesifik dalam jawaban',
+    ]);
+    
+    // Load AI-specific fields
+    detailedAnalysis.value = feedbackData['detailedAnalysis'] ?? '';
+    recommendedActions.value = List<String>.from(feedbackData['recommendedActions'] ?? []);
+    
+    feedbackText.value = detailedAnalysis.value.isNotEmpty 
+        ? detailedAnalysis.value 
+        : 'Feedback berhasil dimuat dari AI analysis.';
   }
 
   /// Load sample data for testing
@@ -67,6 +131,14 @@ class InterviewPracticeFeedbackController extends GetxController {
     ];
     
     feedbackText.value = 'Secara keseluruhan, performa interview Anda cukup baik dengan beberapa area yang perlu diperbaiki.';
+    
+    detailedAnalysis.value = 'Kandidat menunjukkan kemampuan komunikasi yang baik dengan struktur jawaban yang terorganisir. Namun, masih perlu meningkatkan kepercayaan diri dan mengurangi penggunaan filler words untuk mencapai performa yang optimal.';
+    
+    recommendedActions.value = [
+      'Latih presentasi diri di depan cermin untuk meningkatkan kepercayaan diri',
+      'Pelajari teknik STAR (Situation, Task, Action, Result) untuk menjawab pertanyaan behavioral',
+      'Berlatih berbicara tanpa filler words dengan merekam diri sendiri',
+    ];
   }
 
   /// Get color for performance category
