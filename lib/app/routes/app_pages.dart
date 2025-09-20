@@ -20,6 +20,8 @@ import '../modules/course_store_main/bindings/course_store_main_binding.dart';
 import '../modules/course_store_main/views/course_store_main_view.dart';
 import '../modules/course_user/bindings/course_user_binding.dart';
 import '../modules/course_user/views/course_user_view.dart';
+import '../modules/cv_assistant/bindings/cv_assistant_binding.dart';
+import '../modules/cv_assistant/views/cv_assistant_view.dart';
 import '../modules/edit_profile/bindings/edit_profile_binding.dart';
 import '../modules/edit_profile/views/edit_profile_view.dart';
 import '../modules/homepage/bindings/homepage_binding.dart';
@@ -120,6 +122,11 @@ class AppPages {
       name: _Paths.INTERVIEW_PRACTICE_HISTORY_CHAT,
       page: () => const InterviewPracticeHistoryChatView(),
       binding: InterviewPracticeHistoryChatBinding(),
+    ),
+    GetPage(
+      name: _Paths.CV_ASSISTANT,
+      page: () => const CvAssistantView(),
+      binding: CvAssistantBinding(),
     ),
   ];
 }

@@ -325,68 +325,6 @@ class InterviewPracticeFeedbackHistoryView
     );
   }
 
-  Widget _buildActionButtons() {
-    return Column(
-      children: [
-        // Practice Again Button
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              // Navigate back to interview practice
-              Get.offAllNamed('/interview-practice');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text(
-              'Latihan Lagi',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Montserrat',
-                color: AppColors.textOnPrimary,
-              ),
-            ),
-          ),
-        ),
-        
-        const SizedBox(height: 12),
-        
-        // Back to Home Button
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton(
-            onPressed: () {
-              // Navigate back to home
-              Get.offAllNamed('/homepage');
-            },
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              side: const BorderSide(color: AppColors.primary),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text(
-              'Kembali ke Beranda',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Montserrat',
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildAIInsightsSection() {
     return Obx(() {
       final detailedAnalysis = controller.detailedAnalysis.value;
