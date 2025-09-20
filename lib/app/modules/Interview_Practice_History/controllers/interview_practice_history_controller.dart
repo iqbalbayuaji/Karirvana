@@ -109,6 +109,17 @@ class InterviewPracticeHistoryController extends GetxController {
     });
   }
 
+  /// Navigate to chat history page
+  void openChatHistory(String sessionId) {
+    final session = interviewSessions.firstWhere((s) => s.id == sessionId);
+    
+    Get.toNamed('/interview-practice-history-chat', arguments: {
+      'sessionId': sessionId,
+      'sessionTitle': getSessionTitle(session),
+      'sessionDate': formatDate(session.createdAt),
+    });
+  }
+
   /// Check if there are any sessions
   bool get hasSessions => interviewSessions.isNotEmpty;
 }

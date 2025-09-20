@@ -73,6 +73,7 @@ class InterviewPracticeHistoryView
     required String score,
     required String status,
     required VoidCallback onOpen,
+    required VoidCallback onViewChat,
     required VoidCallback onDelete,
   }) {
     return Container(
@@ -163,7 +164,7 @@ class InterviewPracticeHistoryView
           
           // Score and status
           Padding(
-            padding: const EdgeInsets.only(bottom: 2),
+            padding: const EdgeInsets.only(bottom: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -200,6 +201,83 @@ class InterviewPracticeHistoryView
                 ),
               ],
             ),
+          ),
+          
+          // Action buttons
+          Row(
+            children: [
+              // View Chat button
+              Expanded(
+                child: GestureDetector(
+                  onTap: onViewChat,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: AppColors.primary.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.chat_bubble_outline,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Lihat Chat',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // View Feedback button
+              Expanded(
+                child: GestureDetector(
+                  onTap: onOpen,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.assessment_outlined,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Lihat Feedback',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -319,6 +397,7 @@ class InterviewPracticeHistoryView
             score: controller.getSessionScore(session),
             status: "Selesai",
             onOpen: () => controller.openFeedbackPage(session.id),
+            onViewChat: () => controller.openChatHistory(session.id),
             onDelete: () => _showDeleteConfirmation(session.id),
           ),
         );
