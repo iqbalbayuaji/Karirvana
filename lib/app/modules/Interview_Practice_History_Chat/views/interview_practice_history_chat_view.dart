@@ -25,6 +25,7 @@ class InterviewPracticeHistoryChatView
           padding: const EdgeInsets.symmetric(vertical: 45),
           child: Column(
             children: [
+              const SizedBox(height: 10),
               _buildHeader(context),
               const SizedBox(height: 20),
               _buildChatView(context, screenHeight),
@@ -37,35 +38,42 @@ class InterviewPracticeHistoryChatView
   }
 
   Widget _buildHeader(BuildContext context) {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () => Get.back(),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Get.back(),
             child: const Icon(
               Icons.arrow_back,
               color: AppColors.textOnPrimary,
               size: 24,
             ),
           ),
-        ),
-        Expanded(
-          child: Obx(() => Text(
-            controller.sessionTitle.value.isNotEmpty 
-              ? controller.sessionTitle.value 
-              : "Interview History",
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: "Montserrat",
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
+          Expanded(
+            child: Obx(() => Text(
+              controller.sessionTitle.value.isNotEmpty 
+                ? controller.sessionTitle.value 
+                : "Interview History",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: "Montserrat",
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: AppColors.textOnPrimary,
+              ),
+            )),
+          ),
+          GestureDetector(
+            onTap: () => controller.openFeedbackPage(),
+            child: const Icon(
+              Icons.insert_chart_outlined_outlined,
               color: AppColors.textOnPrimary,
+              size: 30,
             ),
-          )),
-        ),
-        const SizedBox(width: 65),
-      ],
+          ),
+        ],
+      ),
     );
   }
 

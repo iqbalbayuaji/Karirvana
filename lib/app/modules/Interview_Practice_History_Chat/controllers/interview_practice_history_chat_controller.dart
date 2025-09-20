@@ -117,4 +117,13 @@ class InterviewPracticeHistoryChatController extends GetxController {
       );
     }
   }
+
+  /// Navigate to feedback page for current session
+  void openFeedbackPage() {
+    if (sessionId.value.isNotEmpty) {
+      Get.toNamed('/interview-practice-feedback', arguments: {
+        'sessionId': sessionId.value,
+      });
+    }
+  }
 }

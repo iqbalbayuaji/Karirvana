@@ -76,210 +76,213 @@ class InterviewPracticeHistoryView
     required VoidCallback onViewChat,
     required VoidCallback onDelete,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with title and actions
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  sessionTitle,
-                  style: const TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              // Delete button
-              GestureDetector(
-                onTap: onDelete,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.delete_outline,
-                    color: Colors.red,
-                    size: 20,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          
-          // Session details
-          Container(
-            width: 190,
-            child: Row(
+    return GestureDetector(
+      onTap: onViewChat,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with title and actions
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Date
-                Text(
-                  date,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
+                Expanded(
+                  child: Text(
+                    sessionTitle,
+                    style: const TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                 ),
-                Icon(
-                  Icons.circle,
-                  size: 3,
-                  color: AppColors.textSecondary,
-                ),
-                // Duration
-                Text(
-                  duration,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
+                const SizedBox(width: 8),
+                // Delete button
+                GestureDetector(
+                  onTap: onDelete,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.red,
+                      size: 20,
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 20),
-          
-          // Score and status
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Score
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.star_outlined,
-                      size: 16,
-                      color: _getScoreColor(int.parse(score)),
+            
+            // Session details
+            Container(
+              width: 190,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Date
+                  Text(
+                    date,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$score/100',
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                  ),
+                  Icon(
+                    Icons.circle,
+                    size: 3,
+                    color: AppColors.textSecondary,
+                  ),
+                  // Duration
+                  Text(
+                    duration,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            
+            // Score and status
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Score
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.star_outlined,
+                        size: 16,
                         color: _getScoreColor(int.parse(score)),
                       ),
-                    ),
-                  ],
-                ),
-                // Status
-                Text(
-                  status,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          // Action buttons
-          Row(
-            children: [
-              // View Chat button
-              Expanded(
-                child: GestureDetector(
-                  onTap: onViewChat,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: AppColors.primary.withOpacity(0.3),
-                        width: 1,
+                      const SizedBox(width: 4),
+                      Text(
+                        '$score/100',
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: _getScoreColor(int.parse(score)),
+                        ),
                       ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.chat_bubble_outline,
-                          size: 16,
-                          color: AppColors.primary,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Lihat Chat',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              // View Feedback button
-              Expanded(
-                child: GestureDetector(
-                  onTap: onOpen,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
+                  // Status
+                  Text(
+                    status,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.assessment_outlined,
-                          size: 16,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Lihat Feedback',
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+            
+            // Action buttons
+            // Row(
+            //   children: [
+            //     // View Chat button
+            //     Expanded(
+            //       child: GestureDetector(
+            //         onTap: onViewChat,
+            //         child: Container(
+            //           padding: const EdgeInsets.symmetric(vertical: 8),
+            //           decoration: BoxDecoration(
+            //             color: AppColors.primary.withOpacity(0.1),
+            //             borderRadius: BorderRadius.circular(8),
+            //             border: Border.all(
+            //               color: AppColors.primary.withOpacity(0.3),
+            //               width: 1,
+            //             ),
+            //           ),
+            //           child: Row(
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             children: [
+            //               Icon(
+            //                 Icons.chat_bubble_outline,
+            //                 size: 16,
+            //                 color: AppColors.primary,
+            //               ),
+            //               const SizedBox(width: 6),
+            //               Text(
+            //                 'Lihat Chat',
+            //                 style: TextStyle(
+            //                   fontFamily: 'Montserrat',
+            //                   fontSize: 12,
+            //                   fontWeight: FontWeight.w600,
+            //                   color: AppColors.primary,
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //     const SizedBox(width: 8),
+            //     // View Feedback button
+            //     Expanded(
+            //       child: GestureDetector(
+            //         onTap: onOpen,
+            //         child: Container(
+            //           padding: const EdgeInsets.symmetric(vertical: 8),
+            //           decoration: BoxDecoration(
+            //             color: AppColors.primary,
+            //             borderRadius: BorderRadius.circular(8),
+            //           ),
+            //           child: Row(
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             children: [
+            //               Icon(
+            //                 Icons.assessment_outlined,
+            //                 size: 16,
+            //                 color: Colors.white,
+            //               ),
+            //               const SizedBox(width: 6),
+            //               Text(
+            //                 'Lihat Feedback',
+            //                 style: TextStyle(
+            //                   fontFamily: 'Montserrat',
+            //                   fontSize: 12,
+            //                   fontWeight: FontWeight.w600,
+            //                   color: Colors.white,
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+          ],
+        ),
       ),
     );
   }
