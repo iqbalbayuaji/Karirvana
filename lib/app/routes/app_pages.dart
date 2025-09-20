@@ -8,6 +8,8 @@ import '../modules/Interview_Practice_Feedback/bindings/interview_practice_feedb
 import '../modules/Interview_Practice_Feedback/views/interview_practice_feedback_view.dart';
 import '../modules/Interview_Practice_History/bindings/interview_practice_history_binding.dart';
 import '../modules/Interview_Practice_History/views/interview_practice_history_view.dart';
+import '../modules/Interview_Practice_History_Chat/bindings/interview_practice_history_chat_binding.dart';
+import '../modules/Interview_Practice_History_Chat/views/interview_practice_history_chat_view.dart';
 import '../modules/career_assistant/bindings/career_assistant_binding.dart';
 import '../modules/career_assistant/views/career_assistant_view.dart';
 import '../modules/certification_store_main/bindings/certification_store_main_binding.dart';
@@ -113,6 +115,11 @@ class AppPages {
       name: _Paths.INTERVIEW_PRACTICE_HISTORY,
       page: () => const InterviewPracticeHistoryView(),
       binding: InterviewPracticeHistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.INTERVIEW_PRACTICE_HISTORY_CHAT,
+      page: () => const InterviewPracticeHistoryChatView(),
+      binding: InterviewPracticeHistoryChatBinding(),
     ),
   ];
 }

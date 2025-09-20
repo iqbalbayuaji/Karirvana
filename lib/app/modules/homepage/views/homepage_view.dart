@@ -6,6 +6,7 @@ import 'package:karirvana/app/modules/homepage/local_widget/carousel.dart';
 import 'package:get/get.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 import 'package:karirvana/app/widgets/bottom_navbar.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/homepage_controller.dart';
 import '../local_widget/Rekomendasi_Container.dart';
 import '../local_widget/icon_features.dart';
@@ -296,7 +297,7 @@ class HomepageView extends GetView<HomepageController> {
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 25),
                                         child: Container(
-                                          height: 100,
+                                          height: 90,
                                           width: double.infinity,
                                           padding: EdgeInsets.symmetric(horizontal: 20),
                                           decoration: BoxDecoration(
@@ -342,7 +343,7 @@ class HomepageView extends GetView<HomepageController> {
                                                         fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
-                                                      Text("Berkembang Lebih asik dengan Vana Plus",
+                                                      Text("Nantikan Fitur Premium yang akan datang",
                                                         style: TextStyle(
                                                           fontFamily: "Montserrat",
                                                           fontSize: 13,
@@ -356,7 +357,7 @@ class HomepageView extends GetView<HomepageController> {
                                               ),
                                               Icon(
                                                 CupertinoIcons.arrow_right, 
-                                                color: AppColors.textOnPrimary,
+                                                color: Colors.transparent,
                                                 size: 25,
                                               )
                                             ],
@@ -463,78 +464,83 @@ class HomepageView extends GetView<HomepageController> {
                                                 )
                                               ],
                                             ),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          "AI Career Assistant",
-                                                          style: TextStyle(
-                                                            fontFamily: "Montserrat",
-                                                            fontSize: 18,
-                                                            color: AppColors.textOnPrimary,
-                                                            fontWeight: FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 190,
-                                                          child: Text(
-                                                            "Berkembang Lebih Asik dengan AI Career Assistant",
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Get.toNamed(Routes.CAREER_ASSISTANT);
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            "AI Career Assistant",
                                                             style: TextStyle(
                                                               fontFamily: "Montserrat",
-                                                              fontSize: 14,
+                                                              fontSize: 18,
                                                               color: AppColors.textOnPrimary,
-                                                              fontWeight: FontWeight.w400,
+                                                              fontWeight: FontWeight.w600,
                                                             ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 190,
+                                                            child: Text(
+                                                              "Berkembang Lebih Asik dengan AI Career Assistant",
+                                                              style: TextStyle(
+                                                                fontFamily: "Montserrat",
+                                                                fontSize: 14,
+                                                                color: AppColors.textOnPrimary,
+                                                                fontWeight: FontWeight.w400,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Container(
+                                                        width: 60,
+                                                        height: 60,
+                                                        decoration: BoxDecoration(
+                                                          color: AppColors.primary,
+                                                          borderRadius: BorderRadius.circular(15)
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  Container(
+                                                    width: double.infinity,
+                                                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.primaryContainer,
+                                                      borderRadius: BorderRadius.circular(30),
+                                                    ),
+                                                    child: Row(
+                                                      children: [ 
+                                                        Icon(
+                                                          Icons.search,
+                                                          color: AppColors.textSecondary,
+                                                          ),
+                                                        SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        Text(
+                                                          "Tanya ke AI",
+                                                          style: TextStyle(
+                                                            fontFamily: "Montserrat",
+                                                            fontSize: 14,
+                                                            color: AppColors.textSecondary,
+                                                            fontWeight: FontWeight.w500,
                                                           ),
                                                         ),
                                                       ],
                                                     ),
-                                                    Container(
-                                                      width: 60,
-                                                      height: 60,
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors.primary,
-                                                        borderRadius: BorderRadius.circular(15)
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                Container(
-                                                  width: double.infinity,
-                                                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                                                  height: 40,
-                                                  decoration: BoxDecoration(
-                                                    color: AppColors.primaryContainer,
-                                                    borderRadius: BorderRadius.circular(30),
-                                                  ),
-                                                  child: Row(
-                                                    children: [ 
-                                                      Icon(
-                                                        Icons.search,
-                                                        color: AppColors.textSecondary,
-                                                        ),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Text(
-                                                        "Tanya ke AI",
-                                                        style: TextStyle(
-                                                          fontFamily: "Montserrat",
-                                                          fontSize: 14,
-                                                          color: AppColors.textSecondary,
-                                                          fontWeight: FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                       ),
