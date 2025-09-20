@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../career_assistant/models/chat_message.dart';
 import '../../../services/interview_storage_service.dart';
+import '../views/interview_practice_feedback_history_view.dart';
+import '../../Interview_Practice_Feedback/controllers/interview_practice_feedback_controller.dart';
 
 class InterviewPracticeHistoryChatController extends GetxController {
   // Chat history data
@@ -118,12 +120,19 @@ class InterviewPracticeHistoryChatController extends GetxController {
     }
   }
 
-  /// Navigate to feedback page for current session
+  /// Navigate to feedback history page for current session
   void openFeedbackPage() {
     if (sessionId.value.isNotEmpty) {
-      Get.toNamed('/interview-practice-feedback', arguments: {
-        'sessionId': sessionId.value,
-      });
+      // Put the controller instance before navigation
+      Get.put(InterviewPracticeFeedbackController());
+      
+      // Navigate to the separate feedback history view
+      Get.to(
+        () => const InterviewPracticeFeedbackHistoryView(),
+        arguments: {
+          'sessionId': sessionId.value,
+        },
+      );
     }
   }
 }
