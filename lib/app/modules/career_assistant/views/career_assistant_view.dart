@@ -184,9 +184,9 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
               borderRadius: BorderRadius.circular(50),
             ),
             child: Icon(
-              Icons.chat_bubble,
+              CupertinoIcons.chat_bubble_2,
               color: AppColors.textOnPrimary,
-              size: 25,
+              size: 30,
             ),
           ),
           SizedBox(

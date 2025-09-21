@@ -14,33 +14,36 @@ class InterviewPracticeHistoryView
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 60),
+          padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: Icon(
-                        Icons.arrow_back,
-                        color: AppColors.textPrimary,
-                        size: 26,
+                Padding(
+                  padding: const EdgeInsets.only(top: 60),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.textPrimary,
+                          size: 26,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "Interview Practice History",
-                      style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: AppColors.textPrimary,
+                      Text(
+                        "Interview Practice History",
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 10)
-                  ],
+                      SizedBox(width: 10)
+                    ],
+                  ),
                 ),
                 SizedBox(height: 25),
                 // ✅ Dynamic content based on controller state
