@@ -47,7 +47,7 @@ class KemitraanContainer extends StatelessWidget {
       margin: const EdgeInsets.only(right: 20),
       width: 140,
       decoration: BoxDecoration(
-        color: AppColors.primaryContainer,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(10),
       ),
       child: 

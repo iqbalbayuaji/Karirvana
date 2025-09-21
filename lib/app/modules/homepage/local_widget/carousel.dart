@@ -53,7 +53,7 @@ class CarouselContainer extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.primaryContainer,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(15)
       ),
       child: Column(

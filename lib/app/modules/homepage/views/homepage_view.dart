@@ -101,14 +101,6 @@ class HomepageView extends GetView<HomepageController> {
                                         size: 27,
                                         color: AppColors.textOnPrimary, 
                                       )),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      CupertinoIcons.bars,
-                                      size: 42,
-                                      color: AppColors.textOnPrimary,
-                                    ),
-                                  )
                                 ],
                               ),
                               SizedBox(
@@ -149,7 +141,7 @@ class HomepageView extends GetView<HomepageController> {
                                   width: double.infinity,
                                   height: 2000,
                                   decoration: const BoxDecoration(
-                                    color: AppColors.surfaceVariant,
+                                    color: AppColors.background,
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(25),
                                       topRight: Radius.circular(25),
@@ -158,8 +150,9 @@ class HomepageView extends GetView<HomepageController> {
                                   child: Column(
                                     children: [
                                       const SizedBox(height: 120),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        padding: EdgeInsets.symmetric(horizontal: 25),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,12 +160,13 @@ class HomepageView extends GetView<HomepageController> {
                                             IconFeatures(
                                               featureData: FeatureData(
                                                 icon: Icons.article_outlined,
-                                                title: "Course",
+                                                title: "Learning",
                                                 onTap: () {
                                                   Get.toNamed('/course-store-main');
                                                 },
                                               ),
                                             ),
+                                            const SizedBox(width: 16),
                                             IconFeatures(
                                               featureData: FeatureData(
                                                 icon: CupertinoIcons.text_badge_checkmark,
@@ -181,15 +175,19 @@ class HomepageView extends GetView<HomepageController> {
                                                 onTap: () => Get.toNamed('/certification-store-main'),
                                               ),
                                             ),
+                                            
+                                            const SizedBox(width: 16),
                                             IconFeatures(
                                               featureData: FeatureData(
-                                                icon: CupertinoIcons.chart_bar,
-                                                title: "Job Interview",
+                                                icon: CupertinoIcons.doc_text,
+                                                title: "CV Assistant",
+                                                width: 60,
                                                 onTap: () {
-                                                  // TODO: Navigate to progress tracking
+                                                  Get.toNamed(Routes.CV_ASSISTANT);
                                                 },
                                               ),
                                             ),
+                                            const SizedBox(width: 16),
                                             IconFeatures(
                                               featureData: FeatureData(
                                                 icon: CupertinoIcons.person_2,
@@ -200,11 +198,21 @@ class HomepageView extends GetView<HomepageController> {
                                                 },
                                               ),
                                             ),
+                                            const SizedBox(width: 16),
+                                            IconFeatures(
+                                              featureData: FeatureData(
+                                                icon: CupertinoIcons.briefcase,
+                                                title: "Job Openings",
+                                                onTap: () {
+                                                  // TODO: Navigate to progress tracking
+                                                },
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
                                       const SizedBox(
-                                        height: 15,
+                                        height: 30,
                                       ),
                                       Column(
                                         children: [
@@ -326,6 +334,11 @@ class HomepageView extends GetView<HomepageController> {
                                                 decoration: BoxDecoration(
                                                   color: AppColors.primary,
                                                   borderRadius: BorderRadius.circular(15)
+                                                ),
+                                                child: Icon(
+                                                  CupertinoIcons.sparkles,
+                                                  color: AppColors.textOnPrimary,
+                                                  size: 29,
                                                 ),
                                               ),
                                               Container(
@@ -504,8 +517,13 @@ class HomepageView extends GetView<HomepageController> {
                                                         width: 60,
                                                         height: 60,
                                                         decoration: BoxDecoration(
-                                                          color: AppColors.primary,
+                                                          color: AppColors.primary.withOpacity(0.3),
                                                           borderRadius: BorderRadius.circular(15)
+                                                        ),
+                                                        child: Icon(
+                                                          CupertinoIcons.chat_bubble_2,
+                                                          color: AppColors.textOnPrimary,
+                                                          size: 30,
                                                         ),
                                                       )
                                                     ],

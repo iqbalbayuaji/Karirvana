@@ -35,10 +35,10 @@ class IconFeatures extends StatelessWidget {
         children: [
           Container(
             width: 55,
-            height: 57,
+            height: 55,
             decoration: BoxDecoration(
-              color: featureData.backgroundColor ?? AppColors.primaryContainer,
-              borderRadius: BorderRadius.circular(15)
+              color: featureData.backgroundColor ?? AppColors.surface,
+              borderRadius: BorderRadius.circular(50)
             ),
             child: Icon(
               featureData.icon,
