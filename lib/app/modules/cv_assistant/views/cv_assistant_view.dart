@@ -85,7 +85,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.only(top: 25),
       child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -93,10 +93,18 @@ class CvAssistantView extends GetView<CvAssistantController> {
                         onTap: () {
                           Get.back();
                         },
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: AppColors.textPrimary,
-                          size: 26,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.outline),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: AppColors.textPrimary,
+                            size: 20,
+                          ),
                         ),
                       ),
                       Text(
@@ -108,7 +116,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
                           color: AppColors.textPrimary,
                         ),
                       ),
-                      SizedBox(width: 10)
+                      SizedBox(width: 40)
                     ],
                   ),
     );
@@ -212,7 +220,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
               ),
             ),
             child: const Text(
-              'Latihan Lagi',
+              'Scan',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

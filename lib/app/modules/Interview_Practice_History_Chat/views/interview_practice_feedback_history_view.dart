@@ -29,10 +29,18 @@ class InterviewPracticeFeedbackHistoryView
                           onTap: () {
                             Get.back();
                           },
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: AppColors.textPrimary,
-                            size: 27,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: AppColors.outline),
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back,
+                              color: AppColors.textPrimary,
+                              size: 20,
+                            ),
                           ),
                         ),
                         Text(
