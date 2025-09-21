@@ -6,6 +6,10 @@ class HomepageController extends GetxController {
   final count = 0.obs;
   final activeIndex = 0.obs;
   
+  // Observable for user name
+  final userName = 'Banon'.obs; // Default fallback name
+  final isLoadingUserName = true.obs;
+  
   // Static variable to track if popup has been shown in this session
   static bool _hasShownPopupInSession = false;
   
@@ -13,6 +17,7 @@ class HomepageController extends GetxController {
   void onInit() {
     super.onInit();
     print('🔍 DEBUG: HomepageController onInit() called');
+    _loadUserName();
   }
 
   @override
@@ -29,6 +34,32 @@ class HomepageController extends GetxController {
   }
 
   void increment() => count.value++;
+
+  // Load user name from Firebase
+  Future<void> _loadUserName() async {
+    try {
+      isLoadingUserName.value = true;
+      
+      final firestoreService = FirestoreService.instance;
+      final profileData = await firestoreService.getUserProfile();
+      
+      if (profileData != null && profileData['name'] != null) {
+        // Extract first word from name field (split by space and take first part)
+        String fullName = profileData['name'].toString();
+        String firstName = fullName.trim().split(' ').first;
+        userName.value = firstName;
+        print('✅ DEBUG: User name loaded: $firstName');
+      } else {
+        // Keep default name if no profile data
+        print('ℹ️ DEBUG: No name found, keeping default name');
+      }
+    } catch (e) {
+      print('⚠️ DEBUG: Error loading user name: $e');
+      // Keep default name on error
+    } finally {
+      isLoadingUserName.value = false;
+    }
+  }
 
   // Public method to check personalization popup (can be called from view)
   Future<void> checkPersonalizationPopup() async {

@@ -117,14 +117,14 @@ class HomepageView extends GetView<HomepageController> {
                                         color: AppColors.textOnPrimary,
                                       ),
                                     ),
-                                    const Text(
-                                      "Banon?",
-                                      style: TextStyle(
+                                    Obx(() => Text(
+                                      "${controller.userName.value}?",
+                                      style: const TextStyle(
                                           fontSize: 20,
                                           fontFamily: "Montserrat",
                                           fontWeight: FontWeight.w600,
                                           color: AppColors.textOnPrimary),
-                                    ),
+                                    )),
                                   ],
                                 ),
                               ),
