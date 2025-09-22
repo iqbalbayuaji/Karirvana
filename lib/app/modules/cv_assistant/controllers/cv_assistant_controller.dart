@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../services/cloudinary_service.dart';
@@ -51,7 +52,9 @@ class CvAssistantController extends GetxController {
           Get.snackbar(
             'Error',
             'File terlalu besar. Maksimal 5MB.',
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
           );
           return;
         }
@@ -72,17 +75,20 @@ class CvAssistantController extends GetxController {
           Get.snackbar(
             'Berhasil',
             'File CV berhasil diupload!',
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 3),
           );
           
-          // Navigate to CV display page after short delay
-          await Future.delayed(const Duration(milliseconds: 500));
-          Get.toNamed('/cv-display', arguments: uploadResult);
+          // Don't auto-navigate, let user tap "Scan CV" button
         } else {
           Get.snackbar(
             'Error',
             'Gagal mengupload file. Silakan coba lagi.',
-            snackPosition: SnackPosition.BOTTOM,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
           );
         }
       }
@@ -90,7 +96,7 @@ class CvAssistantController extends GetxController {
       Get.snackbar(
         'Error',
         'Terjadi kesalahan: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
     } finally {
       isUploading.value = false;
@@ -106,7 +112,7 @@ class CvAssistantController extends GetxController {
       Get.snackbar(
         'Info',
         'Silakan upload file CV terlebih dahulu.',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
     }
   }

@@ -22,10 +22,9 @@ class CvDisplayView extends GetView<CvDisplayController> {
                 }
                 return Column(
                   children: [
+                    const SizedBox(height: 17),
                     _buildFileInfo(),
-                    const SizedBox(height: 20),
                     Expanded(child: _buildFilePreview()),
-                    _buildActionButtons(),
                   ],
                 );
               }),
@@ -78,7 +77,7 @@ class CvDisplayView extends GetView<CvDisplayController> {
   Widget _buildFileInfo() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
@@ -109,16 +108,17 @@ class CvDisplayView extends GetView<CvDisplayController> {
                 Text(
                   controller.fileName,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                     fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     color: AppColors.textPrimary,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Text(
                   '${controller.fileType.toUpperCase()} • ${controller.formattedFileSize}',
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 12,
                     fontFamily: 'Montserrat',
                     color: AppColors.textSecondary,
                   ),
@@ -133,7 +133,7 @@ class CvDisplayView extends GetView<CvDisplayController> {
 
   Widget _buildFilePreview() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
