@@ -2,16 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
-import '../../../services/cloudinary_service.dart';
+import '../../../services/pdf_analysis_service.dart';
 
 class CvAssistantController extends GetxController {
   // Observable variables
   final isUploading = false.obs;
   final uploadedFile = Rxn<Map<String, dynamic>>();
   final uploadProgress = 0.0.obs;
-  
-  // Services
-  final CloudinaryService _cloudinaryService = CloudinaryService.instance;
   
   @override
   void onInit() {
@@ -28,13 +25,13 @@ class CvAssistantController extends GetxController {
     super.onClose();
   }
 
-  // Pick and upload CV file
+  // Pick and process PDF file (UI unchanged, logic updated)
   Future<void> pickAndUploadFile() async {
     try {
-      // Pick file
+      // Pick PDF file only
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf', 'doc', 'docx'],
+        allowedExtensions: ['pdf'], // Only PDF files
         allowMultiple: false,
       );
 
@@ -44,14 +41,13 @@ class CvAssistantController extends GetxController {
         
         File file = File(result.files.single.path!);
         
-        // Validate file size (max 5MB)
-        int fileSizeInBytes = await file.length();
-        double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-        
-        if (fileSizeInMB > 5) {
+        // Validate PDF file
+        try {
+          await PDFAnalysisService.validatePDFFile(file);
+        } catch (e) {
           Get.snackbar(
             'Error',
-            'File terlalu besar. Maksimal 5MB.',
+            e.toString(),
             snackPosition: SnackPosition.TOP,
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -59,44 +55,38 @@ class CvAssistantController extends GetxController {
           return;
         }
         
-        // Simulate upload progress
-        for (int i = 0; i <= 50; i += 10) {
+        // Simulate "upload" progress for UI consistency
+        for (int i = 0; i <= 100; i += 20) {
           uploadProgress.value = i / 100;
-          await Future.delayed(const Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 200));
         }
         
-        // Upload to Cloudinary
-        Map<String, dynamic>? uploadResult = await _cloudinaryService.uploadCVFile(file);
+        // Store file info (same structure as before for UI compatibility)
+        int fileSizeInBytes = await file.length();
+        uploadedFile.value = {
+          'fileName': file.path.split('/').last,
+          'fileType': 'pdf',
+          'fileSize': fileSizeInBytes,
+          'filePath': file.path, // Store local path instead of URL
+          'uploadedAt': DateTime.now().toIso8601String(),
+        };
         
-        if (uploadResult != null) {
-          uploadProgress.value = 1.0;
-          uploadedFile.value = uploadResult;
-          
-          Get.snackbar(
-            'Berhasil',
-            'File CV berhasil diupload!',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-            duration: const Duration(seconds: 3),
-          );
-          
-          // Don't auto-navigate, let user tap "Scan CV" button
-        } else {
-          Get.snackbar(
-            'Error',
-            'Gagal mengupload file. Silakan coba lagi.',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
-        }
+        Get.snackbar(
+          'Berhasil',
+          'File PDF berhasil dipilih!',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
       }
     } catch (e) {
       Get.snackbar(
         'Error',
         'Terjadi kesalahan: ${e.toString()}',
         snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
       );
     } finally {
       isUploading.value = false;
@@ -104,14 +94,14 @@ class CvAssistantController extends GetxController {
     }
   }
   
-  // Navigate to scan/display page
+  // Navigate to CV analysis page
   void navigateToScanPage() {
     if (uploadedFile.value != null) {
-      Get.toNamed('/cv-display', arguments: uploadedFile.value);
+      Get.toNamed('/cv-analysis', arguments: uploadedFile.value);
     } else {
       Get.snackbar(
         'Info',
-        'Silakan upload file CV terlebih dahulu.',
+        'Silakan pilih file PDF terlebih dahulu.',
         snackPosition: SnackPosition.TOP,
       );
     }

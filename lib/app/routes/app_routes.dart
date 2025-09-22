@@ -22,6 +22,7 @@ abstract class Routes {
       _Paths.INTERVIEW_PRACTICE_HISTORY_CHAT;
   static const CV_ASSISTANT = _Paths.CV_ASSISTANT;
   static const CV_DISPLAY = _Paths.CV_DISPLAY;
+  static const CV_ANALYSIS = _Paths.CV_ANALYSIS;
 }
 
 abstract class _Paths {
@@ -45,4 +46,5 @@ abstract class _Paths {
       '/interview-practice-history-chat';
   static const CV_ASSISTANT = '/cv-assistant';
   static const CV_DISPLAY = '/cv-display';
+  static const CV_ANALYSIS = '/cv-analysis';
 }
