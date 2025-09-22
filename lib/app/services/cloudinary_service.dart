@@ -10,16 +10,26 @@ class CloudinaryService {
   CloudinaryService._();
   
   late CloudinaryPublic _cloudinary;
+  late CloudinaryPublic _rawCloudinary;
   
   void initialize() {
     final cloudName = dotenv.env['CLOUDINARY_CLOUD_NAME'];
     final uploadPreset = dotenv.env['CLOUDINARY_UPLOAD_PRESET'];
+    final rawUploadPreset = dotenv.env['CLOUDINARY_RAW_UPLOAD_PRESET'];
     
     if (cloudName == null || uploadPreset == null) {
       throw Exception('Cloudinary configuration not found in .env file');
     }
     
     _cloudinary = CloudinaryPublic(cloudName, uploadPreset, cache: false);
+    
+    // Initialize raw cloudinary with different preset if available
+    if (rawUploadPreset != null) {
+      _rawCloudinary = CloudinaryPublic(cloudName, rawUploadPreset, cache: false);
+    } else {
+      // Fallback to same preset
+      _rawCloudinary = _cloudinary;
+    }
   }
   
   Future<String?> uploadImage(File imageFile, {String? publicId}) async {
@@ -35,6 +45,49 @@ class CloudinaryService {
       return response.secureUrl;
     } catch (e) {
       developer.log('Error uploading image to Cloudinary: $e', name: 'CloudinaryService');
+      return null;
+    }
+  }
+  
+  Future<Map<String, dynamic>?> uploadCVFile(File file, {String? publicId}) async {
+    try {
+      final fileName = file.path.split('/').last;
+      final fileExtension = fileName.split('.').last.toLowerCase();
+      final fileSize = await file.length();
+      
+      developer.log('Starting CV file upload: $fileName ($fileExtension, ${fileSize}bytes)', name: 'CloudinaryService');
+      
+      // Validate file type
+      if (!['pdf', 'doc', 'docx'].contains(fileExtension)) {
+        throw Exception('Unsupported file type. Only PDF, DOC, and DOCX files are allowed.');
+      }
+      
+      // Validate file size (5MB = 5 * 1024 * 1024 bytes)
+      if (fileSize > 5 * 1024 * 1024) {
+        throw Exception('File too large. Maximum size is 5MB.');
+      }
+      
+      final cloudinaryFile = CloudinaryFile.fromFile(
+        file.path,
+        publicId: publicId ?? 'cv_${DateTime.now().millisecondsSinceEpoch}',
+        folder: 'karirvana/cv_files',
+        resourceType: CloudinaryResourceType.Raw, // For non-image files
+      );
+      
+      developer.log('Uploading to Cloudinary with resourceType: Raw', name: 'CloudinaryService');
+      
+      final response = await _rawCloudinary.uploadFile(cloudinaryFile);
+      
+      return {
+        'url': response.secureUrl,
+        'publicId': response.publicId,
+        'fileName': fileName,
+        'fileType': fileExtension,
+        'fileSize': await file.length(),
+        'uploadedAt': DateTime.now().toIso8601String(),
+      };
+    } catch (e) {
+      developer.log('Error uploading CV file to Cloudinary: $e', name: 'CloudinaryService');
       return null;
     }
   }

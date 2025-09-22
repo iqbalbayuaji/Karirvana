@@ -165,71 +165,119 @@ class CvAssistantView extends GetView<CvAssistantController> {
             ],
           ),
           const SizedBox(height: 20),
-          CustomPaint(
-            painter: DottedBorderPainter(
-              color: AppColors.primary.withOpacity(0.4),
-              strokeWidth: 2,
-              dashWidth: 7,
-              dashSpace: 5,
-            ),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(40),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(15),
+          Obx(() => GestureDetector(
+            onTap: controller.isUploading.value ? null : controller.pickAndUploadFile,
+            child: CustomPaint(
+              painter: DottedBorderPainter(
+                color: AppColors.primary.withOpacity(0.4),
+                strokeWidth: 2,
+                dashWidth: 7,
+                dashSpace: 5,
               ),
-              child: const Column(
-                children: [
-                  Icon(CupertinoIcons.cloud_upload, color: AppColors.primary, size: 50),
-                  SizedBox(height: 15),
-                  Text(
-                    'Upload CV Anda',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    'Format: PDF, DOC, DOCX (Max 5MB)',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontFamily: 'Montserrat',
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: controller.isUploading.value
+                  ? Column(
+                      children: [
+                        const CircularProgressIndicator(color: AppColors.primary),
+                        const SizedBox(height: 15),
+                        Text(
+                          'Mengupload... ${(controller.uploadProgress.value * 100).toInt()}%',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    )
+                  : controller.uploadedFile.value != null
+                    ? Column(
+                        children: [
+                          const Icon(CupertinoIcons.checkmark_circle_fill, 
+                            color: Colors.green, size: 50),
+                          const SizedBox(height: 15),
+                          Text(
+                            'File berhasil diupload!',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            controller.uploadedFile.value!['fileName'],
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Montserrat',
+                              color: AppColors.textSecondary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )
+                    : const Column(
+                        children: [
+                          Icon(CupertinoIcons.cloud_upload, color: AppColors.primary, size: 50),
+                          SizedBox(height: 15),
+                          Text(
+                            'Upload CV Anda',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            'Format: PDF, DOC, DOCX (Max 5MB)',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'Montserrat',
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
               ),
             ),
-          ),
+          )),
           const SizedBox(height: 20),
-          SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+          Obx(() => SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: controller.uploadedFile.value != null 
+                ? controller.navigateToScanPage 
+                : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: controller.uploadedFile.value != null 
+                  ? AppColors.primary 
+                  : AppColors.primary.withOpacity(0.5),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                controller.uploadedFile.value != null ? 'Scan CV' : 'Upload File Terlebih Dahulu',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Montserrat',
+                  color: AppColors.textOnPrimary,
+                ),
               ),
             ),
-            child: const Text(
-              'Scan',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Montserrat',
-                color: AppColors.textOnPrimary,
-              ),
-            ),
-          ),
-        ),
+          )),
         ],
       ),
     );
