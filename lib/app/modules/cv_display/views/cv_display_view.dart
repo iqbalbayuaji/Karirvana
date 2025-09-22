@@ -37,38 +37,41 @@ class CvDisplayView extends GetView<CvDisplayController> {
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(colors: AppColors.heroGradient),
-      ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(25, 25, 0, 0),
       child: Row(
-        children: [
-          GestureDetector(
-            onTap: controller.goBack,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(CupertinoIcons.back, color: Colors.white, size: 24),
-            ),
-          ),
-          const SizedBox(width: 15),
-          const Expanded(
-            child: Text(
-              'CV Display',
-              style: TextStyle(
-                fontSize: 24,
-                fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.outline),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: AppColors.textPrimary,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "Hasil Scan CV",
+                        style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      SizedBox(width: 40)
+                    ],
+                  ),
     );
   }
 
