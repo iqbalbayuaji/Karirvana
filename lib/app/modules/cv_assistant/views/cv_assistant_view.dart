@@ -239,7 +239,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            'Format: PDF, DOC, DOCX (Max 5MB)',
+                            'Format: PDF (Max 5MB)',
                             style: TextStyle(
                               fontSize: 12,
                               fontFamily: 'Montserrat',
@@ -268,12 +268,12 @@ class CvAssistantView extends GetView<CvAssistantController> {
                 ),
               ),
               child: Text(
-                controller.uploadedFile.value != null ? 'Scan CV' : 'Upload File Terlebih Dahulu',
+                "Scan CV",
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   fontFamily: 'Montserrat',
-                  color: AppColors.textOnPrimary,
+                  color: AppColors.textOnPrimary
                 ),
               ),
             ),
@@ -322,88 +322,87 @@ class CvAssistantView extends GetView<CvAssistantController> {
             ),
           ),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    controller: controller.templatePromptController,
-                    decoration: InputDecoration(
-                      hintText: 'Contoh: Buat CV untuk posisi Software Engineer dengan pengalaman 2 tahun',
-                      hintStyle: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.textSecondary,
-                        fontFamily: 'Montserrat',
-                      ),
-                      prefixIcon: const Icon(
-                              Icons.edit_document,
-                              color: AppColors.textSecondary,
-                              size: 20,
-                            ),
-                      border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25),
-                              borderSide: const BorderSide(
-                                color: AppColors.outline,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25),
-                              borderSide: const BorderSide(
-                                color: AppColors.outline,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25),
-                              borderSide: const BorderSide(
-                                color: AppColors.primary,
-                                width: 1,
-                              ),
-                            ),
-                            filled: true,
-                            fillColor: AppColors.surfaceVariant,
-                    ),
+          TextFormField(
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            minLines: 1,
+            controller: controller.templatePromptController,
+                decoration: InputDecoration(
+                  // contentPadding: const EdgeInsets.all(10),
+                  hintText: 'Buat template CV...',
+                  hintStyle: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                    fontFamily: 'Montserrat',
+                  ),
+                  prefixIcon: const Icon(
+                          Icons.edit_document,
+                          color: AppColors.textSecondary,
+                          size: 20,
+                        ),
+                  border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: const BorderSide(
+                    color: AppColors.outline,
                   ),
                 ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: const BorderSide(
+                    color: AppColors.outline,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: const BorderSide(
+                    color: AppColors.primary,
+                    width: 1,
+                  ),
+                ),
+                filled: true,
+                fillColor: AppColors.surface,
               ),
-              const SizedBox(width: 10),
-              Obx(() => Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppColors.primary, AppColors.secondary],
+            ),
+            const SizedBox(height: 15),
+            Obx(() => SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: controller.isGeneratingTemplate.value 
+                    ? null 
+                    : controller.generateCVTemplate,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  borderRadius: BorderRadius.circular(25),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(25),
-                    onTap: controller.isGeneratingTemplate.value 
-                        ? null 
-                        : controller.generateCVTemplate,
-                    child: Center(
-                      child: controller.isGeneratingTemplate.value
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Icon(
-                              Icons.send,
+                child: controller.isGeneratingTemplate.value
+                    ? const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
                               color: Colors.white,
-                              size: 20,
+                              strokeWidth: 2,
                             ),
-                    ),
-                  ),
-                ),
-              )),
-            ],
-          )
+                          ),
+                          SizedBox(width: 10),
+                          Text('Sedang membuat template...'),
+                        ],
+                      )
+                    : const Text(
+                        'Buat Template CV',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+              ),
+            )),
         ],
       ),
     );

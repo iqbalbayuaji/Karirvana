@@ -5,7 +5,7 @@ import '../modules/career_assistant/models/chat_message.dart';
 
 class GroqRoadmapService {
   static const String _baseUrl = 'https://api.groq.com/openai/v1/chat/completions';
-  static const String _model = 'llama3-8b-8192';
+  static const String _model = 'llama-3.1-8b-instant';
   
   static const String _systemPrompt = '''
 Kamu adalah AI Career Roadmap Specialist bernama "Roadmap Assistant" yang sangat ahli dalam membuat roadmap karir yang detail dan personal.
