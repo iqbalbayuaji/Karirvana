@@ -23,20 +23,25 @@ class CVTemplatePopup {
             children: [
               Column(
                 children: [
-                  Expanded(
-                    child: Text(
-                      'Template CV Berhasil Dibuat!',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Montserrat',
-                        color: AppColors.textPrimary,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Template CV Berhasil Dibuat!',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                            color: AppColors.textPrimary,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
                       ),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  SizedBox(
-                    width: screenWidth * 0.05,
+                      SizedBox(
+                        width: screenWidth * 0.05,
+                      )
+                    ],
                   ),
 
                   const SizedBox(height: 10),
@@ -59,7 +64,7 @@ class CVTemplatePopup {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Nama file: ${pdfPath.split('/').last}',
+                              '${pdfPath.split('/').last}',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontFamily: 'Montserrat',

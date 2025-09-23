@@ -23,30 +23,6 @@ class CvAnalysisView extends GetView<CvAnalysisController> {
     );
   }
 
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(25),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: controller.goBack,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.outline),
-              ),
-              child: const Icon(Icons.arrow_back, size: 20),
-            ),
-          ),
-          const SizedBox(width: 20),
-          const Text("Analisis CV", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-
   Widget _buildProcessing() {
     return Center(
       child: Column(
@@ -282,31 +258,6 @@ class CvAnalysisView extends GetView<CvAnalysisController> {
             )
           ).toList(),
         ),
-      ),
-    );
-  }
-
-  Widget _buildAIInsightsSection(Map<String, dynamic> result) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), blurRadius: 10)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.psychology_outlined, color: AppColors.primary),
-              const SizedBox(width: 8),
-              const Text('Analisis AI', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text('Analisis CV telah selesai dengan skor ${result['overallScore']}%'),
-        ],
       ),
     );
   }

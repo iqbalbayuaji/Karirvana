@@ -115,7 +115,7 @@ class CvAssistantController extends GetxController {
     }
   }
   
-  // Generate CV template using Groq API
+  // Generate CV template using Groq API with Firebase user data integration
   Future<void> generateCVTemplate() async {
     if (templatePromptController.text.trim().isEmpty) {
       Get.snackbar(
@@ -131,9 +131,114 @@ class CvAssistantController extends GetxController {
     try {
       isGeneratingTemplate.value = true;
       
-      // Generate CV content using Groq API
-      Map<String, dynamic> cvData = await CVTemplateService.generateCVContent(
-        templatePromptController.text.trim()
+      // Check if prompt indicates creating CV for someone else
+      String prompt = templatePromptController.text.trim().toLowerCase();
+      bool isForOthers = prompt.contains('untuk') && 
+                        (prompt.contains('orang lain') || 
+                         prompt.contains('teman') || 
+                         prompt.contains('klien') ||
+                         prompt.contains('seseorang') ||
+                         prompt.contains('dia') ||
+                         prompt.contains('mereka'));
+      
+      // Generate CV content using enhanced method with Firebase data
+      Map<String, dynamic> cvData = await CVTemplateService.generateCVContentWithUserData(
+        templatePromptController.text.trim(),
+        useCurrentUser: !isForOthers, // Use current user data unless explicitly for others
+      );
+      
+      generatedTemplate.value = cvData;
+      
+      // Generate PDF file
+      File pdfFile = await CVTemplateService.generateCVPDF(cvData);
+      
+      // Show success dialog with download options
+      CVTemplatePopup.show(pdfFile.path, cvData);
+      
+      // Clear the input
+      templatePromptController.clear();
+      
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal membuat template CV: ${e.toString()}',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+      );
+    } finally {
+      isGeneratingTemplate.value = false;
+    }
+  }
+  
+  // Generate CV template specifically for current user
+  Future<void> generateCVTemplateForSelf() async {
+    if (templatePromptController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Info',
+        'Silakan masukkan deskripsi untuk template CV Anda.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    
+    try {
+      isGeneratingTemplate.value = true;
+      
+      // Generate CV content using enhanced method with current user data
+      Map<String, dynamic> cvData = await CVTemplateService.generateCVContentWithUserData(
+        templatePromptController.text.trim(),
+        useCurrentUser: true,
+      );
+      
+      generatedTemplate.value = cvData;
+      
+      // Generate PDF file
+      File pdfFile = await CVTemplateService.generateCVPDF(cvData);
+      
+      // Show success dialog with download options
+      CVTemplatePopup.show(pdfFile.path, cvData);
+      
+      // Clear the input
+      templatePromptController.clear();
+      
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal membuat template CV: ${e.toString()}',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+      );
+    } finally {
+      isGeneratingTemplate.value = false;
+    }
+  }
+  
+  // Generate CV template for others (without using current user data)
+  Future<void> generateCVTemplateForOthers() async {
+    if (templatePromptController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Info',
+        'Silakan masukkan deskripsi untuk template CV.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    
+    try {
+      isGeneratingTemplate.value = true;
+      
+      // Generate CV content without using current user data
+      Map<String, dynamic> cvData = await CVTemplateService.generateCVContentWithUserData(
+        templatePromptController.text.trim(),
+        useCurrentUser: false,
       );
       
       generatedTemplate.value = cvData;

@@ -172,33 +172,4 @@ class CvDisplayView extends GetView<CvDisplayController> {
       ),
     );
   }
-
-  Widget _buildActionButtons() {
-    return Padding(
-      padding: const EdgeInsets.all(25),
-      child: Row(
-        children: [
-          Expanded(
-            child: ElevatedButton(
-              onPressed: controller.startAnalysis,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              child: const Text(
-                'Analisis CV',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Montserrat',
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

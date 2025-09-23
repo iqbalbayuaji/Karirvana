@@ -10,11 +10,167 @@ import 'package:open_file/open_file.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firestore_service.dart';
 
 class CVTemplateService {
   static const String _groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
   
-  /// Generate CV content using Groq API
+  /// Generate CV content using Groq API with Firebase user data integration
+  static Future<Map<String, dynamic>> generateCVContentWithUserData(String userPrompt, {bool useCurrentUser = true}) async {
+    try {
+      final String? apiKey = dotenv.env['GROQ_API_KEY'];
+      
+      if (apiKey == null || apiKey.isEmpty) {
+        throw Exception('GROQ_API_KEY not found');
+      }
+      
+      // Get user data from Firebase if requested
+      Map<String, dynamic>? userData;
+      if (useCurrentUser) {
+        userData = await FirestoreService.instance.getUserProfile();
+      }
+      
+      // Calculate age from birth date if available
+      int? age;
+      if (userData?['birthDate'] != null && userData!['birthDate'].toString().isNotEmpty) {
+        try {
+          DateTime birthDate = DateTime.parse(userData['birthDate']);
+          age = DateTime.now().year - birthDate.year;
+          if (DateTime.now().month < birthDate.month || 
+              (DateTime.now().month == birthDate.month && DateTime.now().day < birthDate.day)) {
+            age--;
+          }
+        } catch (e) {
+          debugPrint('Error calculating age: $e');
+        }
+      }
+      
+      // Get current user's email from Firebase Auth
+      String? userEmail = FirebaseAuth.instance.currentUser?.email;
+      
+      // Build enhanced system prompt with user data
+      String systemPrompt = '''
+Buat CV profesional dalam format JSON berdasarkan prompt pengguna.
+
+${useCurrentUser && userData != null ? '''
+DATA PENGGUNA YANG TERSEDIA:
+- Nama: ${userData['name'] ?? userData['username'] ?? 'Tidak tersedia'}
+- Email: ${userEmail ?? userData['email'] ?? 'Tidak tersedia'}
+- Tanggal Lahir: ${userData['birthDate'] ?? 'Tidak tersedia'}
+- Umur: ${age != null ? '$age tahun' : 'Tidak tersedia'}
+- Jenis Kelamin: ${userData['gender'] ?? 'Tidak tersedia'}
+- Bio: ${userData['bio'] ?? 'Tidak tersedia'}
+
+GUNAKAN data pengguna di atas untuk mengisi informasi personal CV. Jika ada data yang tidak tersedia, buat contoh yang realistis berdasarkan prompt.
+''' : '''
+CATATAN: Ini adalah CV untuk orang lain. Buat informasi personal yang realistis berdasarkan prompt pengguna.
+'''}
+
+Format JSON:
+{
+  "personalInfo": {
+    "fullName": "Nama Lengkap",
+    "title": "Posisi",
+    "email": "email@example.com",
+    "phone": "+62 812-3456-7890",
+    "location": "Jakarta, Indonesia",
+    "age": ${age ?? 25},
+    "dateOfBirth": "${userData?['birthDate'] ?? '1999-01-01'}"
+  },
+  "summary": "Ringkasan profesional 2-3 kalimat",
+  "experience": [
+    {
+      "position": "Posisi",
+      "company": "Perusahaan",
+      "duration": "Jan 2020 - Sekarang",
+      "description": "Deskripsi pekerjaan"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Sarjana",
+      "institution": "Universitas",
+      "year": "2018-2022"
+    }
+  ],
+  "skills": ["Skill 1", "Skill 2", "Skill 3"]
+}
+
+Hanya berikan JSON, tanpa teks lain!
+''';
+
+      final response = await http.post(
+        Uri.parse(_groqApiUrl),
+        headers: {
+          'Authorization': 'Bearer $apiKey',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'model': 'llama-3.1-8b-instant',
+          'messages': [
+            {'role': 'system', 'content': systemPrompt},
+            {'role': 'user', 'content': 'Buat CV: $userPrompt'}
+          ],
+          'temperature': 0.7,
+          'max_tokens': 2000,
+        }),
+      ).timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        String content = responseData['choices'][0]['message']['content'];
+        
+        // Clean JSON
+        content = content.trim();
+        if (content.startsWith('```')) content = content.substring(3);
+        if (content.endsWith('```')) content = content.substring(0, content.length - 3);
+        if (content.startsWith('json')) content = content.substring(4);
+        content = content.trim();
+        
+        // Extract JSON object
+        int start = content.indexOf('{');
+        int end = content.lastIndexOf('}');
+        if (start != -1 && end != -1) {
+          content = content.substring(start, end + 1);
+        }
+        
+        try {
+          Map<String, dynamic> cvData = json.decode(content);
+          cvData['generatedAt'] = DateTime.now().toIso8601String();
+          cvData['createdForCurrentUser'] = useCurrentUser;
+          
+          // Override with actual user data if available
+          if (useCurrentUser && userData != null) {
+            cvData['personalInfo'] = cvData['personalInfo'] ?? {};
+            if (userData['name'] != null || userData['username'] != null) {
+              cvData['personalInfo']['fullName'] = userData['name'] ?? userData['username'];
+            }
+            if (userEmail != null) {
+              cvData['personalInfo']['email'] = userEmail;
+            }
+            if (age != null) {
+              cvData['personalInfo']['age'] = age;
+            }
+            if (userData['birthDate'] != null) {
+              cvData['personalInfo']['dateOfBirth'] = userData['birthDate'];
+            }
+          }
+          
+          return cvData;
+        } catch (e) {
+          return _createFallbackCVWithUserData(userPrompt, userData, userEmail, age, useCurrentUser);
+        }
+      }
+      
+      return _createFallbackCVWithUserData(userPrompt, userData, userEmail, age, useCurrentUser);
+    } catch (e) {
+      debugPrint('CV generation error: $e');
+      return _createFallbackCVWithUserData(userPrompt, null, null, null, useCurrentUser);
+    }
+  }
+
+  /// Generate CV content using Groq API (legacy method for backward compatibility)
   static Future<Map<String, dynamic>> generateCVContent(String userPrompt) async {
     try {
       final String? apiKey = dotenv.env['GROQ_API_KEY'];
@@ -139,6 +295,54 @@ Hanya berikan JSON, tanpa teks lain!
     };
   }
   
+  static Map<String, dynamic> _createFallbackCVWithUserData(
+    String prompt, 
+    Map<String, dynamic>? userData, 
+    String? userEmail, 
+    int? age, 
+    bool useCurrentUser
+  ) {
+    return {
+      'personalInfo': {
+        'fullName': useCurrentUser && userData != null 
+            ? (userData['name'] ?? userData['username'] ?? 'Nama Lengkap')
+            : 'Nama Lengkap',
+        'title': 'Posisi yang Diinginkan',
+        'email': useCurrentUser && userEmail != null 
+            ? userEmail 
+            : 'email@example.com',
+        'phone': '+62 812-3456-7890',
+        'location': 'Jakarta, Indonesia',
+        'age': age ?? 25,
+        'dateOfBirth': useCurrentUser && userData?['birthDate'] != null 
+            ? userData!['birthDate'] 
+            : '1999-01-01'
+      },
+      'summary': useCurrentUser && userData?['bio'] != null && userData!['bio'].toString().isNotEmpty
+          ? userData['bio']
+          : 'Profesional berpengalaman dengan keahlian yang relevan dan orientasi pada hasil.',
+      'experience': [
+        {
+          'position': 'Posisi Terakhir',
+          'company': 'Nama Perusahaan',
+          'duration': 'Jan 2022 - Sekarang',
+          'description': 'Mengelola proyek dan tim dengan fokus pada pencapaian target.'
+        }
+      ],
+      'education': [
+        {
+          'degree': 'Sarjana (S1)',
+          'institution': 'Universitas Terkemuka',
+          'year': '2018-2022'
+        }
+      ],
+      'skills': ['Komunikasi', 'Manajemen Proyek', 'Analisis Data', 'Problem Solving'],
+      'generatedAt': DateTime.now().toIso8601String(),
+      'createdForCurrentUser': useCurrentUser,
+      'fallbackUsed': true
+    };
+  }
+  
   /// Generate PDF from CV data
   static Future<File> generateCVPDF(Map<String, dynamic> cvData) async {
     PdfDocument document = PdfDocument();
@@ -162,7 +366,21 @@ Hanya berikan JSON, tanpa teks lain!
         bounds: Rect.fromLTWH(50, yPosition, 500, 20));
     yPosition += 20;
     
-    graphics.drawString('${personalInfo['email'] ?? ''} | ${personalInfo['phone'] ?? ''}', normalFont,
+    // Contact info with age if available
+    String contactInfo = '${personalInfo['email'] ?? ''} | ${personalInfo['phone'] ?? ''}';
+    if (personalInfo['age'] != null) {
+      contactInfo += ' | Umur: ${personalInfo['age']} tahun';
+    }
+    graphics.drawString(contactInfo, normalFont,
+        bounds: Rect.fromLTWH(50, yPosition, 500, 15));
+    yPosition += 15;
+    
+    // Location and date of birth
+    String locationInfo = personalInfo['location'] ?? 'Jakarta, Indonesia';
+    if (personalInfo['dateOfBirth'] != null) {
+      locationInfo += ' | Tanggal Lahir: ${personalInfo['dateOfBirth']}';
+    }
+    graphics.drawString(locationInfo, normalFont,
         bounds: Rect.fromLTWH(50, yPosition, 500, 15));
     yPosition += 30;
     
