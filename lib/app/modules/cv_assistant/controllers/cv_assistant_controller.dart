@@ -202,23 +202,6 @@ class CvAssistantController extends GetxController {
             onPressed: () => Get.back(),
             child: const Text('Tutup'),
           ),
-          TextButton(
-            onPressed: () async {
-              Get.back();
-              try {
-                await CVTemplateService.sharePDF(pdfPath);
-              } catch (e) {
-                Get.snackbar(
-                  'Error',
-                  e.toString(),
-                  snackPosition: SnackPosition.TOP,
-                  backgroundColor: Colors.red,
-                  colorText: Colors.white,
-                );
-              }
-            },
-            child: const Text('Bagikan'),
-          ),
           ElevatedButton(
             onPressed: () async {
               Get.back();

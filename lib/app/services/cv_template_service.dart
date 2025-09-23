@@ -8,6 +8,7 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:cross_file/cross_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CVTemplateService {
@@ -275,10 +276,21 @@ Hanya berikan JSON, tanpa teks lain!
   /// Open PDF file with default app
   static Future<void> openPDF(String filePath) async {
     try {
-      await OpenFile.open(filePath);
+      final result = await OpenFile.open(filePath);
+      debugPrint('Open file result: ${result.message}');
+      
+      if (result.type != ResultType.done) {
+        throw Exception('Gagal membuka file: ${result.message}');
+      }
     } catch (e) {
       debugPrint('Error opening PDF: $e');
-      throw Exception('Tidak dapat membuka file PDF');
+      
+      // Fallback: Show file path to user
+      if (e.toString().contains('MissingPluginException')) {
+        throw Exception('Plugin belum siap. Silakan restart aplikasi dan coba lagi.\n\nFile tersimpan di: $filePath');
+      } else {
+        throw Exception('Tidak dapat membuka file PDF: ${e.toString()}');
+      }
     }
   }
   

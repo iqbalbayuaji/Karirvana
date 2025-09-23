@@ -50,3 +50,5 @@ ios/Runner/GoogleService-Info.plist
 
 # Environment variables
 .env
+
+CV_TEMPLATE_GENERATOR_README.md
