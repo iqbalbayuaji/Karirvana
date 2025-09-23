@@ -4,7 +4,7 @@ import '../../../styles/app_colors.dart';
 import '../controllers/job_openings_main_controller.dart';
 
 class JobCard extends StatelessWidget {
-  final JobOpening job;
+  final JobOpeningMain job;
   final VoidCallback? onTap;
 
   const JobCard({

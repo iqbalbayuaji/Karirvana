@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class JobOpening {
+class JobOpeningMain {
   final String id;
   final String title;
   final String company;
@@ -14,7 +14,7 @@ class JobOpening {
   final String postedDate;
   final bool isRemote;
 
-  JobOpening({
+  JobOpeningMain({
     required this.id,
     required this.title,
     required this.company,
@@ -29,14 +29,14 @@ class JobOpening {
   });
 }
 
-class JobOpeningsController extends GetxController {
+class JobOpeningsMainController extends GetxController {
   final searchController = TextEditingController();
   final searchQuery = ''.obs;
   final selectedFilter = 'Semua'.obs;
   final isLoading = false.obs;
   
-  final allJobs = <JobOpening>[].obs;
-  final filteredJobs = <JobOpening>[].obs;
+  final allJobs = <JobOpeningMain>[].obs;
+  final filteredJobs = <JobOpeningMain>[].obs;
 
   final filters = [
     'Semua',
@@ -75,7 +75,7 @@ class JobOpeningsController extends GetxController {
     
     // Sample job data
     allJobs.value = [
-      JobOpening(
+      JobOpeningMain(
         id: '1',
         title: 'Flutter Developer',
         company: 'TechCorp Indonesia',
@@ -88,7 +88,7 @@ class JobOpeningsController extends GetxController {
         postedDate: '2 hari yang lalu',
         isRemote: true,
       ),
-      JobOpening(
+      JobOpeningMain(
         id: '2',
         title: 'UI/UX Designer',
         company: 'Creative Studio',
@@ -101,7 +101,7 @@ class JobOpeningsController extends GetxController {
         postedDate: '1 hari yang lalu',
         isRemote: false,
       ),
-      JobOpening(
+      JobOpeningMain(
         id: '3',
         title: 'Digital Marketing Specialist',
         company: 'Marketing Pro',
@@ -114,7 +114,7 @@ class JobOpeningsController extends GetxController {
         postedDate: '3 hari yang lalu',
         isRemote: true,
       ),
-      JobOpening(
+      JobOpeningMain(
         id: '4',
         title: 'Sales Executive',
         company: 'Global Sales Inc',
@@ -127,7 +127,7 @@ class JobOpeningsController extends GetxController {
         postedDate: '1 minggu yang lalu',
         isRemote: false,
       ),
-      JobOpening(
+      JobOpeningMain(
         id: '5',
         title: 'Financial Analyst',
         company: 'Finance Solutions',
@@ -140,7 +140,7 @@ class JobOpeningsController extends GetxController {
         postedDate: '5 hari yang lalu',
         isRemote: true,
       ),
-      JobOpening(
+      JobOpeningMain(
         id: '6',
         title: 'HR Generalist',
         company: 'People First',
@@ -160,7 +160,7 @@ class JobOpeningsController extends GetxController {
   }
 
   void filterJobs() {
-    List<JobOpening> filtered = allJobs;
+    List<JobOpeningMain> filtered = allJobs;
     
     // Filter by category
     if (selectedFilter.value != 'Semua') {

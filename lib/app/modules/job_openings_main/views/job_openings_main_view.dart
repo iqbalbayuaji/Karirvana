@@ -6,8 +6,8 @@ import '../controllers/job_openings_main_controller.dart';
 import '../local_widgets/filter_chip.dart';
 import '../local_widgets/job_card.dart';
 
-class JobOpeningsView extends GetView<JobOpeningsController> {
-  const JobOpeningsView({super.key});
+class JobOpeningsMainView extends GetView<JobOpeningsMainController> {
+  const JobOpeningsMainView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -204,7 +204,7 @@ class HomepageView extends GetView<HomepageController> {
                                                 icon: CupertinoIcons.briefcase,
                                                 title: "Job Openings",
                                                 onTap: () {
-                                                  Get.toNamed(Routes.JOB_OPENINGS);
+                                                  Get.toNamed(Routes.JOB_OPENINGS_MAIN);
                                                 },
                                               ),
                                             ),
