@@ -322,44 +322,87 @@ class CvAssistantView extends GetView<CvAssistantController> {
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            height: 50,
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Buat Template CV',
-                hintStyle: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                  fontFamily: 'Montserrat',
-                ),
-                prefixIcon: const Icon(
-                        Icons.chat_bubble_outline,
+          Row(
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 50,
+                  child: TextFormField(
+                    controller: controller.templatePromptController,
+                    decoration: InputDecoration(
+                      hintText: 'Contoh: Buat CV untuk posisi Software Engineer dengan pengalaman 2 tahun',
+                      hintStyle: const TextStyle(
+                        fontSize: 12,
                         color: AppColors.textSecondary,
-                        size: 20,
+                        fontFamily: 'Montserrat',
                       ),
-                border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(
-                          color: AppColors.outline,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(
-                          color: AppColors.outline,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50),
-                        borderSide: const BorderSide(
-                          color: AppColors.primary,
-                          width: 1,
-                        ),
-                      ),
-                      filled: true,
-                      fillColor: AppColors.surfaceVariant,
+                      prefixIcon: const Icon(
+                              Icons.edit_document,
+                              color: AppColors.textSecondary,
+                              size: 20,
+                            ),
+                      border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              borderSide: const BorderSide(
+                                color: AppColors.outline,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              borderSide: const BorderSide(
+                                color: AppColors.outline,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              borderSide: const BorderSide(
+                                color: AppColors.primary,
+                                width: 1,
+                              ),
+                            ),
+                            filled: true,
+                            fillColor: AppColors.surfaceVariant,
+                    ),
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(width: 10),
+              Obx(() => Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppColors.primary, AppColors.secondary],
+                  ),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(25),
+                    onTap: controller.isGeneratingTemplate.value 
+                        ? null 
+                        : controller.generateCVTemplate,
+                    child: Center(
+                      child: controller.isGeneratingTemplate.value
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.send,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                    ),
+                  ),
+                ),
+              )),
+            ],
           )
         ],
       ),

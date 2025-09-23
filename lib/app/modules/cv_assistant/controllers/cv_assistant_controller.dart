@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../services/pdf_analysis_service.dart';
+import '../../../services/cv_template_service.dart';
 
 class CvAssistantController extends GetxController {
   // Observable variables
   final isUploading = false.obs;
   final uploadedFile = Rxn<Map<String, dynamic>>();
   final uploadProgress = 0.0.obs;
+  
+  // Template generation variables
+  final isGeneratingTemplate = false.obs;
+  final templatePromptController = TextEditingController();
+  final generatedTemplate = Rxn<Map<String, dynamic>>();
   
   @override
   void onInit() {
@@ -22,6 +28,7 @@ class CvAssistantController extends GetxController {
 
   @override
   void onClose() {
+    templatePromptController.dispose();
     super.onClose();
   }
 
@@ -105,5 +112,137 @@ class CvAssistantController extends GetxController {
         snackPosition: SnackPosition.TOP,
       );
     }
+  }
+  
+  // Generate CV template using Groq API
+  Future<void> generateCVTemplate() async {
+    if (templatePromptController.text.trim().isEmpty) {
+      Get.snackbar(
+        'Info',
+        'Silakan masukkan deskripsi untuk template CV Anda.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    
+    try {
+      isGeneratingTemplate.value = true;
+      
+      // Generate CV content using Groq API
+      Map<String, dynamic> cvData = await CVTemplateService.generateCVContent(
+        templatePromptController.text.trim()
+      );
+      
+      generatedTemplate.value = cvData;
+      
+      // Generate PDF file
+      File pdfFile = await CVTemplateService.generateCVPDF(cvData);
+      
+      // Show success dialog with download options
+      _showDownloadSuccessDialog(pdfFile.path, cvData);
+      
+      // Clear the input
+      templatePromptController.clear();
+      
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal membuat template CV: ${e.toString()}',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 5),
+      );
+    } finally {
+      isGeneratingTemplate.value = false;
+    }
+  }
+  
+  // Show download success dialog with action options
+  void _showDownloadSuccessDialog(String pdfPath, Map<String, dynamic> cvData) {
+    Get.dialog(
+      AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.green, size: 30),
+            const SizedBox(width: 10),
+            const Expanded(
+              child: Text(
+                'Template CV Berhasil Dibuat!',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'File PDF telah tersimpan di folder Downloads.',
+              style: TextStyle(fontSize: 14),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'Nama file: ${pdfPath.split('/').last}',
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('Tutup'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back();
+              try {
+                await CVTemplateService.sharePDF(pdfPath);
+              } catch (e) {
+                Get.snackbar(
+                  'Error',
+                  e.toString(),
+                  snackPosition: SnackPosition.TOP,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              }
+            },
+            child: const Text('Bagikan'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              try {
+                await CVTemplateService.openPDF(pdfPath);
+              } catch (e) {
+                Get.snackbar(
+                  'Error',
+                  e.toString(),
+                  snackPosition: SnackPosition.TOP,
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Buka PDF'),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
   }
 }
