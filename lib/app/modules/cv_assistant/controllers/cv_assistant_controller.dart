@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../services/pdf_analysis_service.dart';
 import '../../../services/cv_template_service.dart';
+import '../../../widgets/cv_template_popup.dart';
 
 class CvAssistantController extends GetxController {
   // Observable variables
@@ -141,7 +142,7 @@ class CvAssistantController extends GetxController {
       File pdfFile = await CVTemplateService.generateCVPDF(cvData);
       
       // Show success dialog with download options
-      _showDownloadSuccessDialog(pdfFile.path, cvData);
+      CVTemplatePopup.show(pdfFile.path, cvData);
       
       // Clear the input
       templatePromptController.clear();
@@ -158,74 +159,5 @@ class CvAssistantController extends GetxController {
     } finally {
       isGeneratingTemplate.value = false;
     }
-  }
-  
-  // Show download success dialog with action options
-  void _showDownloadSuccessDialog(String pdfPath, Map<String, dynamic> cvData) {
-    Get.dialog(
-      AlertDialog(
-        title: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.green, size: 30),
-            const SizedBox(width: 10),
-            const Expanded(
-              child: Text(
-                'Template CV Berhasil Dibuat!',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'File PDF telah tersimpan di folder Downloads.',
-              style: TextStyle(fontSize: 14),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Nama file: ${pdfPath.split('/').last}',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Tutup'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Get.back();
-              try {
-                await CVTemplateService.openPDF(pdfPath);
-              } catch (e) {
-                Get.snackbar(
-                  'Error',
-                  e.toString(),
-                  snackPosition: SnackPosition.TOP,
-                  backgroundColor: Colors.red,
-                  colorText: Colors.white,
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Buka PDF'),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
-    );
   }
 }
