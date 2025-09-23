@@ -23,6 +23,7 @@ abstract class Routes {
   static const CV_ASSISTANT = _Paths.CV_ASSISTANT;
   static const CV_DISPLAY = _Paths.CV_DISPLAY;
   static const CV_ANALYSIS = _Paths.CV_ANALYSIS;
+  static const JOB_OPENINGS = _Paths.JOB_OPENINGS;
 }
 
 abstract class _Paths {
@@ -47,4 +48,5 @@ abstract class _Paths {
   static const CV_ASSISTANT = '/cv-assistant';
   static const CV_DISPLAY = '/cv-display';
   static const CV_ANALYSIS = '/cv-analysis';
+  static const JOB_OPENINGS = '/job-openings';
 }

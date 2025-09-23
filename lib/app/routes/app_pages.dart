@@ -20,16 +20,18 @@ import '../modules/course_store_main/bindings/course_store_main_binding.dart';
 import '../modules/course_store_main/views/course_store_main_view.dart';
 import '../modules/course_user/bindings/course_user_binding.dart';
 import '../modules/course_user/views/course_user_view.dart';
+import '../modules/cv_analysis/bindings/cv_analysis_binding.dart';
+import '../modules/cv_analysis/views/cv_analysis_view.dart';
 import '../modules/cv_assistant/bindings/cv_assistant_binding.dart';
 import '../modules/cv_assistant/views/cv_assistant_view.dart';
 import '../modules/cv_display/bindings/cv_display_binding.dart';
 import '../modules/cv_display/views/cv_display_view.dart';
-import '../modules/cv_analysis/bindings/cv_analysis_binding.dart';
-import '../modules/cv_analysis/views/cv_analysis_view.dart';
 import '../modules/edit_profile/bindings/edit_profile_binding.dart';
 import '../modules/edit_profile/views/edit_profile_view.dart';
 import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
+import '../modules/job_openings/bindings/job_openings_binding.dart';
+import '../modules/job_openings/views/job_openings_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/personalization/bindings/personalization_binding.dart';
@@ -141,6 +143,11 @@ class AppPages {
       name: _Paths.CV_ANALYSIS,
       page: () => const CvAnalysisView(),
       binding: CvAnalysisBinding(),
+    ),
+    GetPage(
+      name: _Paths.JOB_OPENINGS,
+      page: () => const JobOpeningsView(),
+      binding: JobOpeningsBinding(),
     ),
   ];
 }
