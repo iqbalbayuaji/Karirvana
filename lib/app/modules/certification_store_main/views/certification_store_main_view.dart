@@ -206,17 +206,7 @@ class CertificationStoreMainView extends GetView<CertificationStoreMainControlle
                     return CertificationCard(
                       certification: certification,
                       onTap: () {
-                        // Navigate to certification detail
-                        Get.snackbar(
-                          'Sertifikasi Dipilih',
-                          'Navigasi ke ${certification.title}',
-                          backgroundColor: AppColors.primary,
-                          colorText: AppColors.textOnPrimary,
-                          duration: Duration(seconds: 2),
-                          snackPosition: SnackPosition.BOTTOM,
-                          margin: EdgeInsets.all(16),
-                          borderRadius: 12,
-                        );
+
                       },
                     );
                   },

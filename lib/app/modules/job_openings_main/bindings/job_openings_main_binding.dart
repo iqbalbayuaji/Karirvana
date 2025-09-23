@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../controllers/job_openings_controller.dart';
+import '../controllers/job_openings_main_controller.dart';
 
 class JobOpeningsBinding extends Bindings {
   @override

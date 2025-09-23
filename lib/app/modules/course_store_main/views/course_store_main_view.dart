@@ -205,17 +205,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                     return CourseCard(
                       course: course,
                       onTap: () {
-                        // Navigate to course detail
-                        Get.snackbar(
-                          'Course Selected',
-                          'Navigating to ${course.title}',
-                          backgroundColor: AppColors.primary,
-                          colorText: AppColors.textOnPrimary,
-                          duration: Duration(seconds: 2),
-                          snackPosition: SnackPosition.BOTTOM,
-                          margin: EdgeInsets.all(16),
-                          borderRadius: 12,
-                        );
+                        
                       },
                     );
                   },

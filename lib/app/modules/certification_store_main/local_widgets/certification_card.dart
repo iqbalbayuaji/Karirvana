@@ -21,7 +21,7 @@ class CertificationCard extends StatelessWidget {
         children: [
           Container(
             margin: EdgeInsets.fromLTRB(10, 13, 0, 10),
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(16),
@@ -141,14 +141,6 @@ class CertificationCard extends StatelessWidget {
                         children: [
                           certification.isFree
                               ? Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF10B981).withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
                                   child: Text(
                                     'GRATIS',
                                     style: TextStyle(
@@ -197,14 +189,6 @@ class CertificationCard extends StatelessWidget {
                                 ),
           
                           Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _getLevelColor(certification.level).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
                             child: Text(
                               certification.level,
                               style: TextStyle(

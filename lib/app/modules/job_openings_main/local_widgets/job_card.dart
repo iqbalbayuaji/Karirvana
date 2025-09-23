@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../styles/app_colors.dart';
-import '../controllers/job_openings_controller.dart';
+import '../controllers/job_openings_main_controller.dart';
 
 class JobCard extends StatelessWidget {
   final JobOpening job;
