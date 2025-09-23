@@ -107,7 +107,7 @@ class CertificationStoreMainView extends GetView<CertificationStoreMainControlle
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: AppColors.primaryContainer,
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
                             color: AppColors.outline.withOpacity(0.2),
