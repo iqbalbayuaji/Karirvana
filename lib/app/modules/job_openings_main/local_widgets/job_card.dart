@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../routes/app_pages.dart';
 import '../../../styles/app_colors.dart';
 import '../controllers/job_openings_main_controller.dart';
 
@@ -16,7 +18,9 @@ class JobCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        Get.toNamed(Routes.JOB_OPENINGS);
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(20),

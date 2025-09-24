@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:karirvana/app/modules/job_openings/bindings/job_openings_binding.dart';
 
 import '../modules/Interview_Practice/bindings/interview_practice_binding.dart';
 import '../modules/Interview_Practice/views/interview_practice_setup_view.dart';
@@ -13,6 +12,8 @@ import '../modules/Interview_Practice_History_Chat/bindings/interview_practice_h
 import '../modules/Interview_Practice_History_Chat/views/interview_practice_history_chat_view.dart';
 import '../modules/career_assistant/bindings/career_assistant_binding.dart';
 import '../modules/career_assistant/views/career_assistant_view.dart';
+import '../modules/certification_store/bindings/certification_store_binding.dart';
+import '../modules/certification_store/views/certification_store_view.dart';
 import '../modules/certification_store_main/bindings/certification_store_main_binding.dart';
 import '../modules/certification_store_main/views/certification_store_main_view.dart';
 import '../modules/course_store/bindings/course_store_binding.dart';
@@ -31,6 +32,7 @@ import '../modules/edit_profile/bindings/edit_profile_binding.dart';
 import '../modules/edit_profile/views/edit_profile_view.dart';
 import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
+import '../modules/job_openings/bindings/job_openings_binding.dart';
 import '../modules/job_openings/views/job_openings_view.dart';
 import '../modules/job_openings_main/bindings/job_openings_main_binding.dart';
 import '../modules/job_openings_main/views/job_openings_main_view.dart';
@@ -155,6 +157,11 @@ class AppPages {
       name: _Paths.JOB_OPENINGS,
       page: () => const JobOpeningsView(),
       binding: JobOpeningsBinding(),
+    ),
+    GetPage(
+      name: _Paths.CERTIFICATION_STORE,
+      page: () => const CertificationStoreView(),
+      binding: CertificationStoreBinding(),
     ),
   ];
 }

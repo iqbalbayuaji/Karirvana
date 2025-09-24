@@ -25,6 +25,7 @@ abstract class Routes {
   static const CV_ANALYSIS = _Paths.CV_ANALYSIS;
   static const JOB_OPENINGS = _Paths.JOB_OPENINGS;
   static const JOB_OPENINGS_MAIN = _Paths.JOB_OPENINGS_MAIN;
+  static const CERTIFICATION_STORE = _Paths.CERTIFICATION_STORE;
 }
 
 abstract class _Paths {
@@ -51,4 +52,5 @@ abstract class _Paths {
   static const CV_ANALYSIS = '/cv-analysis';
   static const JOB_OPENINGS = '/job-openings';
   static const JOB_OPENINGS_MAIN = '/job-openings-main';
+  static const CERTIFICATION_STORE = '/certification-store';
 }

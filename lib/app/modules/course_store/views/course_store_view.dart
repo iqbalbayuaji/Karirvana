@@ -599,23 +599,18 @@ class CourseStoreView extends GetView<CourseStoreController> {
                   top: 40,
                   left: 25,
                   child: GestureDetector(
-                    onTap: () => Get.back(),
+                    onTap: () {
+                      Get.back();
+                    },
                     child: Container(
-                      width: 45,
-                      height: 45,
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppColors.surface.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.outline),
                       ),
-                      child: Icon(
-                        CupertinoIcons.back,
+                      child: const Icon(
+                        Icons.arrow_back,
                         color: AppColors.textPrimary,
                         size: 20,
                       ),

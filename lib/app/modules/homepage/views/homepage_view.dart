@@ -479,7 +479,10 @@ class HomepageView extends GetView<HomepageController> {
                                             ),
                                             child: GestureDetector(
                                               onTap: () {
-                                                Get.toNamed(Routes.CAREER_ASSISTANT);
+                                                Get.toNamed(
+                                                  Routes.CAREER_ASSISTANT,
+                                                  arguments: {'autofocus': true},
+                                                );
                                               },
                                               child: Column(
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

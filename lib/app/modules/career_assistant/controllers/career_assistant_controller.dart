@@ -16,6 +16,7 @@ class CareerAssistantController extends GetxController {
   final RxBool isTyping = false.obs;
   final TextEditingController messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
+  final FocusNode inputFocusNode = FocusNode();
 
   // Speech recognition functionality
   final RxBool isListening = false.obs;
@@ -42,12 +43,20 @@ class CareerAssistantController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    final args = Get.arguments;
+    final bool shouldAutofocus = args is Map && (args['autofocus'] == true);
+    if (shouldAutofocus) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        inputFocusNode.requestFocus();
+      });
+    }
   }
 
   @override
   void onClose() {
     messageController.dispose();
     scrollController.dispose();
+    inputFocusNode.dispose();
     super.onClose();
   }
 

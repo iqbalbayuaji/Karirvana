@@ -92,6 +92,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                 ),
                 child: Obx(() => TextFormField(
                   controller: controller.messageController,
+                  focusNode: controller.inputFocusNode,
                   onFieldSubmitted: (value) {
                     if (value.trim().isNotEmpty) {
                       controller.sendMessage(value);
