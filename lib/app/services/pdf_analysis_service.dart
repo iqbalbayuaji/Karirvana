@@ -5,10 +5,26 @@ import 'package:flutter/foundation.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:archive/archive.dart';
 
 class PDFAnalysisService {
   static const String _groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
   
+  /// Extract text from a file (PDF, DOCX, DOC)
+  static Future<String> extractTextFromFile(File file) async {
+    final path = file.path.toLowerCase();
+    if (path.endsWith('.pdf')) {
+      return extractTextFromPDF(file);
+    } else if (path.endsWith('.docx')) {
+      return extractTextFromDOCX(file);
+    } else if (path.endsWith('.doc')) {
+      // Legacy .doc (binary) is not supported without native conversion tools
+      throw Exception('Format DOC (Word lama) belum didukung. Silakan konversi ke PDF atau DOCX.');
+    } else {
+      throw Exception('Format file tidak didukung. Gunakan PDF atau DOCX.');
+    }
+  }
+
   /// Extract text from PDF file using Syncfusion
   static Future<String> extractTextFromPDF(File pdfFile) async {
     try {
@@ -45,6 +61,58 @@ class PDFAnalysisService {
     } catch (e) {
       debugPrint('Error extracting PDF text: $e');
       throw Exception('Failed to extract text from PDF: ${e.toString()}');
+    }
+  }
+
+  /// Extract text from DOCX file by reading word/document.xml and concatenating all w:t runs
+  static Future<String> extractTextFromDOCX(File docxFile) async {
+    try {
+      final bytes = await docxFile.readAsBytes();
+      // DOCX is a ZIP file; quick sanity check for 'PK' header
+      if (bytes.length < 2 || bytes[0] != 0x50 || bytes[1] != 0x4B) {
+        throw Exception('File DOCX tidak valid (bukan arsip ZIP)');
+      }
+
+      final archive = ZipDecoder().decodeBytes(bytes, verify: false);
+      ArchiveFile? documentXml;
+      for (final f in archive.files) {
+        final name = f.name.replaceAll('\\', '/');
+        if (name.endsWith('word/document.xml')) {
+          documentXml = f;
+          break;
+        }
+      }
+
+      if (documentXml == null) {
+        throw Exception('Dokumen DOCX tidak memiliki word/document.xml');
+      }
+
+      final xmlContent = utf8.decode(documentXml.content as List<int>);
+
+      // Extract all text inside <w:t> ... </w:t>
+      final reg = RegExp(r'<w:t[^>]*>(.*?)<\/w:t>', multiLine: true, dotAll: true);
+      final matches = reg.allMatches(xmlContent);
+      if (matches.isEmpty) {
+        throw Exception('Tidak ditemukan teks yang dapat dibaca dalam DOCX');
+      }
+
+      final buffer = StringBuffer();
+      for (final m in matches) {
+        var t = m.group(1) ?? '';
+        t = _unescapeXml(t);
+        if (t.isNotEmpty) {
+          buffer.writeln(t);
+        }
+      }
+
+      final result = buffer.toString().trim();
+      if (result.isEmpty) {
+        throw Exception('Tidak ditemukan teks yang dapat dibaca dalam DOCX');
+      }
+      return result;
+    } catch (e) {
+      debugPrint('Error extracting DOCX text: $e');
+      throw Exception('Gagal mengekstrak teks dari DOCX: ${e.toString()}');
     }
   }
   
@@ -216,6 +284,38 @@ INGAT: Hanya berikan JSON object, tidak ada teks lain!
     }
   }
   
+  /// Validate file (PDF/DOCX/DOC) before processing
+  static Future<bool> validateFile(File file) async {
+    try {
+      // Check file size (max 5MB)
+      final fileSizeInBytes = await file.length();
+      final fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      if (fileSizeInMB > 5) {
+        throw Exception('Ukuran file melebihi 5MB');
+      }
+
+      final lower = file.path.toLowerCase();
+      if (lower.endsWith('.pdf')) {
+        return await validatePDFFile(file);
+      } else if (lower.endsWith('.docx')) {
+        // Quick check: must be a ZIP
+        final bytes = await file.readAsBytes();
+        if (bytes.length < 2 || bytes[0] != 0x50 || bytes[1] != 0x4B) {
+          throw Exception('File DOCX tidak valid');
+        }
+        return true;
+      } else if (lower.endsWith('.doc')) {
+        // We don't support parsing .doc; allow selection but warn later during extraction
+        return true;
+      } else {
+        throw Exception('Format file tidak didukung. Gunakan PDF atau DOCX.');
+      }
+    } catch (e) {
+      debugPrint('General file validation error: $e');
+      rethrow;
+    }
+  }
+
   /// Validate PDF file before processing
   static Future<bool> validatePDFFile(File pdfFile) async {
     try {
@@ -241,5 +341,15 @@ INGAT: Hanya berikan JSON object, tidak ada teks lain!
       debugPrint('PDF validation error: $e');
       rethrow;
     }
+  }
+
+  /// Unescape common XML entities
+  static String _unescapeXml(String text) {
+    return text
+        .replaceAll('&amp;', '&')
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&apos;', "'");
   }
 }

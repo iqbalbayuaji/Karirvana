@@ -33,13 +33,13 @@ class CvAssistantController extends GetxController {
     super.onClose();
   }
 
-  // Pick and process PDF file (UI unchanged, logic updated)
+  // Pick and process CV file (supports PDF/DOC/DOCX)
   Future<void> pickAndUploadFile() async {
     try {
-      // Pick PDF file only
+      // Pick PDF/DOC/DOCX file
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf'], // Only PDF files
+        allowedExtensions: ['pdf', 'doc', 'docx'],
         allowMultiple: false,
       );
 
@@ -48,10 +48,12 @@ class CvAssistantController extends GetxController {
         uploadProgress.value = 0.0;
         
         File file = File(result.files.single.path!);
+        final String pathLower = file.path.toLowerCase();
+        final String ext = pathLower.contains('.') ? pathLower.split('.').last : '';
         
-        // Validate PDF file
+        // Validate file
         try {
-          await PDFAnalysisService.validatePDFFile(file);
+          await PDFAnalysisService.validateFile(file);
         } catch (e) {
           Get.snackbar(
             'Error',
@@ -72,8 +74,8 @@ class CvAssistantController extends GetxController {
         // Store file info (same structure as before for UI compatibility)
         int fileSizeInBytes = await file.length();
         uploadedFile.value = {
-          'fileName': file.path.split('/').last,
-          'fileType': 'pdf',
+          'fileName': file.uri.pathSegments.isNotEmpty ? file.uri.pathSegments.last : file.path,
+          'fileType': ext,
           'fileSize': fileSizeInBytes,
           'filePath': file.path, // Store local path instead of URL
           'uploadedAt': DateTime.now().toIso8601String(),
@@ -81,7 +83,7 @@ class CvAssistantController extends GetxController {
         
         Get.snackbar(
           'Berhasil',
-          'File PDF berhasil dipilih!',
+          'File berhasil dipilih!',
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.green,
           colorText: Colors.white,
@@ -109,7 +111,7 @@ class CvAssistantController extends GetxController {
     } else {
       Get.snackbar(
         'Info',
-        'Silakan pilih file PDF terlebih dahulu.',
+        'Silakan pilih file terlebih dahulu.',
         snackPosition: SnackPosition.TOP,
       );
     }

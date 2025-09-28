@@ -239,7 +239,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            'Format: PDF, DOC, DOCX',
+                            'Format: PDF, DOCX',
                             style: TextStyle(
                               fontSize: 12,
                               fontFamily: 'Montserrat',

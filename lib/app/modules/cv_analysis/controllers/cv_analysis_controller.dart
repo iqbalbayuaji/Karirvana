@@ -63,8 +63,8 @@ class CvAnalysisController extends GetxController {
     errorMessage.value = '';
     
     try {
-      // Step 1: Extract text from PDF
-      await _extractTextFromPDF();
+      // Step 1: Extract text from document (PDF/DOCX)
+      await _extractTextFromFile();
       
       // Step 2: Analyze with Groq API
       await _analyzeWithGroq();
@@ -74,16 +74,16 @@ class CvAnalysisController extends GetxController {
     }
   }
   
-  /// Extract text from PDF file
-  Future<void> _extractTextFromPDF() async {
+  /// Extract text from document file (PDF/DOCX)
+  Future<void> _extractTextFromFile() async {
     try {
       isExtracting.value = true;
       
-      String text = await PDFAnalysisService.extractTextFromPDF(selectedFile!);
+      String text = await PDFAnalysisService.extractTextFromFile(selectedFile!);
       extractedText.value = text;
       
       if (text.trim().isEmpty) {
-        throw Exception('No readable text found in PDF');
+        throw Exception('No readable text found in document');
       }
       
     } catch (e) {
@@ -174,7 +174,7 @@ class CvAnalysisController extends GetxController {
   
   String get currentStatus {
     if (hasError.value) return 'Error';
-    if (isExtracting.value) return 'Membaca PDF...';
+    if (isExtracting.value) return 'Membaca dokumen...';
     if (isAnalyzing.value) return 'Menganalisis dengan AI...';
     if (isCompleted) return 'Analisis Selesai';
     return 'Memulai analisis...';
