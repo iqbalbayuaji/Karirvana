@@ -149,10 +149,10 @@ class CvAssistantController extends GetxController {
       
       generatedTemplate.value = cvData;
       
-      // Generate PDF file
+      // Generate PDF file first
       File pdfFile = await CVTemplateService.generateCVPDF(cvData);
       
-      // Show success dialog with download options
+      // Show popup with dual export options
       CVTemplatePopup.show(pdfFile.path, cvData);
       
       // Clear the input
@@ -171,6 +171,7 @@ class CvAssistantController extends GetxController {
       isGeneratingTemplate.value = false;
     }
   }
+
   
   // Generate CV template specifically for current user
   Future<void> generateCVTemplateForSelf() async {
@@ -196,10 +197,10 @@ class CvAssistantController extends GetxController {
       
       generatedTemplate.value = cvData;
       
-      // Generate PDF file
+      // Generate PDF file first
       File pdfFile = await CVTemplateService.generateCVPDF(cvData);
       
-      // Show success dialog with download options
+      // Show popup with dual export options
       CVTemplatePopup.show(pdfFile.path, cvData);
       
       // Clear the input
@@ -243,10 +244,10 @@ class CvAssistantController extends GetxController {
       
       generatedTemplate.value = cvData;
       
-      // Generate PDF file
+      // Generate PDF file first
       File pdfFile = await CVTemplateService.generateCVPDF(cvData);
       
-      // Show success dialog with download options
+      // Show popup with dual export options
       CVTemplatePopup.show(pdfFile.path, cvData);
       
       // Clear the input

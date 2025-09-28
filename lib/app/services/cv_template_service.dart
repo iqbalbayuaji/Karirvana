@@ -11,6 +11,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:archive/archive.dart';
 import 'firestore_service.dart';
 
 class CVTemplateService {
@@ -519,6 +520,352 @@ Hanya berikan JSON, tanpa teks lain!
     } catch (e) {
       debugPrint('Error sharing PDF: $e');
       throw Exception('Tidak dapat membagikan file PDF');
+    }
+  }
+
+  /// Generate DOCX from CV data
+  static Future<File> generateCVDOCX(Map<String, dynamic> cvData) async {
+    try {
+      // Create DOCX content
+      String docxContent = _generateSimpleDOCXContent(cvData);
+      
+      // Create DOCX archive
+      final archive = Archive();
+      
+      // Add required DOCX files
+      final contentTypesData = _getContentTypesXml();
+      final relsData = _getRelsXml();
+      final docRelsData = _getDocumentRelsXml();
+      final documentData = utf8.encode(docxContent);
+      
+      archive.addFile(ArchiveFile('[Content_Types].xml', contentTypesData.length, contentTypesData));
+      archive.addFile(ArchiveFile('_rels/.rels', relsData.length, relsData));
+      archive.addFile(ArchiveFile('word/_rels/document.xml.rels', docRelsData.length, docRelsData));
+      archive.addFile(ArchiveFile('word/document.xml', documentData.length, documentData));
+      
+      // Encode archive to ZIP
+      final zipEncoder = ZipEncoder();
+      final zipData = zipEncoder.encode(archive);
+      
+      if (zipData == null) {
+        throw Exception('Failed to create DOCX file');
+      }
+      
+      // Save to Downloads folder
+      return await _saveDOCXToDownloads(zipData, cvData);
+    } catch (e) {
+      debugPrint('Error generating DOCX: $e');
+      throw Exception('Gagal membuat file DOCX: ${e.toString()}');
+    }
+  }
+
+  /// Generate simple DOCX content XML
+  static String _generateSimpleDOCXContent(Map<String, dynamic> cvData) {
+    final personalInfo = cvData['personalInfo'] ?? {};
+    final experience = cvData['experience'] as List? ?? [];
+    final education = cvData['education'] as List? ?? [];
+    final skills = cvData['skills'] as List? ?? [];
+    
+    String content = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>
+    <!-- Header Section -->
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+          <w:sz w:val="32"/>
+        </w:rPr>
+        <w:t>${_escapeXml(personalInfo['fullName'] ?? 'Nama Lengkap')}</w:t>
+      </w:r>
+    </w:p>
+    
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+      </w:pPr>
+      <w:r>
+        <w:rPr>
+          <w:i/>
+          <w:sz w:val="20"/>
+        </w:rPr>
+        <w:t>${_escapeXml(personalInfo['title'] ?? 'Posisi')}</w:t>
+      </w:r>
+    </w:p>
+    
+    <!-- Contact Information -->
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+      </w:pPr>
+      <w:r>
+        <w:t>${_escapeXml(personalInfo['email'] ?? '')} | ${_escapeXml(personalInfo['phone'] ?? '')}</w:t>
+      </w:r>
+    </w:p>
+    
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+      </w:pPr>
+      <w:r>
+        <w:t>${_escapeXml(personalInfo['location'] ?? 'Jakarta, Indonesia')}</w:t>
+      </w:r>
+    </w:p>''';
+
+    // Add age and date of birth if available
+    if (personalInfo['age'] != null || personalInfo['dateOfBirth'] != null) {
+      content += '''
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center"/>
+      </w:pPr>
+      <w:r>
+        <w:t>''';
+      if (personalInfo['age'] != null) {
+        content += _escapeXml('Umur: ${personalInfo['age']} tahun');
+      }
+      if (personalInfo['dateOfBirth'] != null) {
+        if (personalInfo['age'] != null) content += ' | ';
+        content += _escapeXml('Tanggal Lahir: ${personalInfo['dateOfBirth']}');
+      }
+      content += '''</w:t>
+      </w:r>
+    </w:p>''';
+    }
+
+    // Summary Section
+    content += '''
+    
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+          <w:sz w:val="24"/>
+        </w:rPr>
+        <w:t>RINGKASAN</w:t>
+      </w:r>
+    </w:p>
+    
+    <w:p>
+      <w:r>
+        <w:t>${_escapeXml(cvData['summary'] ?? '')}</w:t>
+      </w:r>
+    </w:p>''';
+
+    // Experience Section
+    if (experience.isNotEmpty) {
+      content += '''
+    
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+          <w:sz w:val="24"/>
+        </w:rPr>
+        <w:t>PENGALAMAN KERJA</w:t>
+      </w:r>
+    </w:p>''';
+
+      for (var exp in experience) {
+        content += '''
+    
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>${_escapeXml(exp['position'] ?? '')} - ${_escapeXml(exp['company'] ?? '')}</w:t>
+      </w:r>
+    </w:p>
+    
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:i/>
+        </w:rPr>
+        <w:t>${_escapeXml(exp['duration'] ?? '')}</w:t>
+      </w:r>
+    </w:p>
+    
+    <w:p>
+      <w:r>
+        <w:t>${_escapeXml(exp['description'] ?? '')}</w:t>
+      </w:r>
+    </w:p>''';
+      }
+    }
+
+    // Education Section
+    if (education.isNotEmpty) {
+      content += '''
+    
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+          <w:sz w:val="24"/>
+        </w:rPr>
+        <w:t>PENDIDIKAN</w:t>
+      </w:r>
+    </w:p>''';
+
+      for (var edu in education) {
+        content += '''
+    
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+        </w:rPr>
+        <w:t>${_escapeXml(edu['degree'] ?? '')} - ${_escapeXml(edu['institution'] ?? '')}</w:t>
+      </w:r>
+    </w:p>
+    
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:i/>
+        </w:rPr>
+        <w:t>${_escapeXml(edu['year'] ?? '')}</w:t>
+      </w:r>
+    </w:p>''';
+      }
+    }
+
+    // Skills Section
+    if (skills.isNotEmpty) {
+      content += '''
+    
+    <w:p>
+      <w:r>
+        <w:rPr>
+          <w:b/>
+          <w:sz w:val="24"/>
+        </w:rPr>
+        <w:t>KEAHLIAN</w:t>
+      </w:r>
+    </w:p>
+    
+    <w:p>
+      <w:r>
+        <w:t>${_escapeXml(skills.join(', '))}</w:t>
+      </w:r>
+    </w:p>''';
+    }
+
+    content += '''
+  </w:body>
+</w:document>''';
+
+    return content;
+  }
+
+  /// Escape XML special characters
+  static String _escapeXml(String text) {
+    return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&apos;');
+  }
+
+  /// Get Content Types XML for DOCX
+  static List<int> _getContentTypesXml() {
+    const content = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>''';
+    return utf8.encode(content);
+  }
+
+  /// Get main relationships XML for DOCX
+  static List<int> _getRelsXml() {
+    const content = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>''';
+    return utf8.encode(content);
+  }
+
+  /// Get document relationships XML for DOCX
+  static List<int> _getDocumentRelsXml() {
+    const content = '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+</Relationships>''';
+    return utf8.encode(content);
+  }
+
+  /// Save DOCX to Downloads folder
+  static Future<File> _saveDOCXToDownloads(List<int> bytes, Map<String, dynamic> cvData) async {
+    try {
+      // Request storage permission
+      await _requestStoragePermission();
+      
+      // Generate filename
+      final personalInfo = cvData['personalInfo'] ?? {};
+      String fileName = 'CV_${personalInfo['fullName'] ?? 'Template'}_${DateTime.now().millisecondsSinceEpoch}.docx';
+      fileName = fileName.replaceAll(' ', '_').replaceAll(RegExp(r'[^\w\-_\.]'), '');
+      
+      Directory? directory;
+      
+      if (Platform.isAndroid) {
+        directory = Directory('/storage/emulated/0/Download');
+        if (!await directory.exists()) {
+          directory = await getExternalStorageDirectory();
+        }
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+      }
+      
+      final file = File('${directory!.path}/$fileName');
+      await file.writeAsBytes(bytes);
+      
+      debugPrint('DOCX saved to: ${file.path}');
+      return file;
+    } catch (e) {
+      debugPrint('Error saving DOCX to downloads: $e');
+      // Fallback
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/cv_template_${DateTime.now().millisecondsSinceEpoch}.docx');
+      await file.writeAsBytes(bytes);
+      return file;
+    }
+  }
+
+  /// Open DOCX file with default app
+  static Future<void> openDOCX(String filePath) async {
+    try {
+      final result = await OpenFile.open(filePath);
+      debugPrint('Open DOCX result: ${result.message}');
+      
+      if (result.type != ResultType.done) {
+        throw Exception('Gagal membuka file: ${result.message}');
+      }
+    } catch (e) {
+      debugPrint('Error opening DOCX: $e');
+      
+      // Fallback: Show file path to user
+      if (e.toString().contains('MissingPluginException')) {
+        throw Exception('Plugin belum siap. Silakan restart aplikasi dan coba lagi.\n\nFile tersimpan di: $filePath');
+      } else {
+        throw Exception('Tidak dapat membuka file DOCX: ${e.toString()}');
+      }
+    }
+  }
+
+  /// Share DOCX file
+  static Future<void> shareDOCX(String filePath) async {
+    try {
+      await Share.shareXFiles([XFile(filePath)], text: 'Template CV saya');
+    } catch (e) {
+      debugPrint('Error sharing DOCX: $e');
+      throw Exception('Tidak dapat membagikan file DOCX');
     }
   }
 }

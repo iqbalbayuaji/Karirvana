@@ -229,7 +229,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
                           Icon(CupertinoIcons.cloud_upload, color: AppColors.primary, size: 50),
                           SizedBox(height: 15),
                           Text(
-                            'Upload CV Anda',
+                            'Pilih File CV ',
                             style: TextStyle(
                               fontSize: 16,
                               fontFamily: 'Montserrat',
@@ -239,7 +239,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
                           ),
                           SizedBox(height: 5),
                           Text(
-                            'Format: PDF (Max 5MB)',
+                            'Format: PDF, DOC, DOCX',
                             style: TextStyle(
                               fontSize: 12,
                               fontFamily: 'Montserrat',
@@ -313,7 +313,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Buat template CV secara custom',
+            'Buat template CV secara custom dalam format PDF atau DOCX',
             textAlign: TextAlign.left,
             style: TextStyle(
               fontSize: 14,
@@ -399,6 +399,7 @@ class CvAssistantView extends GetView<CvAssistantController> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: AppColors.textOnPrimary,
                         ),
                       ),
               ),

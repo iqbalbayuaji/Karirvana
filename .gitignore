@@ -52,3 +52,6 @@ ios/Runner/GoogleService-Info.plist
 .env
 
 CV_TEMPLATE_GENERATOR_README.md
+
+# Documentation folder
+docs/

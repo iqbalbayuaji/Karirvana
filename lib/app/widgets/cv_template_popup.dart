@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../styles/app_colors.dart';
@@ -121,6 +122,71 @@ class CVTemplatePopup {
                           fontWeight: FontWeight.w600,
                           fontFamily: 'Montserrat',
                           color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+                  // Download DOCX Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        Get.back();
+                        try {
+                          // Show loading
+                          Get.dialog(
+                            const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            barrierDismissible: false,
+                          );
+
+                          // Generate DOCX file
+                          File docxFile = await CVTemplateService.generateCVDOCX(cvData);
+
+                          // Close loading
+                          Get.back();
+
+                          // Open DOCX file
+                          await CVTemplateService.openDOCX(docxFile.path);
+
+                          Get.snackbar(
+                            'Berhasil',
+                            'File DOCX berhasil dibuat dan disimpan!',
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
+                        } catch (e) {
+                          // Close loading if still open
+                          if (Get.isDialogOpen == true) Get.back();
+                          
+                          Get.snackbar(
+                            'Error',
+                            'Gagal membuat file DOCX: ${e.toString()}',
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                            duration: const Duration(seconds: 5),
+                          );
+                        }
+                      },
+                      label: const Text(
+                        'Buka DOCX',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                     ),
