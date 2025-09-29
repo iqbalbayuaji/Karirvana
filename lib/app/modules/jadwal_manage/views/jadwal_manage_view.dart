@@ -375,6 +375,22 @@ class JadwalManageView extends GetView<JadwalManageController> {
         return Colors.grey;
     }
   }
+
+  /// Format time range for display
+  String _formatTimeRange(TaskModel task) {
+    if (task.time == null) {
+      return 'Sepanjang hari';
+    }
+    
+    final startTime = '${task.time!.hour.toString().padLeft(2, '0')}:${task.time!.minute.toString().padLeft(2, '0')}';
+    
+    if (task.endTime == null) {
+      return startTime;
+    }
+    
+    final endTime = '${task.endTime!.hour.toString().padLeft(2, '0')}:${task.endTime!.minute.toString().padLeft(2, '0')}';
+    return '$startTime - $endTime';
+  }
   
   Widget _buildCustomCalendar() {
     final now = DateTime.now();
@@ -603,7 +619,7 @@ class JadwalManageView extends GetView<JadwalManageController> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            time,
+                            _formatTimeRange(task),
                             style: TextStyle(
                               fontSize: 12,
                               fontFamily: 'Montserrat',
@@ -634,28 +650,6 @@ class JadwalManageView extends GetView<JadwalManageController> {
                               ),
                             ),
                           ),
-                          if (task.isCompleted) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF4CAF50).withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Text(
-                                'Selesai',
-                                style: TextStyle(
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Montserrat',
-                                  color: Color(0xFF4CAF50),
-                                ),
-                              ),
-                            ),
-                          ],
                         ],
                       ),
                     ],

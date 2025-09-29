@@ -204,6 +204,15 @@ class JadwalAddController extends GetxController {
         startTime.value.minute,
       );
       
+      // Create DateTime from selected date and end time
+      final taskEndDateTime = DateTime(
+        selectedDate.value.year,
+        selectedDate.value.month,
+        selectedDate.value.day,
+        endTime.value.hour,
+        endTime.value.minute,
+      );
+      
       // Create new task
       final task = TaskModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -212,6 +221,7 @@ class JadwalAddController extends GetxController {
         description: descriptionController.text.trim(),
         date: selectedDate.value,
         time: taskDateTime,
+        endTime: taskEndDateTime,
         priority: selectedPriority.value,
         category: selectedCategory.value,
         isCompleted: false,

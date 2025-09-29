@@ -77,7 +77,7 @@ class JadwalManageController extends GetxController {
       Get.snackbar(
         'Error',
         'Gagal memuat jadwal: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red[400]!,
         colorText: Colors.white,
         duration: const Duration(seconds: 3),
@@ -111,19 +111,6 @@ class JadwalManageController extends GetxController {
       // Update in Firebase
       await _taskService.toggleTaskCompletion(taskId, newCompletionStatus);
 
-      // Show success feedback
-      Get.snackbar(
-        newCompletionStatus ? 'Tugas Selesai' : 'Tugas Dibatalkan',
-        newCompletionStatus 
-            ? 'Tugas "${task.title}" telah diselesaikan'
-            : 'Tugas "${task.title}" dibatalkan penyelesaiannya',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: newCompletionStatus 
-            ? const Color(0xFF4CAF50) 
-            : const Color(0xFFFF9800),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
     } catch (e) {
       // Revert local state on error
       tasks[taskIndex] = task;
@@ -131,7 +118,7 @@ class JadwalManageController extends GetxController {
       Get.snackbar(
         'Error',
         'Gagal mengupdate tugas: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red[400]!,
         colorText: Colors.white,
         duration: const Duration(seconds: 3),
@@ -152,15 +139,6 @@ class JadwalManageController extends GetxController {
 
       // Delete from Firebase
       await _taskService.deleteTask(taskId);
-
-      Get.snackbar(
-        'Tugas Dihapus',
-        'Tugas "${task.title}" telah dihapus',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red[400]!,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
     } catch (e) {
       // Restore task on error
       tasks.insert(taskIndex, task);
@@ -168,7 +146,7 @@ class JadwalManageController extends GetxController {
       Get.snackbar(
         'Error',
         'Gagal menghapus tugas: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red[400]!,
         colorText: Colors.white,
         duration: const Duration(seconds: 3),

@@ -5,6 +5,7 @@ class TaskModel {
   final String description;
   final DateTime date;
   final DateTime? time;
+  final DateTime? endTime;
   final TaskPriority priority;
   final TaskCategory category;
   final bool isCompleted;
@@ -18,6 +19,7 @@ class TaskModel {
     required this.description,
     required this.date,
     this.time,
+    this.endTime,
     required this.priority,
     required this.category,
     this.isCompleted = false,
@@ -32,6 +34,7 @@ class TaskModel {
     String? description,
     DateTime? date,
     DateTime? time,
+    DateTime? endTime,
     TaskPriority? priority,
     TaskCategory? category,
     bool? isCompleted,
@@ -45,6 +48,7 @@ class TaskModel {
       description: description ?? this.description,
       date: date ?? this.date,
       time: time ?? this.time,
+      endTime: endTime ?? this.endTime,
       priority: priority ?? this.priority,
       category: category ?? this.category,
       isCompleted: isCompleted ?? this.isCompleted,
@@ -61,6 +65,7 @@ class TaskModel {
       'description': description,
       'date': date.toIso8601String(),
       'time': time?.toIso8601String(),
+      'endTime': endTime?.toIso8601String(),
       'priority': priority.name,
       'category': category.name,
       'isCompleted': isCompleted,
@@ -77,6 +82,7 @@ class TaskModel {
       description: json['description'],
       date: DateTime.parse(json['date']),
       time: json['time'] != null ? DateTime.parse(json['time']) : null,
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
       priority: TaskPriority.values.firstWhere((e) => e.name == json['priority']),
       category: TaskCategory.values.firstWhere((e) => e.name == json['category']),
       isCompleted: json['isCompleted'] ?? false,
