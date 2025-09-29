@@ -6,8 +6,80 @@ import '../../../styles/app_colors.dart';
 import '../controllers/jadwal_manage_controller.dart';
 import '../models/task_model.dart';
 
-class JadwalManageView extends GetView<JadwalManageController> {
+class JadwalManageView extends StatefulWidget {
   const JadwalManageView({super.key});
+
+  @override
+  State<JadwalManageView> createState() => _JadwalManageViewState();
+}
+
+class _JadwalManageViewState extends State<JadwalManageView>
+    with TickerProviderStateMixin {
+  late JadwalManageController controller;
+  late AnimationController _slideAnimationController;
+  late Animation<Offset> _slideAnimation;
+  
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<JadwalManageController>();
+    
+    // Initialize animation controller
+    _slideAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    
+    _slideAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _slideAnimationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _slideAnimationController.dispose();
+    super.dispose();
+  }
+
+  // Handle swipe animation for month navigation
+  void _animateMonthChange(bool isNext) async {
+    // Set animation direction
+    _slideAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset(isNext ? -1.0 : 1.0, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _slideAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start slide out animation
+    await _slideAnimationController.forward();
+
+    // Change month data
+    if (isNext) {
+      controller.goToNextMonth();
+    } else {
+      controller.goToPreviousMonth();
+    }
+
+    // Reset animation for slide in
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(isNext ? 1.0 : -1.0, 0.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _slideAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Reset controller and start slide in
+    _slideAnimationController.reset();
+    await _slideAnimationController.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,7 +181,7 @@ class JadwalManageView extends GetView<JadwalManageController> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        controller.goToPreviousMonth();
+                                        _animateMonthChange(false);
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.all(8),
@@ -123,7 +195,7 @@ class JadwalManageView extends GetView<JadwalManageController> {
                                     const SizedBox(width: 3),
                                     GestureDetector(
                                       onTap: () {
-                                        controller.goToNextMonth();
+                                        _animateMonthChange(true);
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.all(8),
@@ -141,8 +213,23 @@ class JadwalManageView extends GetView<JadwalManageController> {
                             
                             const SizedBox(height: 20),
                             
-                            // Custom Calendar
-                            Obx(() => _buildCustomCalendar()),
+                            // Custom Calendar with Swipe Gesture
+                            GestureDetector(
+                              onPanEnd: (details) {
+                                // Detect swipe direction
+                                if (details.velocity.pixelsPerSecond.dx > 500) {
+                                  // Swipe right - previous month
+                                  _animateMonthChange(false);
+                                } else if (details.velocity.pixelsPerSecond.dx < -500) {
+                                  // Swipe left - next month
+                                  _animateMonthChange(true);
+                                }
+                              },
+                              child: SlideTransition(
+                                position: _slideAnimation,
+                                child: Obx(() => _buildCustomCalendar()),
+                              ),
+                            ),
                           ],
                         ),
                       ),
