@@ -28,6 +28,7 @@ abstract class Routes {
   static const CERTIFICATION_STORE = _Paths.CERTIFICATION_STORE;
   static const JADWAL_MANAGE = _Paths.JADWAL_MANAGE;
   static const JADWAL_ADD = _Paths.JADWAL_ADD;
+  static const ROADMAP_MANAGE = _Paths.ROADMAP_MANAGE;
 }
 
 abstract class _Paths {
@@ -57,4 +58,5 @@ abstract class _Paths {
   static const CERTIFICATION_STORE = '/certification-store';
   static const JADWAL_MANAGE = '/jadwal-manage';
   static const JADWAL_ADD = '/jadwal-add';
+  static const ROADMAP_MANAGE = '/roadmap-manage';
 }
