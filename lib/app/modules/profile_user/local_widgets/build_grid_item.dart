@@ -39,6 +39,9 @@ Widget buildGridItem(int index) {
         switch (index) {
           case 0:
             // Navigate to Roadmap
+            if (Get.context != null) {
+              Get.toNamed(Routes.ROADMAP_MANAGE);
+            }            
             break;
           case 1:
             // Navigate to Jadwal

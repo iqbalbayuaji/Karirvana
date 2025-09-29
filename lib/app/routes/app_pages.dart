@@ -181,7 +181,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ROADMAP_MANAGE,
-      page: () => const RoadmapManageView(),
+      page: () => RoadmapManageView(),
       binding: RoadmapManageBinding(),
     ),
   ];
