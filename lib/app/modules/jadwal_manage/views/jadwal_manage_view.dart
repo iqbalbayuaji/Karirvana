@@ -1,24 +1,602 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
+import '../../../styles/app_colors.dart';
 import '../controllers/jadwal_manage_controller.dart';
+import '../models/task_model.dart';
 
 class JadwalManageView extends GetView<JadwalManageController> {
   const JadwalManageView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('JadwalManageView'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          'JadwalManageView is working',
-          style: TextStyle(fontSize: 20),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 20, 25, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.outline),
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back,
+                        color: AppColors.textPrimary,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                  const Text(
+                    'Jadwal',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat',
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(width: 33),
+                ],
+              ),
+            ),
+            
+            // Calendar Section
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Calendar Card
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        // border: Border.all(color: AppColors.outline),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Calendar Header
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Obx(() => Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    controller.getCurrentMonthYear(),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Montserrat',
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                )),
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        controller.goToPreviousMonth();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Icon(
+                                          CupertinoIcons.chevron_left,
+                                          color: AppColors.primary,
+                                          size: 23,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 3),
+                                    GestureDetector(
+                                      onTap: () {
+                                        controller.goToNextMonth();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Icon(
+                                          CupertinoIcons.chevron_right,
+                                          color: AppColors.primary,
+                                          size: 23,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            
+                            const SizedBox(height: 20),
+                            
+                            // Custom Calendar
+                            Obx(() => _buildCustomCalendar()),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 20),
+                    
+                    // Today's Schedule Section
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        // border: Border.all(color: AppColors.outline),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Obx(() => Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.calendar_today,
+                                      color: AppColors.primary,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      _getSelectedDateTitle(),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Montserrat',
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    
+                                  },
+                                  child: Container(
+                                    width: 35,
+                                    height: 35,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )),
+                            
+                            const SizedBox(height: 16),
+                            
+                            // Dynamic Schedule Items
+                            Obx(() => _buildScheduleList()),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+  
+  
+  String _getSelectedDateTitle() {
+    final selectedDate = controller.selectedDate.value;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final selected = DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
+    
+    final months = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    
+    if (selected.isAtSameMomentAs(today)) {
+      return 'Jadwal Hari Ini';
+    } else {
+      return 'Jadwal ${selectedDate.day} ${months[selectedDate.month - 1]}';
+    }
+  }
+  
+  bool _isSelectedDate(DateTime date) {
+    final selectedDate = controller.selectedDate.value;
+    return date.year == selectedDate.year &&
+           date.month == selectedDate.month &&
+           date.day == selectedDate.day;
+  }
+  
+  Widget _buildScheduleList() {
+    final selectedTasks = controller.getTasksForDate(controller.selectedDate.value);
+    
+    if (selectedTasks.isEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: Column(
+            children: [
+              Icon(
+                Icons.event_busy,
+                size: 48,
+                color: AppColors.textSecondary.withOpacity(0.5),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Tidak ada jadwal',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Montserrat',
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
+    return Column(
+      children: selectedTasks.asMap().entries.map((entry) {
+        final index = entry.key;
+        final task = entry.value;
+        
+        return Column(
+          children: [
+            _buildScheduleItem(
+              time: task.time != null 
+                  ? '${task.time!.hour.toString().padLeft(2, '0')}:${task.time!.minute.toString().padLeft(2, '0')}'
+                  : 'Sepanjang hari',
+              title: task.title,
+              type: _getTaskTypeString(task.category),
+              color: _getTaskColor(task.category),
+            ),
+            if (index < selectedTasks.length - 1) const SizedBox(height: 12),
+          ],
+        );
+      }).toList(),
+    );
+  }
+  
+  String _getTaskTypeString(TaskCategory category) {
+    switch (category) {
+      case TaskCategory.work:
+        return 'Pekerjaan';
+      case TaskCategory.personal:
+        return 'Pribadi';
+      case TaskCategory.study:
+        return 'Belajar';
+      case TaskCategory.health:
+        return 'Kesehatan';
+      case TaskCategory.shopping:
+        return 'Belanja';
+      case TaskCategory.meeting:
+        return 'Meeting';
+      case TaskCategory.other:
+        return 'Lainnya';
+    }
+  }
+  
+  Color _getTaskColor(TaskCategory category) {
+    switch (category) {
+      case TaskCategory.work:
+        return Colors.blue;
+      case TaskCategory.personal:
+        return Colors.teal;
+      case TaskCategory.study:
+        return Colors.orange;
+      case TaskCategory.health:
+        return Colors.red;
+      case TaskCategory.shopping:
+        return Colors.green;
+      case TaskCategory.meeting:
+        return Colors.purple;
+      case TaskCategory.other:
+        return Colors.grey;
+    }
+  }
+  
+  Widget _buildCustomCalendar() {
+    final now = DateTime.now();
+    final calendarDate = controller.currentCalendarDate.value;
+    final firstDayOfMonth = DateTime(calendarDate.year, calendarDate.month, 1);
+    final startDate = firstDayOfMonth.subtract(Duration(days: firstDayOfMonth.weekday - 1));
+    
+    return Column(
+      children: [
+        // Days of week header
+        Row(
+          children: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
+              .map((day) => Expanded(
+                    child: Center(
+                      child: Text(
+                        day,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ))
+              .toList(),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Calendar grid
+        ...List.generate(6, (weekIndex) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              children: List.generate(7, (dayIndex) {
+                final date = startDate.add(Duration(days: weekIndex * 7 + dayIndex));
+                final isCurrentMonth = date.month == calendarDate.month;
+                final isToday = date.day == now.day && 
+                               date.month == now.month && 
+                               date.year == now.year;
+                final hasEvent = _hasEventOnDate(date); // Will be used later
+                // Temporary usage to avoid warning
+                hasEvent;
+                
+                return Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.updateSelectedDate(date);
+                    },
+                    child: Container(
+                      height: 40,
+                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                      decoration: BoxDecoration(
+                        // Temporarily disabled - will be used later
+                        color: _isSelectedDate(date)
+                            ? AppColors.primary
+                            : Colors.transparent,
+                        // color: isToday 
+                        //     ? AppColors.primary 
+                        //     : _isSelectedDate(date)
+                        //         ? AppColors.primary.withOpacity(0.8)
+                        //         : hasEvent 
+                        //             ? AppColors.primary.withOpacity(0.1)
+                        //             : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        // border: hasEvent && !isToday && !_isSelectedDate(date)
+                        //     ? Border.all(color: AppColors.primary.withOpacity(0.3))
+                        //     : null,
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${date.day}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: isToday ? FontWeight.bold : FontWeight.w500,
+                                fontFamily: 'Montserrat',
+                                color: _isSelectedDate(date)
+                                    ? Colors.white
+                                    : isCurrentMonth
+                                        ? AppColors.textPrimary
+                                        : AppColors.textSecondary.withOpacity(0.5),
+                              ),
+                            ),
+                            // Temporarily disabled - will be used later
+                            // if (hasEvent && !isToday && !_isSelectedDate(date))
+                            //   Container(
+                            //     width: 4,
+                            //     height: 4,
+                            //     decoration: BoxDecoration(
+                            //       color: AppColors.primary,
+                            //       shape: BoxShape.circle,
+                            //     ),
+                            //   ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
+          );
+        }),
+      ],
+    );
+  }
+  
+  Widget _buildScheduleItem({
+    required String time,
+    required String title,
+    required String type,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          
+          const SizedBox(width: 12),
+          
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat',
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
+                      color: AppColors.textSecondary,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      time,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontFamily: 'Montserrat',
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        type,
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: color,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  bool _hasEventOnDate(DateTime date) {
+    // Placeholder logic - replace with actual event checking
+    return date.day % 5 == 0; // Example: events every 5th day
+  }
+  
+  // void _onDateSelected(DateTime date) {
+  //   Get.snackbar(
+  //     'Tanggal Dipilih',
+  //     'Anda memilih tanggal ${date.day}/${date.month}/${date.year}',
+  //     snackPosition: SnackPosition.BOTTOM,
+  //     backgroundColor: AppColors.primary,
+  //     colorText: Colors.white,
+  //   );
+  // }
+  
+  void _showAddScheduleDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'Tambah Jadwal',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Montserrat',
+            ),
+          ),
+          content: const Text(
+            'Fitur tambah jadwal akan segera hadir!',
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Montserrat',
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -42,6 +42,9 @@ Widget buildGridItem(int index) {
             break;
           case 1:
             // Navigate to Jadwal
+            if (Get.context != null) {
+              Get.toNamed(Routes.JADWAL_MANAGE);
+            }
             break;
           case 2:
             // Navigate to Interview Practice History

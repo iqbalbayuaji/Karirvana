@@ -18,6 +18,9 @@ class JadwalManageController extends GetxController {
   // Selected date for calendar view
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   
+  // Current calendar month/year view
+  final Rx<DateTime> currentCalendarDate = DateTime.now().obs;
+  
   @override
   void onInit() {
     super.onInit();
@@ -97,6 +100,28 @@ class JadwalManageController extends GetxController {
   void updateSelectedDate(DateTime date) {
     selectedDate.value = date;
     _updateFilteredTasks();
+  }
+  
+  /// Navigate to previous month
+  void goToPreviousMonth() {
+    final current = currentCalendarDate.value;
+    currentCalendarDate.value = DateTime(current.year, current.month - 1, 1);
+  }
+  
+  /// Navigate to next month
+  void goToNextMonth() {
+    final current = currentCalendarDate.value;
+    currentCalendarDate.value = DateTime(current.year, current.month + 1, 1);
+  }
+  
+  /// Get current month year string for display
+  String getCurrentMonthYear() {
+    final date = currentCalendarDate.value;
+    final months = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    return '${months[date.month - 1]} ${date.year}';
   }
   
   /// Update filtered tasks based on current date and filters
