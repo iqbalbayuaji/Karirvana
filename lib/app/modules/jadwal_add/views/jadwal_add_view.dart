@@ -192,13 +192,30 @@ class JadwalAddView extends GetView<JadwalAddController> {
         decoration: InputDecoration(
           hintText: 'Masukkan judul jadwal...',
           hintStyle: TextStyle(
-            color: AppColors.textSecondary.withOpacity(0.6),
+            color: AppColors.outline,
             fontSize: 14,
             fontFamily: 'Montserrat',
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderSide: BorderSide(
+              color: AppColors.outline,
+              width: 1,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: AppColors.outline,
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: AppColors.primary,
+              width: 2,
+            ),
           ),
           contentPadding: const EdgeInsets.all(16),
         ),
@@ -230,13 +247,30 @@ class JadwalAddView extends GetView<JadwalAddController> {
         decoration: InputDecoration(
           hintText: 'Masukkan deskripsi jadwal...',
           hintStyle: TextStyle(
-            color: AppColors.textSecondary.withOpacity(0.6),
+            color: AppColors.outline,
             fontSize: 14,
             fontFamily: 'Montserrat',
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderSide: BorderSide(
+              color: AppColors.outline,
+              width: 1,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: AppColors.outline,
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: AppColors.primary,
+              width: 2,
+            ),
           ),
           contentPadding: const EdgeInsets.all(16),
         ),
