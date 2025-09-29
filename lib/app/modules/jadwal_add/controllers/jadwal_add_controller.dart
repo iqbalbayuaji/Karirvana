@@ -185,7 +185,7 @@ class JadwalAddController extends GetxController {
       Get.snackbar(
         'Error',
         'Anda harus login terlebih dahulu',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -236,24 +236,29 @@ class JadwalAddController extends GetxController {
       final jadwalController = Get.find<JadwalManageController>();
       jadwalController.addTask(task);
       
-      // Show success message
-      Get.snackbar(
-        'Berhasil',
-        'Jadwal berhasil ditambahkan',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 2),
-      );
+      // Small delay to ensure all operations complete
+      await Future.delayed(const Duration(milliseconds: 100));
       
-      // Navigate back
+      // Navigate back to jadwal manage page
       Get.back();
+      
+      // Show success message after navigation with small delay
+      Future.delayed(const Duration(milliseconds: 200), () {
+        Get.snackbar(
+          'Berhasil',
+          'Jadwal berhasil ditambahkan',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+        );
+      });
       
     } catch (e) {
       Get.snackbar(
         'Error',
         'Gagal menambahkan jadwal: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: const Duration(seconds: 3),
