@@ -1,85 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:karirvana/app/routes/app_pages.dart';
 
 import '../../../styles/app_colors.dart';
 import '../controllers/jadwal_manage_controller.dart';
 import '../models/task_model.dart';
 
-class JadwalManageView extends StatefulWidget {
+class JadwalManageView extends GetView<JadwalManageController> {
   const JadwalManageView({super.key});
-
-  @override
-  State<JadwalManageView> createState() => _JadwalManageViewState();
-}
-
-class _JadwalManageViewState extends State<JadwalManageView>
-    with TickerProviderStateMixin {
-  late JadwalManageController controller;
-  late AnimationController _slideAnimationController;
-  late Animation<Offset> _slideAnimation;
-  
-  @override
-  void initState() {
-    super.initState();
-    controller = Get.find<JadwalManageController>();
-    
-    // Initialize animation controller
-    _slideAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    
-    _slideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideAnimationController,
-      curve: Curves.easeInOut,
-    ));
-  }
-
-  @override
-  void dispose() {
-    _slideAnimationController.dispose();
-    super.dispose();
-  }
-
-  // Handle swipe animation for month navigation
-  void _animateMonthChange(bool isNext) async {
-    // Set animation direction
-    _slideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset(isNext ? -1.0 : 1.0, 0.0),
-    ).animate(CurvedAnimation(
-      parent: _slideAnimationController,
-      curve: Curves.easeInOut,
-    ));
-
-    // Start slide out animation
-    await _slideAnimationController.forward();
-
-    // Change month data
-    if (isNext) {
-      controller.goToNextMonth();
-    } else {
-      controller.goToPreviousMonth();
-    }
-
-    // Reset animation for slide in
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(isNext ? 1.0 : -1.0, 0.0),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideAnimationController,
-      curve: Curves.easeInOut,
-    ));
-
-    // Reset controller and start slide in
-    _slideAnimationController.reset();
-    await _slideAnimationController.forward();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +18,7 @@ class _JadwalManageViewState extends State<JadwalManageView>
           children: [
             // Header
             Padding(
-              padding: const EdgeInsets.fromLTRB(25, 20, 25, 10),
+              padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -179,32 +108,14 @@ class _JadwalManageViewState extends State<JadwalManageView>
                                 )),
                                 Row(
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        _animateMonthChange(false);
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Icon(
-                                          CupertinoIcons.chevron_left,
-                                          color: AppColors.primary,
-                                          size: 23,
-                                        ),
-                                      ),
+                                    _buildAnimatedNavButton(
+                                      icon: CupertinoIcons.chevron_left,
+                                      onTap: () => controller.goToPreviousMonth(),
                                     ),
                                     const SizedBox(width: 3),
-                                    GestureDetector(
-                                      onTap: () {
-                                        _animateMonthChange(true);
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Icon(
-                                          CupertinoIcons.chevron_right,
-                                          color: AppColors.primary,
-                                          size: 23,
-                                        ),
-                                      ),
+                                    _buildAnimatedNavButton(
+                                      icon: CupertinoIcons.chevron_right,
+                                      onTap: () => controller.goToNextMonth(),
                                     ),
                                   ],
                                 )
@@ -213,23 +124,62 @@ class _JadwalManageViewState extends State<JadwalManageView>
                             
                             const SizedBox(height: 20),
                             
-                            // Custom Calendar with Swipe Gesture
-                            GestureDetector(
+                            // Custom Calendar with Enhanced Swipe Gesture & Animation
+                            Obx(() => GestureDetector(
                               onPanEnd: (details) {
-                                // Detect swipe direction
-                                if (details.velocity.pixelsPerSecond.dx > 500) {
-                                  // Swipe right - previous month
-                                  _animateMonthChange(false);
-                                } else if (details.velocity.pixelsPerSecond.dx < -500) {
-                                  // Swipe left - next month
-                                  _animateMonthChange(true);
+                                // Swipe left to go to next month
+                                if (details.velocity.pixelsPerSecond.dx < -500) {
+                                  controller.goToNextMonth();
+                                }
+                                // Swipe right to go to previous month
+                                else if (details.velocity.pixelsPerSecond.dx > 500) {
+                                  controller.goToPreviousMonth();
                                 }
                               },
-                              child: SlideTransition(
-                                position: _slideAnimation,
-                                child: Obx(() => _buildCustomCalendar()),
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 400),
+                                switchInCurve: Curves.easeOutCubic,
+                                switchOutCurve: Curves.easeInCubic,
+                                transitionBuilder: (Widget child, Animation<double> animation) {
+                                  return AnimatedBuilder(
+                                    animation: animation,
+                                    builder: (context, child) {
+                                      return Transform(
+                                        alignment: Alignment.center,
+                                        transform: Matrix4.identity()
+                                          ..setEntry(3, 2, 0.001) // Perspective
+                                          ..rotateY((1 - animation.value) * 0.3)
+                                          ..scale(0.8 + (animation.value * 0.2)),
+                                        child: SlideTransition(
+                                          position: Tween<Offset>(
+                                            begin: const Offset(0.5, 0),
+                                            end: Offset.zero,
+                                          ).animate(CurvedAnimation(
+                                            parent: animation,
+                                            curve: Curves.elasticOut,
+                                          )),
+                                          child: FadeTransition(
+                                            opacity: Tween<double>(
+                                              begin: 0.0,
+                                              end: 1.0,
+                                            ).animate(CurvedAnimation(
+                                              parent: animation,
+                                              curve: const Interval(0.2, 1.0, curve: Curves.easeOut),
+                                            )),
+                                            child: child,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: child,
+                                  );
+                                },
+                                child: Container(
+                                  key: ValueKey(controller.getCurrentMonthYear()),
+                                  child: _buildCustomCalendar(),
+                                ),
                               ),
-                            ),
+                            )),
                           ],
                         ),
                       ),
@@ -281,7 +231,7 @@ class _JadwalManageViewState extends State<JadwalManageView>
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    
+                                    Get.toNamed(Routes.JADWAL_ADD);  
                                   },
                                   child: Container(
                                     width: 35,
@@ -482,7 +432,9 @@ class _JadwalManageViewState extends State<JadwalManageView>
                     onTap: () {
                       controller.updateSelectedDate(date);
                     },
-                    child: Container(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOutCubic,
                       height: 40,
                       margin: const EdgeInsets.symmetric(horizontal: 2),
                       decoration: BoxDecoration(
@@ -517,18 +469,36 @@ class _JadwalManageViewState extends State<JadwalManageView>
                                             : AppColors.textSecondary.withOpacity(0.5),
                               ),
                             ),
-                            // Dot indicator untuk tanggal yang memiliki jadwal
+                            // Animated Dot indicator untuk tanggal yang memiliki jadwal
                             if (hasEvent && !_isSelectedDate(date))
-                              Container(
-                                margin: const EdgeInsets.only(top: 2),
-                                width: 4,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: isToday 
-                                      ? Colors.white 
-                                      : AppColors.primary,
-                                  shape: BoxShape.circle,
-                                ),
+                              TweenAnimationBuilder<double>(
+                                duration: const Duration(milliseconds: 800),
+                                tween: Tween<double>(begin: 0.8, end: 1.2),
+                                curve: Curves.elasticOut,
+                                builder: (context, scale, child) {
+                                  return Transform.scale(
+                                    scale: scale,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(top: 2),
+                                      width: 4,
+                                      height: 4,
+                                      decoration: BoxDecoration(
+                                        color: isToday 
+                                            ? Colors.white 
+                                            : AppColors.primary,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: (isToday ? Colors.white : AppColors.primary)
+                                                .withOpacity(0.4),
+                                            blurRadius: 3,
+                                            spreadRadius: 0.5,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                           ],
                         ),
@@ -632,6 +602,49 @@ class _JadwalManageViewState extends State<JadwalManageView>
   
   bool _hasEventOnDate(DateTime date) {
     return controller.getTasksForDate(date).isNotEmpty;
+  }
+
+  Widget _buildAnimatedNavButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 200),
+      tween: Tween<double>(begin: 1.0, end: 1.0),
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () {
+                // Trigger scale animation
+                (context as Element).markNeedsBuild();
+                onTap();
+              },
+              onTapDown: (_) {
+                // Scale down on press
+                (context as Element).markNeedsBuild();
+              },
+              onTapUp: (_) {
+                // Scale back up on release
+                (context as Element).markNeedsBuild();
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.all(10),
+                child: Icon(
+                  icon,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
   
   // void _onDateSelected(DateTime date) {

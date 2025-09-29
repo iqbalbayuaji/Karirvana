@@ -27,6 +27,7 @@ abstract class Routes {
   static const JOB_OPENINGS_MAIN = _Paths.JOB_OPENINGS_MAIN;
   static const CERTIFICATION_STORE = _Paths.CERTIFICATION_STORE;
   static const JADWAL_MANAGE = _Paths.JADWAL_MANAGE;
+  static const JADWAL_ADD = _Paths.JADWAL_ADD;
 }
 
 abstract class _Paths {
@@ -55,4 +56,5 @@ abstract class _Paths {
   static const JOB_OPENINGS_MAIN = '/job-openings-main';
   static const CERTIFICATION_STORE = '/certification-store';
   static const JADWAL_MANAGE = '/jadwal-manage';
+  static const JADWAL_ADD = '/jadwal-add';
 }

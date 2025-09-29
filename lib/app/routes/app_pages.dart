@@ -32,6 +32,8 @@ import '../modules/edit_profile/bindings/edit_profile_binding.dart';
 import '../modules/edit_profile/views/edit_profile_view.dart';
 import '../modules/homepage/bindings/homepage_binding.dart';
 import '../modules/homepage/views/homepage_view.dart';
+import '../modules/jadwal_add/bindings/jadwal_add_binding.dart';
+import '../modules/jadwal_add/views/jadwal_add_view.dart';
 import '../modules/jadwal_manage/bindings/jadwal_manage_binding.dart';
 import '../modules/jadwal_manage/views/jadwal_manage_view.dart';
 import '../modules/job_openings/bindings/job_openings_binding.dart';
@@ -169,6 +171,11 @@ class AppPages {
       name: _Paths.JADWAL_MANAGE,
       page: () => const JadwalManageView(),
       binding: JadwalManageBinding(),
+    ),
+    GetPage(
+      name: _Paths.JADWAL_ADD,
+      page: () => const JadwalAddView(),
+      binding: JadwalAddBinding(),
     ),
   ];
 }
