@@ -388,9 +388,7 @@ class JadwalManageView extends GetView<JadwalManageController> {
                 final isToday = date.day == now.day && 
                                date.month == now.month && 
                                date.year == now.year;
-                final hasEvent = _hasEventOnDate(date); // Will be used later
-                // Temporary usage to avoid warning
-                hasEvent;
+                final hasEvent = _hasEventOnDate(date);
                 
                 return Expanded(
                   child: GestureDetector(
@@ -401,21 +399,17 @@ class JadwalManageView extends GetView<JadwalManageController> {
                       height: 40,
                       margin: const EdgeInsets.symmetric(horizontal: 2),
                       decoration: BoxDecoration(
-                        // Temporarily disabled - will be used later
                         color: _isSelectedDate(date)
                             ? AppColors.primary
-                            : Colors.transparent,
-                        // color: isToday 
-                        //     ? AppColors.primary 
-                        //     : _isSelectedDate(date)
-                        //         ? AppColors.primary.withOpacity(0.8)
-                        //         : hasEvent 
-                        //             ? AppColors.primary.withOpacity(0.1)
-                        //             : Colors.transparent,
+                            : isToday 
+                                ? AppColors.primary.withOpacity(0.8)
+                                : hasEvent 
+                                    ? AppColors.primary.withOpacity(0.1)
+                                    : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
-                        // border: hasEvent && !isToday && !_isSelectedDate(date)
-                        //     ? Border.all(color: AppColors.primary.withOpacity(0.3))
-                        //     : null,
+                        border: hasEvent && !isToday && !_isSelectedDate(date)
+                            ? Border.all(color: AppColors.primary.withOpacity(0.4), width: 1)
+                            : null,
                       ),
                       child: Center(
                         child: Column(
@@ -429,21 +423,26 @@ class JadwalManageView extends GetView<JadwalManageController> {
                                 fontFamily: 'Montserrat',
                                 color: _isSelectedDate(date)
                                     ? Colors.white
-                                    : isCurrentMonth
-                                        ? AppColors.textPrimary
-                                        : AppColors.textSecondary.withOpacity(0.5),
+                                    : isToday
+                                        ? Colors.white
+                                        : isCurrentMonth
+                                            ? AppColors.textPrimary
+                                            : AppColors.textSecondary.withOpacity(0.5),
                               ),
                             ),
-                            // Temporarily disabled - will be used later
-                            // if (hasEvent && !isToday && !_isSelectedDate(date))
-                            //   Container(
-                            //     width: 4,
-                            //     height: 4,
-                            //     decoration: BoxDecoration(
-                            //       color: AppColors.primary,
-                            //       shape: BoxShape.circle,
-                            //     ),
-                            //   ),
+                            // Dot indicator untuk tanggal yang memiliki jadwal
+                            if (hasEvent && !_isSelectedDate(date))
+                              Container(
+                                margin: const EdgeInsets.only(top: 2),
+                                width: 4,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: isToday 
+                                      ? Colors.white 
+                                      : AppColors.primary,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -545,8 +544,7 @@ class JadwalManageView extends GetView<JadwalManageController> {
   }
   
   bool _hasEventOnDate(DateTime date) {
-    // Placeholder logic - replace with actual event checking
-    return date.day % 5 == 0; // Example: events every 5th day
+    return controller.getTasksForDate(date).isNotEmpty;
   }
   
   // void _onDateSelected(DateTime date) {
