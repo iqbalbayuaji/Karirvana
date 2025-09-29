@@ -231,7 +231,9 @@ class JadwalManageView extends GetView<JadwalManageController> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Get.toNamed(Routes.JADWAL_ADD);  
+                                    Get.toNamed(Routes.JADWAL_ADD, arguments: {
+                                      'selectedDate': controller.selectedDate.value,
+                                    });  
                                   },
                                   child: Container(
                                     width: 35,
@@ -355,12 +357,6 @@ class JadwalManageView extends GetView<JadwalManageController> {
         return 'Pribadi';
       case TaskCategory.study:
         return 'Belajar';
-      case TaskCategory.health:
-        return 'Kesehatan';
-      case TaskCategory.shopping:
-        return 'Belanja';
-      case TaskCategory.meeting:
-        return 'Meeting';
       case TaskCategory.other:
         return 'Lainnya';
     }
@@ -374,12 +370,6 @@ class JadwalManageView extends GetView<JadwalManageController> {
         return Colors.teal;
       case TaskCategory.study:
         return Colors.orange;
-      case TaskCategory.health:
-        return Colors.red;
-      case TaskCategory.shopping:
-        return Colors.green;
-      case TaskCategory.meeting:
-        return Colors.purple;
       case TaskCategory.other:
         return Colors.grey;
     }
@@ -656,45 +646,5 @@ class JadwalManageView extends GetView<JadwalManageController> {
   //     colorText: Colors.white,
   //   );
   // }
-  
-  void _showAddScheduleDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: const Text(
-            'Tambah Jadwal',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Montserrat',
-            ),
-          ),
-          content: const Text(
-            'Fitur tambah jadwal akan segera hadir!',
-            style: TextStyle(
-              fontFamily: 'Montserrat',
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'OK',
-                style: TextStyle(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Montserrat',
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 }

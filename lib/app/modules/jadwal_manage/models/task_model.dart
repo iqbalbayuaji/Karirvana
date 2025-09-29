@@ -91,9 +91,6 @@ enum TaskCategory {
   work,
   personal,
   study,
-  health,
-  shopping,
-  meeting,
   other
 }
 
@@ -134,12 +131,6 @@ extension TaskCategoryExtension on TaskCategory {
         return 'Pribadi';
       case TaskCategory.study:
         return 'Belajar';
-      case TaskCategory.health:
-        return 'Kesehatan';
-      case TaskCategory.shopping:
-        return 'Belanja';
-      case TaskCategory.meeting:
-        return 'Meeting';
       case TaskCategory.other:
         return 'Lainnya';
     }
@@ -153,12 +144,6 @@ extension TaskCategoryExtension on TaskCategory {
         return 0xe7fd; // person
       case TaskCategory.study:
         return 0xe80c; // school
-      case TaskCategory.health:
-        return 0xe3f0; // favorite (heart)
-      case TaskCategory.shopping:
-        return 0xe59c; // shopping_cart
-      case TaskCategory.meeting:
-        return 0xe7fc; // people
       case TaskCategory.other:
         return 0xe5c3; // more_horiz
     }

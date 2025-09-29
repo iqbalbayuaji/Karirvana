@@ -13,7 +13,8 @@ class JadwalAddController extends GetxController {
   
   // Observable Variables
   final selectedDate = DateTime.now().obs;
-  final selectedTime = TimeOfDay.now().obs;
+  final startTime = TimeOfDay.now().obs;
+  final endTime = TimeOfDay(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute).obs;
   final selectedPriority = TaskPriority.medium.obs;
   final selectedCategory = TaskCategory.personal.obs;
   final isLoading = false.obs;
@@ -62,15 +63,51 @@ class JadwalAddController extends GetxController {
     }
   }
 
-  // Time Selection
-  Future<void> selectTime() async {
+  // Start Time Selection
+  Future<void> selectStartTime() async {
     final TimeOfDay? picked = await showTimePicker(
       context: Get.context!,
-      initialTime: selectedTime.value,
+      initialTime: startTime.value,
     );
     if (picked != null) {
-      selectedTime.value = picked;
+      startTime.value = picked;
+      // Auto-adjust end time if it's before start time
+      if (_timeToMinutes(endTime.value) <= _timeToMinutes(picked)) {
+        final newEndHour = picked.hour + 1;
+        endTime.value = TimeOfDay(
+          hour: newEndHour > 23 ? 23 : newEndHour,
+          minute: picked.minute,
+        );
+      }
     }
+  }
+
+  // End Time Selection
+  Future<void> selectEndTime() async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: Get.context!,
+      initialTime: endTime.value,
+    );
+    if (picked != null) {
+      // Validate that end time is after start time
+      if (_timeToMinutes(picked) > _timeToMinutes(startTime.value)) {
+        endTime.value = picked;
+      } else {
+        Get.snackbar(
+          'Peringatan',
+          'Waktu selesai harus lebih dari waktu mulai',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+        );
+      }
+    }
+  }
+
+  // Helper method to convert TimeOfDay to minutes
+  int _timeToMinutes(TimeOfDay time) {
+    return time.hour * 60 + time.minute;
   }
 
   // Priority Selection
@@ -101,11 +138,36 @@ class JadwalAddController extends GetxController {
     }
   }
 
-  // Get formatted time
-  String get formattedTime {
-    final hour = selectedTime.value.hour.toString().padLeft(2, '0');
-    final minute = selectedTime.value.minute.toString().padLeft(2, '0');
+  // Get formatted start time
+  String get formattedStartTime {
+    final hour = startTime.value.hour.toString().padLeft(2, '0');
+    final minute = startTime.value.minute.toString().padLeft(2, '0');
     return '$hour:$minute';
+  }
+
+  // Get formatted end time
+  String get formattedEndTime {
+    final hour = endTime.value.hour.toString().padLeft(2, '0');
+    final minute = endTime.value.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
+  // Get duration in hours and minutes
+  String get formattedDuration {
+    final startMinutes = _timeToMinutes(startTime.value);
+    final endMinutes = _timeToMinutes(endTime.value);
+    final durationMinutes = endMinutes - startMinutes;
+    
+    final hours = durationMinutes ~/ 60;
+    final minutes = durationMinutes % 60;
+    
+    if (hours > 0 && minutes > 0) {
+      return '${hours} jam ${minutes} menit';
+    } else if (hours > 0) {
+      return '${hours} jam';
+    } else {
+      return '${minutes} menit';
+    }
   }
 
   // Save Task
@@ -115,13 +177,13 @@ class JadwalAddController extends GetxController {
     isLoading.value = true;
     
     try {
-      // Create DateTime from selected date and time
+      // Create DateTime from selected date and start time
       final taskDateTime = DateTime(
         selectedDate.value.year,
         selectedDate.value.month,
         selectedDate.value.day,
-        selectedTime.value.hour,
-        selectedTime.value.minute,
+        startTime.value.hour,
+        startTime.value.minute,
       );
       
       // Create new task

@@ -89,7 +89,7 @@ class JadwalManageController extends GetxController {
         description: 'Jogging di taman',
         date: today.add(const Duration(days: 2)),
         priority: TaskPriority.low,
-        category: TaskCategory.health,
+        category: TaskCategory.personal,
         isCompleted: false,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

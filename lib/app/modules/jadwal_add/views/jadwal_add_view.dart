@@ -15,10 +15,23 @@ class JadwalAddView extends GetView<JadwalAddController> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header
             _buildHeader(),
             
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+              child: Text(
+                          controller.formattedDate,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Montserrat',
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+            ),
             // Form Content
             Expanded(
               child: SingleChildScrollView(
@@ -42,14 +55,39 @@ class JadwalAddView extends GetView<JadwalAddController> {
                       
                       const SizedBox(height: 25),
                       
-                      // Date & Time Section
-                      _buildSectionTitle('Tanggal & Waktu'),
+                      // Duration Section
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                          "Durasi",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Montserrat',
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Text(
+                              '${controller.formattedDuration}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Montserrat',
+                                  color: AppColors.primary,
+                                ),
+                            ),
+                          ),                  
+                        ],
+                      ),
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Expanded(child: _buildDateSelector()),
+                          Expanded(child: _buildStartTimeSelector()),
                           const SizedBox(width: 15),
-                          Expanded(child: _buildTimeSelector()),
+                          Expanded(child: _buildEndTimeSelector()),
                         ],
                       ),
                       
@@ -86,7 +124,7 @@ class JadwalAddView extends GetView<JadwalAddController> {
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
+      padding: const EdgeInsets.fromLTRB(25, 20, 25, 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -127,7 +165,7 @@ class JadwalAddView extends GetView<JadwalAddController> {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: FontWeight.w600,
         fontFamily: 'Montserrat',
         color: AppColors.textPrimary,
@@ -155,6 +193,7 @@ class JadwalAddView extends GetView<JadwalAddController> {
           hintText: 'Masukkan judul jadwal...',
           hintStyle: TextStyle(
             color: AppColors.textSecondary.withOpacity(0.6),
+            fontSize: 14,
             fontFamily: 'Montserrat',
           ),
           border: OutlineInputBorder(
@@ -162,11 +201,6 @@ class JadwalAddView extends GetView<JadwalAddController> {
             borderSide: BorderSide.none,
           ),
           contentPadding: const EdgeInsets.all(16),
-          prefixIcon: Icon(
-            CupertinoIcons.textformat,
-            color: AppColors.primary,
-            size: 20,
-          ),
         ),
         style: TextStyle(
           fontFamily: 'Montserrat',
@@ -197,6 +231,7 @@ class JadwalAddView extends GetView<JadwalAddController> {
           hintText: 'Masukkan deskripsi jadwal...',
           hintStyle: TextStyle(
             color: AppColors.textSecondary.withOpacity(0.6),
+            fontSize: 14,
             fontFamily: 'Montserrat',
           ),
           border: OutlineInputBorder(
@@ -204,14 +239,6 @@ class JadwalAddView extends GetView<JadwalAddController> {
             borderSide: BorderSide.none,
           ),
           contentPadding: const EdgeInsets.all(16),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.only(bottom: 60),
-            child: Icon(
-              CupertinoIcons.doc_text,
-              color: AppColors.primary,
-              size: 20,
-            ),
-          ),
         ),
         style: TextStyle(
           fontFamily: 'Montserrat',
@@ -221,9 +248,9 @@ class JadwalAddView extends GetView<JadwalAddController> {
     );
   }
 
-  Widget _buildDateSelector() {
+  Widget _buildStartTimeSelector() {
     return Obx(() => GestureDetector(
-      onTap: controller.selectDate,
+      onTap: controller.selectStartTime,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -240,28 +267,18 @@ class JadwalAddView extends GetView<JadwalAddController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(
-                  CupertinoIcons.calendar,
-                  color: AppColors.primary,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Tanggal',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Montserrat',
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
+            Text(
+              'Waktu Mulai',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
-              controller.formattedDate,
+              controller.formattedStartTime,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -275,9 +292,9 @@ class JadwalAddView extends GetView<JadwalAddController> {
     ));
   }
 
-  Widget _buildTimeSelector() {
+  Widget _buildEndTimeSelector() {
     return Obx(() => GestureDetector(
-      onTap: controller.selectTime,
+      onTap: controller.selectEndTime,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -294,28 +311,18 @@ class JadwalAddView extends GetView<JadwalAddController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(
-                  CupertinoIcons.clock,
-                  color: AppColors.primary,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Waktu',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Montserrat',
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
+            Text(
+              'Waktu Selesai',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
-              controller.formattedTime,
+              controller.formattedEndTime,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
