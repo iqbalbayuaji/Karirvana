@@ -1,5 +1,6 @@
 class TaskModel {
   final String id;
+  final String userId;
   final String title;
   final String description;
   final DateTime date;
@@ -12,6 +13,7 @@ class TaskModel {
 
   TaskModel({
     required this.id,
+    required this.userId,
     required this.title,
     required this.description,
     required this.date,
@@ -25,6 +27,7 @@ class TaskModel {
 
   TaskModel copyWith({
     String? id,
+    String? userId,
     String? title,
     String? description,
     DateTime? date,
@@ -37,6 +40,7 @@ class TaskModel {
   }) {
     return TaskModel(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       title: title ?? this.title,
       description: description ?? this.description,
       date: date ?? this.date,
@@ -52,6 +56,7 @@ class TaskModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId': userId,
       'title': title,
       'description': description,
       'date': date.toIso8601String(),
@@ -67,6 +72,7 @@ class TaskModel {
   factory TaskModel.fromJson(Map<String, dynamic> json) {
     return TaskModel(
       id: json['id'],
+      userId: json['userId'],
       title: json['title'],
       description: json['description'],
       date: DateTime.parse(json['date']),

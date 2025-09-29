@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+import '../../../services/task_firestore_service.dart';
 import '../../jadwal_manage/controllers/jadwal_manage_controller.dart';
 import '../../jadwal_manage/models/task_model.dart';
 
 class JadwalAddController extends GetxController {
+  // Services
+  final TaskFirestoreService _taskService = TaskFirestoreService.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  
   // Form Controllers
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -174,6 +180,18 @@ class JadwalAddController extends GetxController {
   Future<void> saveTask() async {
     if (!formKey.currentState!.validate()) return;
     
+    // Check if user is authenticated
+    if (_auth.currentUser == null) {
+      Get.snackbar(
+        'Error',
+        'Anda harus login terlebih dahulu',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    
     isLoading.value = true;
     
     try {
@@ -189,6 +207,7 @@ class JadwalAddController extends GetxController {
       // Create new task
       final task = TaskModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: _auth.currentUser!.uid,
         title: titleController.text.trim(),
         description: descriptionController.text.trim(),
         date: selectedDate.value,
@@ -200,9 +219,12 @@ class JadwalAddController extends GetxController {
         updatedAt: DateTime.now(),
       );
       
-      // Add to jadwal manage controller
+      // Save to Firebase
+      await _taskService.addTask(task);
+      
+      // Add to jadwal manage controller (local state)
       final jadwalController = Get.find<JadwalManageController>();
-      jadwalController.tasks.add(task);
+      jadwalController.addTask(task);
       
       // Show success message
       Get.snackbar(
@@ -224,6 +246,7 @@ class JadwalAddController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
+        duration: const Duration(seconds: 3),
       );
     } finally {
       isLoading.value = false;
