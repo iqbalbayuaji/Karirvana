@@ -70,15 +70,15 @@ class JadwalAddView extends GetView<JadwalAddController> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 6),
-                            child: Text(
-                              '${controller.formattedDuration}',
+                            child: Obx(() => Text(
+                              controller.formattedDuration,
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   fontFamily: 'Montserrat',
                                   color: AppColors.primary,
                                 ),
-                            ),
+                            )),
                           ),                  
                         ],
                       ),

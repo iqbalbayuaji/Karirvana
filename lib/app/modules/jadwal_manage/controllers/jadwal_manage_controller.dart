@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/task_model.dart';
 
@@ -51,6 +52,38 @@ class JadwalManageController extends GetxController {
       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
     ];
     return '${months[date.month - 1]} ${date.year}';
+  }
+  
+  /// Toggle task completion status
+  void toggleTaskCompletion(String taskId) {
+    final taskIndex = tasks.indexWhere((task) => task.id == taskId);
+    if (taskIndex != -1) {
+      final task = tasks[taskIndex];
+      final updatedTask = task.copyWith(
+        isCompleted: !task.isCompleted,
+        updatedAt: DateTime.now(),
+      );
+      tasks[taskIndex] = updatedTask;
+      
+    }
+  }
+  
+  /// Delete a task
+  void deleteTask(String taskId) {
+    final taskIndex = tasks.indexWhere((task) => task.id == taskId);
+    if (taskIndex != -1) {
+      final task = tasks[taskIndex];
+      tasks.removeAt(taskIndex);
+      
+      Get.snackbar(
+        'Tugas Dihapus',
+        'Tugas "${task.title}" telah dihapus',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red[400]!,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+    }
   }
 
   /// Load sample tasks for demonstration

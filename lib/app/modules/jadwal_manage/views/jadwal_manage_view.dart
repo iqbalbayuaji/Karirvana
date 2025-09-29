@@ -335,6 +335,7 @@ class JadwalManageView extends GetView<JadwalManageController> {
         return Column(
           children: [
             _buildScheduleItem(
+              task: task,
               time: task.time != null 
                   ? '${task.time!.hour.toString().padLeft(2, '0')}:${task.time!.minute.toString().padLeft(2, '0')}'
                   : 'Sepanjang hari',
@@ -505,6 +506,7 @@ class JadwalManageView extends GetView<JadwalManageController> {
   }
   
   Widget _buildScheduleItem({
+    required TaskModel task,
     required String time,
     required String title,
     required String type,
@@ -513,17 +515,53 @@ class JadwalManageView extends GetView<JadwalManageController> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: task.isCompleted 
+            ? Colors.grey.withOpacity(0.1) 
+            : color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(
+          color: task.isCompleted 
+              ? Colors.grey.withOpacity(0.3) 
+              : color.withOpacity(0.3)
+        ),
       ),
       child: Row(
         children: [
+          // Completion checkbox
+          GestureDetector(
+            onTap: () => controller.toggleTaskCompletion(task.id),
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: task.isCompleted 
+                    ? const Color(0xFF4CAF50) 
+                    : Colors.transparent,
+                border: Border.all(
+                  color: task.isCompleted 
+                      ? const Color(0xFF4CAF50) 
+                      : color,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: task.isCompleted
+                  ? const Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: 16,
+                    )
+                  : null,
+            ),
+          ),
+          
+          const SizedBox(width: 12),
+          
           Container(
-            width: 4,
+            width: 3,
             height: 40,
             decoration: BoxDecoration(
-              color: color,
+              color: task.isCompleted ? Colors.grey : color,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -535,63 +573,96 @@ class JadwalManageView extends GetView<JadwalManageController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Montserrat',
-                        color: AppColors.textPrimary,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: task.isCompleted 
+                              ? Colors.grey 
+                              : AppColors.textPrimary,
+                          decoration: task.isCompleted 
+                              ? TextDecoration.lineThrough 
+                              : TextDecoration.none,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          time,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'Montserrat',
-                            color: AppColors.textSecondary,
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.access_time,
+                            size: 14,
+                            color: task.isCompleted 
+                                ? Colors.grey 
+                                : AppColors.textSecondary,
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: color.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            type,
+                          const SizedBox(width: 4),
+                          Text(
+                            time,
                             style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
                               fontFamily: 'Montserrat',
-                              color: color,
+                              color: task.isCompleted 
+                                  ? Colors.grey 
+                                  : AppColors.textSecondary,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: task.isCompleted 
+                                  ? Colors.grey.withOpacity(0.2) 
+                                  : color.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              type,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Montserrat',
+                                color: task.isCompleted ? Colors.grey : color,
+                              ),
+                            ),
+                          ),
+                          if (task.isCompleted) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF4CAF50).withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Text(
+                                'Selesai',
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Montserrat',
+                                  color: Color(0xFF4CAF50),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    
-                  },
+                  onTap: () => controller.deleteTask(task.id),
                   child: Icon(
                     Icons.delete_outlined,
                     color: Colors.red[400],
