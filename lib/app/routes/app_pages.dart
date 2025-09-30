@@ -16,6 +16,8 @@ import '../modules/certification_store/bindings/certification_store_binding.dart
 import '../modules/certification_store/views/certification_store_view.dart';
 import '../modules/certification_store_main/bindings/certification_store_main_binding.dart';
 import '../modules/certification_store_main/views/certification_store_main_view.dart';
+import '../modules/course_manage/bindings/course_manage_binding.dart';
+import '../modules/course_manage/views/course_manage_view.dart';
 import '../modules/course_store/bindings/course_store_binding.dart';
 import '../modules/course_store/views/course_store_view.dart';
 import '../modules/course_store_main/bindings/course_store_main_binding.dart';
@@ -190,6 +192,11 @@ class AppPages {
       name: _Paths.ROADMAP_EDIT,
       page: () => const RoadmapEditView(),
       binding: RoadmapEditBinding(),
+    ),
+    GetPage(
+      name: _Paths.COURSE_MANAGE,
+      page: () => const CourseManageView(),
+      binding: CourseManageBinding(),
     ),
   ];
 }
