@@ -44,6 +44,16 @@ class CareerAssistantController extends GetxController {
   void onReady() {
     super.onReady();
     final args = Get.arguments;
+    
+    // Check for roadmap mode
+    if (args is Map && args['mode'] == 'roadmap') {
+      isRoadmapMode.value = true;
+      // Auto-start with roadmap generation prompt
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        sendMessage('Buatkan saya roadmap karir yang sesuai dengan minat dan kemampuan saya');
+      });
+    }
+    
     final bool shouldAutofocus = args is Map && (args['autofocus'] == true);
     if (shouldAutofocus) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
