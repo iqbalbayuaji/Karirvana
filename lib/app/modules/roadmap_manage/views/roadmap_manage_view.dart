@@ -537,13 +537,138 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
               ],
             ),
           ),
-          Icon(
-            Icons.arrow_forward_ios,
-            size: 12,
-            color: AppColors.textSecondary.withOpacity(0.5),
-          ),
+          _buildResourceStatusIndicator(resource),
         ],
       ),
     );
+  }
+
+  Widget _buildResourceStatusIndicator(RoadmapResource resource) {
+    // For job type, use job-specific status
+    if (resource.type == 'job') {
+      return _buildJobStatusIndicator(resource.jobStatus ?? JobApplicationStatus.notApplied);
+    }
+    
+    // For course and certificate, use general resource status
+    return _buildGeneralResourceStatusIndicator(resource.status);
+  }
+
+  Widget _buildJobStatusIndicator(JobApplicationStatus status) {
+    switch (status) {
+      case JobApplicationStatus.notApplied:
+        // Kondisi 1: Belum apply - tampilan normal dengan panah
+        return Icon(
+          Icons.arrow_forward_ios,
+          size: 12,
+          color: AppColors.textSecondary.withOpacity(0.5),
+        );
+      
+      case JobApplicationStatus.applied:
+        // Kondisi 2: Sudah apply
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.orange.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.orange.withOpacity(0.3)),
+          ),
+          child: Text(
+            'Applied',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: Colors.orange,
+            ),
+          ),
+        );
+      
+      case JobApplicationStatus.accepted:
+        // Kondisi 3: Sudah diterima
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.green.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.green.withOpacity(0.3)),
+          ),
+          child: Text(
+            'Accepted',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: Colors.green,
+            ),
+          ),
+        );
+    }
+  }
+
+  Widget _buildGeneralResourceStatusIndicator(ResourceStatus status) {
+    switch (status) {
+      case ResourceStatus.notAdded:
+        // Kondisi 1: Belum ditambahkan - tampilan normal dengan panah
+        return Icon(
+          Icons.arrow_forward_ios,
+          size: 12,
+          color: AppColors.textSecondary.withOpacity(0.5),
+        );
+      
+      case ResourceStatus.added:
+        // Kondisi 2: Sudah ditambahkan tapi belum dimulai
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.blue.withOpacity(0.3)),
+          ),
+          child: Text(
+            'Added',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: Colors.blue,
+            ),
+          ),
+        );
+      
+      case ResourceStatus.inProgress:
+        // Kondisi 3: Sedang dikerjakan/on progress
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.orange.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.orange.withOpacity(0.3)),
+          ),
+          child: Text(
+            'In Progress',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: Colors.orange,
+            ),
+          ),
+        );
+      
+      case ResourceStatus.completed:
+        // Kondisi 4: Sudah selesai
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.green.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.green.withOpacity(0.3)),
+          ),
+          child: Text(
+            'Completed',
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              color: Colors.green,
+            ),
+          ),
+        );
+    }
   }
 }
