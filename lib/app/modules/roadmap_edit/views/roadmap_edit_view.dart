@@ -24,10 +24,12 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                     _buildRoadmapCard(),
                     const SizedBox(height: 20),
                     _buildRoadmapSteps(),
+                    const SizedBox(height: 100), // Space for bottom button
                   ],
                 ),
               ),
             ),
+            _buildBottomSaveButton(),
           ],
         ),
       ),
@@ -69,26 +71,7 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
               color: AppColors.textPrimary,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              controller.saveRoadmap();
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Text(
-                'Save',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ),
+          const SizedBox(width: 33),
         ],
       ),
     );
@@ -132,6 +115,14 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                     color: AppColors.textSecondary,
                   ),
                 ),
+                const SizedBox(height: 7),
+                Obx(() => LinearProgressIndicator(
+                  value: controller.overallProgress,
+                  backgroundColor: AppColors.primaryContainer,
+                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(16),
+                )),
               ],
             ),
           ),
@@ -220,23 +211,6 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          mainStep.description,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontFamily: 'Montserrat',
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Estimasi: ${mainStep.estimatedDuration}',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontFamily: 'Montserrat',
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -244,7 +218,7 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                   GestureDetector(
                     onTap: () => controller.deleteMainStep(mainStep.id),
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Icon(
                         Icons.delete_outline,
                         color: Colors.red[400],
@@ -331,10 +305,10 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                     width: 20,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: subStep.isCompleted ? AppColors.primary : Colors.transparent,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(3),
+                      color: subStep.isCompleted ? Colors.green : Colors.transparent,
                       border: Border.all(
-                        color: subStep.isCompleted ? AppColors.primary : AppColors.outline,
+                        color: subStep.isCompleted ? Colors.green : AppColors.outline,
                         width: 2,
                       ),
                     ),
@@ -373,11 +347,11 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                   GestureDetector(
                     onTap: () => controller.deleteSubStep(mainStepId, subStep.id),
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(8),
                       child: Icon(
                         Icons.delete_outline,
                         color: Colors.red[400],
-                        size: 16,
+                        size: 20,
                       ),
                     ),
                   ),
@@ -385,7 +359,7 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                   Icon(
                     isExpanded ? Icons.expand_less : Icons.expand_more,
                     color: AppColors.textSecondary,
-                    size: 20,
+                    size: 25,
                   ),
                 ],
               ),
@@ -528,7 +502,6 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
               ],
             ),
           ),
-          _buildResourceStatusIndicator(resource),
           const SizedBox(width: 8),
           // Edit resource button
           GestureDetector(
@@ -538,7 +511,7 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
               child: Icon(
                 Icons.edit_outlined,
                 color: AppColors.textSecondary,
-                size: 16,
+                size: 20,
               ),
             ),
           ),
@@ -550,7 +523,7 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
               child: Icon(
                 Icons.delete_outline,
                 color: Colors.red[400],
-                size: 16,
+                size: 20,
               ),
             ),
           ),
@@ -679,5 +652,47 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
           ),
         );
     }
+  }
+
+  Widget _buildBottomSaveButton() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              controller.saveRoadmap();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text(
+              'Save Roadmap',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

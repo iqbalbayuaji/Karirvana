@@ -69,7 +69,7 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                     ),
                   ),
                   const Text(
-                    'Edit Roadmap Karir',
+                    'Roadmap Karir',
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(
