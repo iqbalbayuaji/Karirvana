@@ -237,7 +237,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
     return Expanded(
       child: Obx(() => ListView(
         controller: controller.scrollController,
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        padding: EdgeInsets.fromLTRB( 16, 20, 16, 80),
         children: [
           // Chat Messages
           ...controller.messages.asMap().entries.map((entry) {
@@ -424,7 +424,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                 )),
                 SizedBox(width: 8),
                 Obx(() => Text(
-                  controller.isRoadmapMode.value ? 'Roadmap Assistant sedang mengetik...' : 'Mengetik...',
+                  controller.isRoadmapMode.value ? 'Roadmap Assistant mengetik...' : 'Mengetik...',
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontSize: 14,

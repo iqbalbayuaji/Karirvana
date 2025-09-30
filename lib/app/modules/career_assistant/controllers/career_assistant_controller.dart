@@ -92,6 +92,12 @@ class CareerAssistantController extends GetxController {
       _initializeChat();
     }
 
+    // Clear previous roadmap when user continues conversation
+    if (hasGeneratedRoadmap.value) {
+      print('🔄 Clearing previous roadmap for new conversation');
+      _clearRoadmapData();
+    }
+
     // Add user message
     final userMessage = ChatMessage.user(text.trim());
     messages.add(userMessage);
@@ -204,6 +210,7 @@ class CareerAssistantController extends GetxController {
     isRoadmapMode.value = true;
     isWelcomeView.value = false;
     messages.clear();
+    _clearRoadmapData(); // Clear any previous roadmap
     
     // Add initial roadmap greeting
     final initialMessage = ChatMessage(
@@ -329,12 +336,14 @@ class CareerAssistantController extends GetxController {
 
   // Clear roadmap data
   void _clearRoadmapData() {
+    print('🧹 Clearing roadmap data...');
     hasGeneratedRoadmap.value = false;
     roadmapTitle.value = '';
     roadmapDescription.value = '';
     roadmapSteps.clear();
     expandedSteps.clear();
     expandedSubSteps.clear();
+    print('✅ Roadmap data cleared');
   }
 
   // Save roadmap (placeholder - integrate with roadmap_manage system)
