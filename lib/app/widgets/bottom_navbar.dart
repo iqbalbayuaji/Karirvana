@@ -42,7 +42,7 @@ class BottomNavbar extends StatelessWidget {
           _buildNavItem(
             icon: CupertinoIcons.chat_bubble_2_fill,
             inactiveIcon: CupertinoIcons.chat_bubble_2,
-            label: 'AI Assistant',
+            label: 'Career Assistant',
             index: 1,
             onTap: () => Get.offAllNamed('/career-assistant'),
           ),

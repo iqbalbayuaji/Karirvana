@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:karirvana/app/routes/app_pages.dart';
 import '../../../styles/app_colors.dart';
 import '../controllers/roadmap_edit_controller.dart';
 import '../../roadmap_manage/models/roadmap_models.dart';
@@ -491,12 +492,17 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
           if (resource.type == 'course' || resource.type == 'certificate' || resource.type == 'job')
             GestureDetector(
               onTap: () => controller.editResource(mainStepId, subStepId, resource),
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                child: Icon(
-                  Icons.sync_rounded,
-                  color: AppColors.textSecondary,
-                  size: 20,
+              child: GestureDetector(
+                onTap: () {
+                  Get.toNamed(Routes.COURSE_MANAGE);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Icon(
+                    Icons.sync_rounded,
+                    color: AppColors.textSecondary,
+                    size: 20,
+                  ),
                 ),
               ),
             ),

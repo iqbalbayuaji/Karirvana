@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:karirvana/app/modules/career_assistant/local_widgets/chatbot_chips.dart';
+import 'package:karirvana/app/modules/career_assistant/local_widgets/roadmap_display_widget.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 import 'package:karirvana/app/widgets/bottom_navbar.dart';
 import '../controllers/career_assistant_controller.dart';
@@ -234,23 +235,40 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
 
   Widget _buildChatView(BuildContext context, double screenHeight) {
     return Expanded(
-      child: Obx(() => ListView.builder(
+      child: Obx(() => ListView(
         controller: controller.scrollController,
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        itemCount: controller.messages.length + (controller.isTyping.value ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index == controller.messages.length && controller.isTyping.value) {
-            return _buildTypingIndicator(context);
-          }
+        children: [
+          // Chat Messages
+          ...controller.messages.asMap().entries.map((entry) {
+            final index = entry.key;
+            final message = entry.value;
+            return Padding(
+              padding: EdgeInsets.only(bottom: screenHeight * 0.03),
+              child: message.isUser
+                  ? _buildUserMessage(message.content, context)
+                  : _buildBotMessage(message.content, context, isWelcome: index == 0),
+            );
+          }).toList(),
           
-          final message = controller.messages[index];
-          return Padding(
-            padding: EdgeInsets.only(bottom: screenHeight * 0.03),
-            child: message.isUser
-                ? _buildUserMessage(message.content, context)
-                : _buildBotMessage(message.content, context, isWelcome: index == 0),
-          );
-        },
+          // Typing Indicator
+          if (controller.isTyping.value)
+            _buildTypingIndicator(context),
+          
+          // Roadmap Display (when generated)
+          if (controller.hasGeneratedRoadmap.value) ...[
+            SizedBox(height: screenHeight * 0.03),
+            RoadmapDisplayWidget(
+              roadmapTitle: controller.roadmapTitle.value,
+              roadmapDescription: controller.roadmapDescription.value,
+              steps: controller.roadmapSteps,
+              expandedSteps: controller.expandedSteps,
+              expandedSubSteps: controller.expandedSubSteps,
+              onSave: () => controller.saveRoadmap(),
+              onRegenerate: () => controller.regenerateRoadmap(),
+            ),
+          ],
+        ],
       )),
     );
   }

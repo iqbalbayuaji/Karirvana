@@ -4,6 +4,7 @@ import '../models/chat_message.dart';
 import '../../../services/groq_service.dart';
 import '../../../services/groq_roadmap_service.dart';
 import '../../../services/speech_service.dart';
+import '../../roadmap_manage/models/roadmap_models.dart';
 
 class CareerAssistantController extends GetxController {
   // View state management
@@ -22,6 +23,14 @@ class CareerAssistantController extends GetxController {
   final RxBool isListening = false.obs;
   final RxBool isSpeechAvailable = false.obs;
   final RxString partialSpeechResult = ''.obs;
+
+  // Roadmap functionality
+  final RxBool hasGeneratedRoadmap = false.obs;
+  final RxString roadmapTitle = ''.obs;
+  final RxString roadmapDescription = ''.obs;
+  final RxList<RoadmapMainStep> roadmapSteps = <RoadmapMainStep>[].obs;
+  final RxList<String> expandedSteps = <String>[].obs;
+  final RxList<String> expandedSubSteps = <String>[].obs;
 
   // Quick action topics
   final List<String> quickActions = [
@@ -93,17 +102,42 @@ class CareerAssistantController extends GetxController {
     _scrollToBottom();
 
     try {
+      print('🚀 SENDING MESSAGE - Mode: ${isRoadmapMode.value ? "ROADMAP" : "NORMAL"}');
+      print('📝 Message count: ${messages.length}');
+      
       // Choose service based on mode
       final response = isRoadmapMode.value 
           ? await GroqRoadmapService.sendMessage(messages.toList())
           : await GroqService.sendMessage(messages.toList());
       
-      // Add bot response
-      messages.add(ChatMessage.bot(response));
+      print('✅ RESPONSE RECEIVED');
+      print('📄 Response length: ${response.length}');
+      print('🔍 First 200 chars: ${response.length > 200 ? response.substring(0, 200) + "..." : response}');
+      
+      // Check if response contains a roadmap (only in roadmap mode)
+      if (isRoadmapMode.value) {
+        final isRoadmap = GroqRoadmapService.isRoadmapResponse(response);
+        print('🗺️ Is roadmap response: $isRoadmap');
+        
+        if (isRoadmap) {
+          print('🎯 Processing as roadmap...');
+          _processRoadmapResponse(response);
+        } else {
+          print('💬 Processing as normal chat...');
+          // Add bot response as normal chat message
+          messages.add(ChatMessage.bot(response));
+        }
+      } else {
+        // Add bot response as normal chat message
+        messages.add(ChatMessage.bot(response));
+      }
     } catch (e) {
+      print('❌ ERROR in sendMessage: ${e.toString()}');
+      print('📍 Error type: ${e.runtimeType}');
+      
       // Add error message
       messages.add(ChatMessage.bot(
-        'Maaf, terjadi kesalahan saat memproses pesan Anda. Silakan coba lagi.'
+        'Maaf, terjadi kesalahan saat memproses pesan Anda. Silakan coba lagi.\n\nDEBUG: ${e.toString()}'
       ));
     } finally {
       isTyping.value = false;
@@ -160,8 +194,10 @@ class CareerAssistantController extends GetxController {
   void backToWelcome() {
     isWelcomeView.value = true;
     isRoadmapMode.value = false;
+    hasGeneratedRoadmap.value = false;
     messages.clear();
     messageController.clear();
+    _clearRoadmapData();
   }
 
   void startRoadmapMode() {
@@ -180,13 +216,14 @@ class CareerAssistantController extends GetxController {
     _scrollToBottom();
   }
 
+
   // Initialize speech recognition
   Future<void> _initializeSpeech() async {
     try {
       final available = await SpeechService.initialize();
       isSpeechAvailable.value = available;
     } catch (e) {
-      print('Error initializing speech: $e');
+      // Error initializing speech: $e
       isSpeechAvailable.value = false;
     }
   }
@@ -244,5 +281,117 @@ class CareerAssistantController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  // Process roadmap response from Groq
+  void _processRoadmapResponse(String response) {
+    try {
+      print('🔄 PROCESSING ROADMAP RESPONSE');
+      
+      final roadmapJson = GroqRoadmapService.extractRoadmapJson(response);
+      print('📊 Extracted JSON: ${roadmapJson != null ? "SUCCESS" : "FAILED"}');
+      
+      if (roadmapJson != null) {
+        print('🏗️ JSON Keys: ${roadmapJson.keys.toList()}');
+        
+        // Extract roadmap info
+        final roadmapInfo = GroqRoadmapService.getRoadmapInfo(response);
+        roadmapTitle.value = roadmapInfo['title'] ?? 'Roadmap Karir';
+        roadmapDescription.value = roadmapInfo['description'] ?? '';
+        
+        print('📋 Title: ${roadmapTitle.value}');
+        print('📝 Description: ${roadmapDescription.value}');
+        
+        // Parse roadmap steps
+        roadmapSteps.value = GroqRoadmapService.parseRoadmapSteps(roadmapJson);
+        print('🪜 Steps parsed: ${roadmapSteps.length}');
+        
+        // Set roadmap generated flag
+        hasGeneratedRoadmap.value = true;
+        print('✅ Roadmap generation flag set to true');
+        
+        // Add confirmation message
+        messages.add(ChatMessage.bot(
+          "Roadmap karir Anda telah berhasil dibuat! 🎉\n\nSilakan lihat roadmap di bawah ini dan tentukan apakah sesuai dengan kebutuhan Anda. Anda dapat menyimpannya atau meminta saya untuk membuat ulang dengan penyesuaian."
+        ));
+      } else {
+        print('⚠️ JSON extraction failed, treating as normal message');
+        messages.add(ChatMessage.bot(response));
+      }
+    } catch (e) {
+      print('❌ ERROR in _processRoadmapResponse: ${e.toString()}');
+      print('📍 Error type: ${e.runtimeType}');
+      
+      // If parsing fails, treat as normal message
+      messages.add(ChatMessage.bot(response));
+    }
+  }
+
+  // Clear roadmap data
+  void _clearRoadmapData() {
+    hasGeneratedRoadmap.value = false;
+    roadmapTitle.value = '';
+    roadmapDescription.value = '';
+    roadmapSteps.clear();
+    expandedSteps.clear();
+    expandedSubSteps.clear();
+  }
+
+  // Save roadmap (placeholder - integrate with roadmap_manage system)
+  void saveRoadmap() {
+    try {
+      // TODO: Integrate with Firebase/roadmap_manage system
+      // For now, show success message
+      Get.snackbar(
+        'Berhasil',
+        'Roadmap berhasil disimpan! Anda dapat mengelolanya di halaman Roadmap Management.',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
+        snackPosition: SnackPosition.TOP,
+        duration: const Duration(seconds: 3),
+        titleText: Text(
+          'Berhasil',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Montserrat',
+            color: Colors.white,
+          ),
+        ),
+        messageText: Text(
+          'Roadmap berhasil disimpan! Anda dapat mengelolanya di halaman Roadmap Management.',
+          style: TextStyle(
+            fontSize: 14,
+            fontFamily: 'Montserrat',
+            color: Colors.white,
+          ),
+        ),
+      );
+      
+      // Clear roadmap and return to welcome
+      _clearRoadmapData();
+      backToWelcome();
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal menyimpan roadmap. Silakan coba lagi.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        borderRadius: 12,
+        margin: const EdgeInsets.all(16),
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
+  // Regenerate roadmap
+  void regenerateRoadmap() {
+    // Clear current roadmap
+    _clearRoadmapData();
+    
+    // Send regeneration request
+    sendMessage("Saya kurang puas dengan roadmap yang dibuat. Bisakah Anda membuat roadmap yang lebih sesuai dengan kebutuhan saya? Mohon pertimbangkan kembali detail yang sudah saya berikan sebelumnya.");
   }
 }
