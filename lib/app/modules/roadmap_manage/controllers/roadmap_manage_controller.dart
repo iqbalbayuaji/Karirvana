@@ -95,18 +95,6 @@ class RoadmapManageController extends GetxController {
                 provider: 'DevSkills',
                 status: ResourceStatus.added,
               ),
-              RoadmapResource(
-                type: 'certificate', 
-                title: 'JavaScript Developer Certificate', 
-                provider: 'JSCert',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'certificate', 
-                title: 'Frontend JavaScript Mastery', 
-                provider: 'WebCert',
-                status: ResourceStatus.notAdded,
-              ),
             ],
           ),
           RoadmapSubStep(
@@ -170,12 +158,6 @@ class RoadmapManageController extends GetxController {
                 provider: 'ReactCert',
                 status: ResourceStatus.notAdded,
               ),
-              RoadmapResource(
-                type: 'certificate', 
-                title: 'Web Development Bootcamp', 
-                provider: 'CodeCamp',
-                status: ResourceStatus.notAdded,
-              ),
             ],
           ),
           RoadmapSubStep(
@@ -186,20 +168,8 @@ class RoadmapManageController extends GetxController {
             estimatedDuration: '1 minggu',
             resources: [
               RoadmapResource(
-                type: 'guide', 
-                title: 'CV Template untuk Developer', 
-                provider: 'CareerGuide',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'guide', 
-                title: 'Panduan Menulis CV IT', 
-                provider: 'TechCareer',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
                 type: 'tool', 
-                title: 'CV Builder Tool', 
+                title: 'CV Assistant', 
                 provider: 'Karirvana',
                 status: ResourceStatus.notAdded,
               ),
@@ -216,18 +186,6 @@ class RoadmapManageController extends GetxController {
                 type: 'course', 
                 title: 'Portfolio Website Development', 
                 provider: 'WebAcademy',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'guide', 
-                title: 'Portfolio Best Practices', 
-                provider: 'DesignGuide',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'tool', 
-                title: 'Portfolio Templates', 
-                provider: 'PortfolioHub',
                 status: ResourceStatus.notAdded,
               ),
             ],
@@ -249,12 +207,6 @@ class RoadmapManageController extends GetxController {
             estimatedDuration: '2-3 minggu',
             resources: [
               RoadmapResource(
-                type: 'guide', 
-                title: 'Frontend Interview Questions', 
-                provider: 'InterviewPrep',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
                 type: 'course', 
                 title: 'Technical Interview Mastery', 
                 provider: 'InterviewAce',
@@ -262,7 +214,7 @@ class RoadmapManageController extends GetxController {
               ),
               RoadmapResource(
                 type: 'tool', 
-                title: 'Mock Interview Practice', 
+                title: 'Interview Practice', 
                 provider: 'Karirvana',
                 status: ResourceStatus.notAdded,
               ),
@@ -302,12 +254,6 @@ class RoadmapManageController extends GetxController {
                 provider: 'Traveloka', 
                 location: 'Jakarta',
                 jobStatus: JobApplicationStatus.notApplied,
-              ),
-              RoadmapResource(
-                type: 'guide', 
-                title: 'Job Application Strategy', 
-                provider: 'CareerGuide',
-                status: ResourceStatus.notAdded,
               ),
             ],
           ),

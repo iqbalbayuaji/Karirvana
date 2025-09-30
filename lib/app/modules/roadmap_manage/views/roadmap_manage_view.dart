@@ -25,7 +25,7 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
               _buildHeader(),
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -46,7 +46,7 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
 
   Widget _buildHeader() {
     return Padding(
-              padding: const EdgeInsets.fromLTRB(25, 20, 25, 20),
+              padding: const EdgeInsets.fromLTRB(25, 20, 25, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -69,7 +69,7 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                     ),
                   ),
                   const Text(
-                    'Roadmap Karir',
+                    'Edit Roadmap Karir',
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: TextStyle(
@@ -440,7 +440,7 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Rekomendasi Resources:',
+                    'Rekomendasi',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -475,10 +475,6 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
       case 'job':
         icon = Icons.work_outline;
         color = Colors.orange;
-        break;
-      case 'guide':
-        icon = Icons.menu_book_outlined;
-        color = Colors.blue;
         break;
       case 'tool':
         icon = Icons.build_outlined;
