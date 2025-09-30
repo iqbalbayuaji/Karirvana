@@ -453,24 +453,6 @@ class RoadmapDisplayWidget extends StatelessWidget {
               ],
             ),
           ),
-          
-          // Resource Type Badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: _getResourceColor(resource.type).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              _getResourceTypeLabel(resource.type),
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Montserrat',
-                color: _getResourceColor(resource.type),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -568,54 +550,35 @@ class RoadmapDisplayWidget extends StatelessWidget {
     }
   }
 
+  // Get resource icon (consistent with roadmap_manage)
   IconData _getResourceIcon(String type) {
     switch (type) {
       case 'course':
-        return Icons.school_outlined;
+        return Icons.play_circle_outline;
       case 'certificate':
         return Icons.verified_outlined;
       case 'job':
         return Icons.work_outline;
-      case 'guide':
-        return Icons.book_outlined;
       case 'tool':
         return Icons.build_outlined;
       default:
-        return Icons.link_outlined;
+        return Icons.link;
     }
   }
 
+  // Get resource color (consistent with roadmap_manage)
   Color _getResourceColor(String type) {
     switch (type) {
       case 'course':
-        return Colors.blue;
-      case 'certificate':
-        return Colors.orange;
-      case 'job':
-        return Colors.green;
-      case 'guide':
-        return Colors.purple;
-      case 'tool':
-        return Colors.teal;
-      default:
         return AppColors.primary;
-    }
-  }
-
-  String _getResourceTypeLabel(String type) {
-    switch (type) {
-      case 'course':
-        return 'Kursus';
       case 'certificate':
-        return 'Sertifikat';
+        return Colors.green;
       case 'job':
-        return 'Pekerjaan';
-      case 'guide':
-        return 'Panduan';
+        return Colors.orange;
       case 'tool':
-        return 'Tool';
+        return AppColors.tertiary;
       default:
-        return 'Lainnya';
+        return AppColors.textSecondary;
     }
   }
 }

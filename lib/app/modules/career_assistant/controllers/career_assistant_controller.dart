@@ -4,7 +4,9 @@ import '../models/chat_message.dart';
 import '../../../services/groq_service.dart';
 import '../../../services/groq_roadmap_service.dart';
 import '../../../services/speech_service.dart';
+import '../../../services/firebase_roadmap_service.dart';
 import '../../roadmap_manage/models/roadmap_models.dart';
+import '../../roadmap_manage/controllers/roadmap_manage_controller.dart';
 
 class CareerAssistantController extends GetxController {
   // View state management
@@ -346,11 +348,53 @@ class CareerAssistantController extends GetxController {
     print('✅ Roadmap data cleared');
   }
 
-  // Save roadmap (placeholder - integrate with roadmap_manage system)
-  void saveRoadmap() {
+  // Save roadmap to roadmap_manage system and Firebase
+  Future<void> saveRoadmap() async {
     try {
-      // TODO: Integrate with Firebase/roadmap_manage system
-      // For now, show success message
+      print('🔄 Starting roadmap save process...');
+      print('📋 Roadmap Title: ${roadmapTitle.value}');
+      print('🪜 Steps Count: ${roadmapSteps.length}');
+      
+      // Validate roadmap data
+      if (roadmapTitle.value.isEmpty) {
+        throw Exception('Roadmap title is empty');
+      }
+      
+      if (roadmapSteps.isEmpty) {
+        throw Exception('Roadmap has no steps');
+      }
+      
+      // Ensure RoadmapManageController exists
+      if (!Get.isRegistered<RoadmapManageController>()) {
+        print('📦 Registering RoadmapManageController...');
+        Get.put(RoadmapManageController(), permanent: true);
+      }
+      
+      // Get controller
+      final roadmapManageController = Get.find<RoadmapManageController>();
+      print('✅ Got RoadmapManageController');
+      
+      // Update roadmap_manage with new data
+      print('📊 Updating roadmap data...');
+      roadmapManageController.roadmapTitle.value = roadmapTitle.value;
+      roadmapManageController.roadmapSteps.value = roadmapSteps.toList();
+      
+      print('✅ Roadmap data updated successfully');
+      
+      // Verify data transfer
+      print('🔍 Verification:');
+      print('   - RoadmapManage Title: ${roadmapManageController.roadmapTitle.value}');
+      print('   - RoadmapManage Steps: ${roadmapManageController.roadmapSteps.length}');
+      print('   - Data Match: ${roadmapManageController.roadmapTitle.value == roadmapTitle.value}');
+      
+      // Save to Firebase
+      print('🔥 Saving to Firebase...');
+      await FirebaseRoadmapService.saveRoadmap(
+        title: roadmapTitle.value,
+        description: roadmapDescription.value,
+        steps: roadmapSteps.toList(),
+      );
+      print('✅ Firebase save completed');
       Get.snackbar(
         'Berhasil',
         'Roadmap berhasil disimpan! Anda dapat mengelolanya di halaman Roadmap Management.',
@@ -379,18 +423,29 @@ class CareerAssistantController extends GetxController {
         ),
       );
       
+      // Notify RoadmapManageController if it exists
+      if (Get.isRegistered<RoadmapManageController>()) {
+        final roadmapController = Get.find<RoadmapManageController>();
+        roadmapController.refreshRoadmap();
+        print('🔄 Notified RoadmapManageController to refresh');
+      }
+      
       // Clear roadmap and return to welcome
       _clearRoadmapData();
       backToWelcome();
     } catch (e) {
+      print('❌ Error saving roadmap: ${e.toString()}');
+      print('📍 Error type: ${e.runtimeType}');
+      
       Get.snackbar(
         'Error',
-        'Gagal menyimpan roadmap. Silakan coba lagi.',
+        'Gagal menyimpan roadmap: ${e.toString()}',
         backgroundColor: Colors.red,
         colorText: Colors.white,
         borderRadius: 12,
         margin: const EdgeInsets.all(16),
         snackPosition: SnackPosition.TOP,
+        duration: const Duration(seconds: 5),
       );
     }
   }

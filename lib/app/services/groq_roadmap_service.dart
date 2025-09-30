@@ -68,7 +68,7 @@ ATURAN PENTING:
 - Untuk percakapan biasa, gunakan teks normal
 - Pastikan JSON valid dan sesuai struktur - JANGAN sampai ada string yang tidak tertutup
 - Buat 3-4 step utama dengan 2-3 sub-step per step (jangan terlalu banyak)
-- Resource types: course, certificate, job, guide, tool
+- Resource types: course, certificate, job, tool (JANGAN gunakan guide atau type lainnya)
 - PASTIKAN semua string dalam JSON tertutup dengan benar dengan tanda kutip
 - JANGAN buat JSON yang terlalu panjang - fokus pada hal-hal penting saja
 

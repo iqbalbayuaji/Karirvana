@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import '../models/roadmap_models.dart';
+import '../../../services/firebase_roadmap_service.dart';
+import '../../career_assistant/controllers/career_assistant_controller.dart';
 
 class RoadmapManageController extends GetxController {
   // Roadmap data
   final isLoading = false.obs;
-  final roadmapTitle = 'Frontend Developer Career Path'.obs;
+  final roadmapTitle = 'My Career Roadmap'.obs;
   final roadmapSteps = <RoadmapMainStep>[].obs;
   final expandedSteps = <String>{}.obs;
   final expandedSubSteps = <String>{}.obs;
@@ -13,10 +15,78 @@ class RoadmapManageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initializeSampleData();
+    
+    print('🚀 RoadmapManageController initialized');
+    
+    // Try to load roadmap from Firebase first
+    _loadRoadmapFromFirebase();
     
     // Periodically check for completion updates
     _startAutoCompletionCheck();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    print('📱 RoadmapManageController ready');
+    
+    // Also try to get data from CareerAssistantController if available
+    _tryLoadFromCareerAssistant();
+  }
+
+  // Try to load data from CareerAssistantController
+  void _tryLoadFromCareerAssistant() {
+    try {
+      if (Get.isRegistered<CareerAssistantController>()) {
+        final careerController = Get.find<CareerAssistantController>();
+        
+        if (careerController.hasGeneratedRoadmap.value && 
+            careerController.roadmapSteps.isNotEmpty) {
+          
+          print('🔄 Found roadmap data in CareerAssistantController');
+          print('📋 Title: ${careerController.roadmapTitle.value}');
+          print('🪜 Steps: ${careerController.roadmapSteps.length}');
+          
+          // Update with data from Career Assistant
+          roadmapTitle.value = careerController.roadmapTitle.value;
+          roadmapSteps.value = careerController.roadmapSteps.toList();
+          
+          print('✅ Roadmap data loaded from CareerAssistantController');
+        }
+      }
+    } catch (e) {
+      print('⚠️ Could not load from CareerAssistantController: $e');
+    }
+  }
+
+  // Load roadmap from Firebase
+  Future<void> _loadRoadmapFromFirebase() async {
+    try {
+      isLoading.value = true;
+      print('🔥 Loading roadmap from Firebase...');
+      
+      final roadmapData = await FirebaseRoadmapService.loadRoadmap();
+      
+      if (roadmapData != null) {
+        // Load data from Firebase
+        roadmapTitle.value = roadmapData['title'] as String? ?? 'My Roadmap';
+        roadmapSteps.value = FirebaseRoadmapService.parseRoadmapFromFirebase(roadmapData);
+        
+        print('✅ Roadmap loaded from Firebase');
+        print('📋 Title: ${roadmapTitle.value}');
+        print('🪜 Steps: ${roadmapSteps.length}');
+      } else {
+        // No roadmap in Firebase, use sample data
+        print('📭 No roadmap in Firebase, using sample data');
+        _initializeSampleData();
+      }
+    } catch (e) {
+      print('❌ Error loading from Firebase: $e');
+      // Fallback to sample data
+      _initializeSampleData();
+    } finally {
+      isLoading.value = false;
+    }
   }
   
   void _startAutoCompletionCheck() {
@@ -28,340 +98,114 @@ class RoadmapManageController extends GetxController {
 
   void _recheckAllCompletions() {
     for (final mainStep in roadmapSteps) {
-      checkStepCompletion(mainStep.id);
+      for (final subStep in mainStep.subSteps) {
+        _checkSubStepCompletion(subStep);
+      }
+      _checkMainStepCompletion(mainStep);
     }
   }
 
-  void _initializeSampleData() {
-    isLoading.value = true;
-    // Sample hierarchical roadmap data
-    roadmapSteps.value = [
-      RoadmapMainStep(
-        id: '1',
-        title: 'Mempelajari Frontend Development',
-        description: 'Kuasai teknologi dasar untuk pengembangan web frontend',
-        isCompleted: false,
-        estimatedDuration: '3-4 bulan',
-        subSteps: [
-          RoadmapSubStep(
-            id: '1-1',
-            title: 'Belajar HTML & CSS',
-            description: 'Pelajari struktur dan styling dasar website',
-            isCompleted: true,
-            estimatedDuration: '2-3 minggu',
-            resources: [
-              RoadmapResource(
-                type: 'course',
-                title: 'HTML & CSS Fundamentals',
-                provider: 'Karirvana Academy',
-                status: ResourceStatus.completed,
-              ),
-              RoadmapResource(
-                type: 'certificate',
-                title: 'Web Development Certificate',
-                provider: 'Karirvana',
-                status: ResourceStatus.inProgress,
-              ),
-              RoadmapResource(
-                type: 'certificate',
-                title: 'HTML5 & CSS3 Certificate',
-                provider: 'TechCert',
-                status: ResourceStatus.added,
-              ),
-              RoadmapResource(
-                type: 'certificate',
-                title: 'Web Design Fundamentals',
-                provider: 'DesignPro',
-                status: ResourceStatus.notAdded,
-              ),
-            ],
-          ),
-          RoadmapSubStep(
-            id: '1-2',
-            title: 'Belajar JavaScript',
-            description: 'Kuasai bahasa pemrograman untuk interaktivitas web',
-            isCompleted: false,
-            estimatedDuration: '4-6 minggu',
-            resources: [
-              RoadmapResource(
-                type: 'course', 
-                title: 'JavaScript Essentials', 
-                provider: 'CodeAcademy',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'course', 
-                title: 'Modern JavaScript ES6+', 
-                provider: 'DevSkills',
-                status: ResourceStatus.added,
-              ),
-            ],
-          ),
-          RoadmapSubStep(
-            id: '1-3',
-            title: 'Belajar React.js',
-            description: 'Pelajari framework React untuk aplikasi web modern',
-            isCompleted: false,
-            estimatedDuration: '6-8 minggu',
-            resources: [
-              RoadmapResource(
-                type: 'course', 
-                title: 'React.js Complete Guide', 
-                provider: 'ReactMasters',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'course', 
-                title: 'React Hooks & Context', 
-                provider: 'ModernReact',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'certificate', 
-                title: 'React Developer Certificate', 
-                provider: 'ReactCert',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'certificate', 
-                title: 'Frontend Framework Mastery', 
-                provider: 'FrameworkPro',
-                status: ResourceStatus.notAdded,
-              ),
-            ],
-          ),
-        ],
-      ),
-      RoadmapMainStep(
-        id: '2',
-        title: 'Create Portfolio',
-        description: 'Bangun portfolio yang menarik dan dapatkan sertifikasi',
-        isCompleted: false,
-        estimatedDuration: '1-2 bulan',
-        subSteps: [
-          RoadmapSubStep(
-            id: '2-1',
-            title: 'Mengikuti Sertifikasi',
-            description: 'Dapatkan sertifikasi untuk meningkatkan kredibilitas',
-            isCompleted: false,
-            estimatedDuration: '2-3 minggu',
-            resources: [
-              RoadmapResource(
-                type: 'certificate', 
-                title: 'Frontend Developer Professional', 
-                provider: 'TechCert',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'certificate', 
-                title: 'React.js Specialist', 
-                provider: 'ReactCert',
-                status: ResourceStatus.notAdded,
-              ),
-            ],
-          ),
-          RoadmapSubStep(
-            id: '2-2',
-            title: 'Membuat CV',
-            description: 'Buat CV yang menarik dan profesional',
-            isCompleted: false,
-            estimatedDuration: '1 minggu',
-            resources: [
-              RoadmapResource(
-                type: 'tool', 
-                title: 'CV Assistant', 
-                provider: 'Karirvana',
-                status: ResourceStatus.notAdded,
-              ),
-            ],
-          ),
-          RoadmapSubStep(
-            id: '2-3',
-            title: 'Bangun Portfolio Website',
-            description: 'Buat website portfolio untuk showcase project',
-            isCompleted: false,
-            estimatedDuration: '2-3 minggu',
-            resources: [
-              RoadmapResource(
-                type: 'course', 
-                title: 'Portfolio Website Development', 
-                provider: 'WebAcademy',
-                status: ResourceStatus.notAdded,
-              ),
-            ],
-          ),
-        ],
-      ),
-      RoadmapMainStep(
-        id: '3',
-        title: 'Melamar Pekerjaan',
-        description: 'Mulai melamar pekerjaan sebagai Frontend Developer',
-        isCompleted: false,
-        estimatedDuration: '1-3 bulan',
-        subSteps: [
-          RoadmapSubStep(
-            id: '3-1',
-            title: 'Persiapan Interview',
-            description: 'Siapkan diri untuk proses interview',
-            isCompleted: false,
-            estimatedDuration: '2-3 minggu',
-            resources: [
-              RoadmapResource(
-                type: 'course', 
-                title: 'Technical Interview Mastery', 
-                provider: 'InterviewAce',
-                status: ResourceStatus.notAdded,
-              ),
-              RoadmapResource(
-                type: 'tool', 
-                title: 'Interview Practice', 
-                provider: 'Karirvana',
-                status: ResourceStatus.notAdded,
-              ),
-            ],
-          ),
-          RoadmapSubStep(
-            id: '3-2',
-            title: 'Apply to Companies',
-            description: 'Mulai melamar ke perusahaan target',
-            isCompleted: false,
-            estimatedDuration: '4-8 minggu',
-            resources: [
-              RoadmapResource(
-                type: 'job', 
-                title: 'Frontend Developer - Tokopedia', 
-                provider: 'Tokopedia', 
-                location: 'Jakarta',
-                jobStatus: JobApplicationStatus.applied,
-              ),
-              RoadmapResource(
-                type: 'job', 
-                title: 'React Developer - Gojek', 
-                provider: 'Gojek', 
-                location: 'Jakarta',
-                jobStatus: JobApplicationStatus.accepted,
-              ),
-              RoadmapResource(
-                type: 'job', 
-                title: 'Web Developer - Shopee', 
-                provider: 'Shopee', 
-                location: 'Jakarta',
-                jobStatus: JobApplicationStatus.notApplied,
-              ),
-              RoadmapResource(
-                type: 'job', 
-                title: 'Frontend Engineer - Traveloka', 
-                provider: 'Traveloka', 
-                location: 'Jakarta',
-                jobStatus: JobApplicationStatus.notApplied,
-              ),
-            ],
-          ),
-        ],
-      ),
-    ];
+  // Calculate overall progress
+  double get overallProgress {
+    if (roadmapSteps.isEmpty) return 0.0;
     
-    isLoading.value = false;
+    int completedSteps = 0;
+    int totalSteps = 0;
+    
+    for (final mainStep in roadmapSteps) {
+      for (final subStep in mainStep.subSteps) {
+        totalSteps++;
+        if (subStep.isCompleted) completedSteps++;
+      }
+    }
+    
+    return totalSteps > 0 ? completedSteps / totalSteps : 0.0;
   }
 
+  // Toggle main step expansion
   void toggleMainStep(String stepId) {
     if (expandedSteps.contains(stepId)) {
       expandedSteps.remove(stepId);
-      // Also collapse all sub-steps when main step is collapsed
-      final mainStep = roadmapSteps.firstWhere((step) => step.id == stepId);
-      for (final subStep in mainStep.subSteps) {
-        expandedSubSteps.remove(subStep.id);
-      }
     } else {
       expandedSteps.add(stepId);
     }
-    expandedSteps.refresh();
-    expandedSubSteps.refresh();
   }
 
+  // Toggle sub step expansion
   void toggleSubStep(String subStepId) {
     if (expandedSubSteps.contains(subStepId)) {
       expandedSubSteps.remove(subStepId);
     } else {
       expandedSubSteps.add(subStepId);
     }
-    expandedSubSteps.refresh();
   }
 
-  // Auto-detect step completion based on system criteria
-  void checkStepCompletion(String stepId, {bool isSubStep = false}) {
-    if (isSubStep) {
-      // Auto-detect sub-step completion
-      for (final mainStep in roadmapSteps) {
-        final subStepIndex = mainStep.subSteps.indexWhere((s) => s.id == stepId);
-        if (subStepIndex != -1) {
-          final subStep = mainStep.subSteps[subStepIndex];
+  // Toggle sub step completion
+  void toggleSubStepCompletion(String subStepId) {
+    for (final mainStep in roadmapSteps) {
+      for (final subStep in mainStep.subSteps) {
+        if (subStep.id == subStepId) {
+          subStep.isCompleted = !subStep.isCompleted;
+          _checkMainStepCompletion(mainStep);
           
-          // Auto-completion logic based on step type
-          bool shouldBeCompleted = _detectSubStepCompletion(subStep);
-          
-          if (subStep.isCompleted != shouldBeCompleted) {
-            subStep.isCompleted = shouldBeCompleted;
-            roadmapSteps.refresh();
-          }
+          // Save changes to Firebase
+          _saveToFirebase();
           break;
         }
       }
-    } else {
-      // Auto-detect main step completion
-      final stepIndex = roadmapSteps.indexWhere((s) => s.id == stepId);
-      if (stepIndex != -1) {
-        final mainStep = roadmapSteps[stepIndex];
-        
-        // Main step is completed when all sub-steps are completed
-        bool allSubStepsCompleted = mainStep.subSteps.every((subStep) => subStep.isCompleted);
-        
-        if (mainStep.isCompleted != allSubStepsCompleted) {
-          mainStep.isCompleted = allSubStepsCompleted;
-          roadmapSteps.refresh();
-        }
-      }
     }
   }
-  
-  // Logic to detect if a sub-step should be marked as completed
+
+  // Check step completion based on sub-steps
+  void checkStepCompletion(String stepId) {
+    final step = roadmapSteps.firstWhereOrNull((s) => s.id == stepId);
+    if (step != null) {
+      _checkMainStepCompletion(step);
+    }
+  }
+
+  // Check if main step should be completed based on sub-steps
+  void _checkMainStepCompletion(RoadmapMainStep mainStep) {
+    if (mainStep.subSteps.isEmpty) return;
+    
+    bool allCompleted = mainStep.subSteps.every((subStep) => subStep.isCompleted);
+    mainStep.isCompleted = allCompleted;
+  }
+
+  // Check individual sub-step completion
+  void _checkSubStepCompletion(RoadmapSubStep subStep) {
+    // Auto-completion logic based on step type
+    bool shouldBeCompleted = _detectSubStepCompletion(subStep);
+    
+    if (subStep.isCompleted != shouldBeCompleted) {
+      subStep.isCompleted = shouldBeCompleted;
+    }
+  }
+
+  // Detect if sub-step should be auto-completed
   bool _detectSubStepCompletion(RoadmapSubStep subStep) {
-    // Example completion criteria - you can customize this based on your needs
+    // Basic detection logic - can be enhanced
     switch (subStep.id) {
-      case 'html_css':
-        // Check if user has completed HTML/CSS courses or assessments
-        return _hasCompletedCourses(['html_basics', 'css_basics']);
-      
-      case 'javascript':
-        // Check if user has completed JavaScript courses
-        return _hasCompletedCourses(['js_fundamentals', 'js_dom']);
-      
-      case 'react':
-        // Check if user has completed React courses
-        return _hasCompletedCourses(['react_basics', 'react_hooks']);
-      
-      case 'portfolio':
-        // Check if user has uploaded portfolio projects
+      case 'html_css_basics':
+        return _hasCompletedCourses();
+      case 'javascript_fundamentals':
+        return _hasCompletedCourses();
+      case 'react_basics':
+        return _hasCompletedCourses();
+      case 'portfolio_creation':
         return _hasUploadedPortfolio();
-      
-      case 'cv_building':
-        // Check if user has created and saved CV
+      case 'cv_preparation':
         return _hasSavedCV();
-      
       case 'job_applications':
-        // Check if user has applied to jobs through the platform
         return _hasAppliedToJobs();
-      
       default:
-        // Default: manual completion or time-based
         return false;
     }
   }
-  
-  // Helper methods for checking completion criteria
-  bool _hasCompletedCourses(List<String> courseIds) {
-    // TODO: Integrate with your course completion system
-    // For now, return false - implement based on your course tracking
+
+  // Placeholder methods for external integrations
+  bool _hasCompletedCourses() {
+    // TODO: Check if user has completed relevant courses
     return false;
   }
   
@@ -379,40 +223,113 @@ class RoadmapManageController extends GetxController {
     // TODO: Check if user has applied to jobs
     return false;
   }
-  
-  // Method to manually trigger completion check for all steps
-  void recheckAllCompletions() {
-    for (final mainStep in roadmapSteps) {
-      for (final subStep in mainStep.subSteps) {
-        checkStepCompletion(subStep.id, isSubStep: true);
-      }
-      checkStepCompletion(mainStep.id, isSubStep: false);
+
+  // Save current roadmap state to Firebase
+  Future<void> _saveToFirebase() async {
+    try {
+      print('💾 Auto-saving roadmap changes to Firebase...');
+      
+      await FirebaseRoadmapService.saveRoadmap(
+        title: roadmapTitle.value,
+        description: 'Updated roadmap from roadmap management',
+        steps: roadmapSteps.toList(),
+      );
+      
+      print('✅ Auto-save completed');
+    } catch (e) {
+      print('❌ Auto-save failed: $e');
+      // Don't show error to user for auto-save failures
     }
   }
 
+  // Manual save method (can be called from UI)
+  Future<void> saveRoadmap() async {
+    try {
+      await FirebaseRoadmapService.saveRoadmap(
+        title: roadmapTitle.value,
+        description: 'Roadmap saved from roadmap management',
+        steps: roadmapSteps.toList(),
+      );
+      
+      Get.snackbar('Berhasil', 'Roadmap berhasil disimpan!');
+    } catch (e) {
+      print('❌ Manual save failed: $e');
+      Get.snackbar('Error', 'Gagal menyimpan roadmap: $e');
+    }
+  }
+
+  // Generate new roadmap (navigate to career assistant)
   void generateNewRoadmap() {
-    // Navigate to career assistant for AI roadmap generation
-    Get.toNamed('/career-assistant', arguments: {'mode': 'roadmap'});
+    Get.toNamed('/career-assistant');
   }
 
+  // Generate schedule from roadmap
   void generateSchedule() {
-    Get.toNamed('/jadwal-manage');
+    // TODO: Integrate with jadwal_manage system
+    Get.snackbar('Info', 'Fitur generate schedule akan segera tersedia!');
   }
 
-  double get overallProgress {
-    if (roadmapSteps.isEmpty) return 0.0;
+  // Manual refresh method (can be called from UI)
+  Future<void> refreshRoadmap() async {
+    print('🔄 Manual refresh triggered');
     
-    int totalSteps = 0;
-    int completedSteps = 0;
+    // Try to load from Career Assistant first
+    _tryLoadFromCareerAssistant();
     
-    for (final mainStep in roadmapSteps) {
-      totalSteps += 1 + mainStep.subSteps.length;
-      if (mainStep.isCompleted) completedSteps++;
-      for (final subStep in mainStep.subSteps) {
-        if (subStep.isCompleted) completedSteps++;
-      }
-    }
-    
-    return totalSteps > 0 ? completedSteps / totalSteps : 0.0;
+    // Then try Firebase
+    await _loadRoadmapFromFirebase();
+  }
+
+  // Initialize sample data (fallback)
+  void _initializeSampleData() {
+    roadmapTitle.value = 'Frontend Developer Career Path';
+    roadmapSteps.value = [
+      RoadmapMainStep(
+        id: 'step_1',
+        title: 'Foundation Learning',
+        description: 'Master the basics of web development',
+        isCompleted: false,
+        estimatedDuration: '2-3 months',
+        subSteps: [
+          RoadmapSubStep(
+            id: 'html_css_basics',
+            title: 'HTML & CSS Fundamentals',
+            description: 'Learn basic structure and styling of websites',
+            isCompleted: false,
+            estimatedDuration: '2-3 weeks',
+            resources: [
+              RoadmapResource(
+                type: 'course',
+                title: 'HTML & CSS Complete Course',
+                provider: 'Karirvana Academy',
+              ),
+            ],
+          ),
+        ],
+      ),
+      RoadmapMainStep(
+        id: 'step_2',
+        title: 'JavaScript Mastery',
+        description: 'Learn programming for web interactivity',
+        isCompleted: false,
+        estimatedDuration: '1-2 months',
+        subSteps: [
+          RoadmapSubStep(
+            id: 'javascript_fundamentals',
+            title: 'JavaScript Essentials',
+            description: 'Master JavaScript programming language',
+            isCompleted: false,
+            estimatedDuration: '4-6 weeks',
+            resources: [
+              RoadmapResource(
+                type: 'course',
+                title: 'JavaScript Complete Guide',
+                provider: 'Karirvana Academy',
+              ),
+            ],
+          ),
+        ],
+      ),
+    ];
   }
 }
