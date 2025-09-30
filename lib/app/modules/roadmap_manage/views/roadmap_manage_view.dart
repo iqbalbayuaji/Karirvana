@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:karirvana/app/routes/app_pages.dart';
 import '../../../styles/app_colors.dart';
 import '../controllers/roadmap_manage_controller.dart';
 import '../models/roadmap_models.dart';
@@ -122,16 +123,26 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                   ],
                 ),
               ),
-              Icon(
-                Icons.edit_outlined,
-                color: AppColors.textSecondary,
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(Routes.ROADMAP_EDIT);
+                },
+                child: Icon(
+                  Icons.edit_outlined,
+                  color: AppColors.textSecondary,
+                ),
               ),
               const SizedBox(
                 width: 15
               ),
-              Icon(
-                Icons.delete_outlined,
-                color: Colors.red[400],
+              GestureDetector(
+                onTap: () {
+
+                },
+                child: Icon(
+                  Icons.delete_outlined,
+                  color: Colors.red[400],
+                ),
               ),
             ],
           ),
