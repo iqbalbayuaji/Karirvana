@@ -48,6 +48,8 @@ import '../modules/profile_user/bindings/profile_user_binding.dart';
 import '../modules/profile_user/views/profile_user_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/roadmap_edit/bindings/roadmap_edit_binding.dart';
+import '../modules/roadmap_edit/views/roadmap_edit_view.dart';
 import '../modules/roadmap_manage/bindings/roadmap_manage_binding.dart';
 import '../modules/roadmap_manage/views/roadmap_manage_view.dart';
 
@@ -183,6 +185,11 @@ class AppPages {
       name: _Paths.ROADMAP_MANAGE,
       page: () => RoadmapManageView(),
       binding: RoadmapManageBinding(),
+    ),
+    GetPage(
+      name: _Paths.ROADMAP_EDIT,
+      page: () => const RoadmapEditView(),
+      binding: RoadmapEditBinding(),
     ),
   ];
 }

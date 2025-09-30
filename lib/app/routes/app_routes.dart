@@ -29,6 +29,7 @@ abstract class Routes {
   static const JADWAL_MANAGE = _Paths.JADWAL_MANAGE;
   static const JADWAL_ADD = _Paths.JADWAL_ADD;
   static const ROADMAP_MANAGE = _Paths.ROADMAP_MANAGE;
+  static const ROADMAP_EDIT = _Paths.ROADMAP_EDIT;
 }
 
 abstract class _Paths {
@@ -59,4 +60,5 @@ abstract class _Paths {
   static const JADWAL_MANAGE = '/jadwal-manage';
   static const JADWAL_ADD = '/jadwal-add';
   static const ROADMAP_MANAGE = '/roadmap-manage';
+  static const ROADMAP_EDIT = '/roadmap-edit';
 }
