@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../styles/app_colors.dart';
@@ -379,7 +380,7 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                       const Text(
                         'Rekomendasi',
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           fontFamily: 'Montserrat',
                           color: AppColors.textSecondary,
@@ -387,27 +388,10 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
                       ),
                       GestureDetector(
                         onTap: () => controller.addResource(mainStepId, subStep.id),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.add, color: AppColors.primary, size: 14),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Add',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: Icon(
+                          Icons.add, 
+                          color: AppColors.primary, 
+                          size: 23
                         ),
                       ),
                     ],
@@ -503,18 +487,22 @@ class RoadmapEditView extends GetView<RoadmapEditController> {
             ),
           ),
           const SizedBox(width: 8),
-          // Edit resource button
-          GestureDetector(
-            onTap: () => controller.editResource(mainStepId, subStepId, resource),
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              child: Icon(
-                Icons.edit_outlined,
-                color: AppColors.textSecondary,
-                size: 20,
+          // Edit resource button - only show for course, certificate, and job
+          if (resource.type == 'course' || resource.type == 'certificate' || resource.type == 'job')
+            GestureDetector(
+              onTap: () => controller.editResource(mainStepId, subStepId, resource),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                child: Icon(
+                  Icons.sync_rounded,
+                  color: AppColors.textSecondary,
+                  size: 20,
+                ),
               ),
             ),
-          ),
+          // Add spacing only if edit button is shown
+          if (resource.type == 'course' || resource.type == 'certificate' || resource.type == 'job')
+            const SizedBox(width: 8),
           // Delete resource button
           GestureDetector(
             onTap: () => controller.deleteResource(mainStepId, subStepId, resource),

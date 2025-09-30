@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../styles/app_colors.dart';
 import '../../roadmap_manage/models/roadmap_models.dart';
 
 class RoadmapEditController extends GetxController {
@@ -265,33 +266,125 @@ class RoadmapEditController extends GetxController {
   void editRoadmapTitle() {
     Get.dialog(
       AlertDialog(
-        title: const Text('Edit Roadmap Title'),
-        content: TextFormField(
-          initialValue: roadmapTitle.value,
-          decoration: const InputDecoration(
-            labelText: 'Roadmap Title',
-            border: OutlineInputBorder(),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          'Edit Roadmap Title',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Montserrat',
+            color: AppColors.textPrimary,
           ),
-          onChanged: (value) {
-            roadmapTitle.value = value;
-          },
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              initialValue: roadmapTitle.value,
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: AppColors.textPrimary,
+              ),
+              decoration: InputDecoration(
+                labelText: 'Roadmap Title',
+                labelStyle: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Montserrat',
+                  color: AppColors.textSecondary,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.outline),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.outline),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: AppColors.primary, width: 2),
+                ),
+                filled: true,
+                fillColor: AppColors.background,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+              onChanged: (value) {
+                roadmapTitle.value = value;
+              },
+            ),
+          ],
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
               Get.back();
               Get.snackbar(
-                'Success',
-                'Roadmap title updated',
+                'Berhasil',
+                'Judul roadmap berhasil diperbarui',
                 backgroundColor: Colors.green,
                 colorText: Colors.white,
+                borderRadius: 12,
+                margin: const EdgeInsets.all(16),
+                snackPosition: SnackPosition.TOP,
+                duration: const Duration(seconds: 2),
+                titleText: Text(
+                  'Berhasil',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                ),
+                messageText: Text(
+                  'Judul roadmap berhasil diperbarui',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                ),
               );
             },
-            child: const Text('Save'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 2,
+            ),
+            child: Text(
+              'Save',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Montserrat',
+              ),
+            ),
           ),
         ],
       ),
@@ -302,12 +395,71 @@ class RoadmapEditController extends GetxController {
   void deleteMainStep(String stepId) {
     Get.dialog(
       AlertDialog(
-        title: const Text('Delete Step'),
-        content: const Text('Are you sure you want to delete this step? This action cannot be undone.'),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.warning_rounded,
+              color: Colors.red,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Hapus Step',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Montserrat',
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Apakah Anda yakin ingin menghapus step ini?',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Tindakan ini tidak dapat dibatalkan dan akan menghapus semua sub-step di dalamnya.',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Batal',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -315,14 +467,57 @@ class RoadmapEditController extends GetxController {
               expandedSteps.remove(stepId);
               Get.back();
               Get.snackbar(
-                'Deleted',
-                'Step has been deleted',
+                'Berhasil',
+                'Step berhasil dihapus',
                 backgroundColor: Colors.red,
                 colorText: Colors.white,
+                borderRadius: 12,
+                margin: const EdgeInsets.all(16),
+                snackPosition: SnackPosition.TOP,
+                duration: const Duration(seconds: 2),
+                titleText: Text(
+                  'Berhasil',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                ),
+                messageText: Text(
+                  'Step berhasil dihapus',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                ),
               );
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 2,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.delete_outline, size: 18, color: Colors.white),
+                const SizedBox(width: 8),
+                Text(
+                  'Hapus',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -332,12 +527,71 @@ class RoadmapEditController extends GetxController {
   void deleteSubStep(String mainStepId, String subStepId) {
     Get.dialog(
       AlertDialog(
-        title: const Text('Delete Sub-Step'),
-        content: const Text('Are you sure you want to delete this sub-step?'),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.warning_rounded,
+              color: Colors.red,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Hapus Sub-Step',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Montserrat',
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Apakah Anda yakin ingin menghapus sub-step ini?',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Tindakan ini tidak dapat dibatalkan dan akan menghapus semua rekomendasi di dalamnya.',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Batal',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -349,14 +603,57 @@ class RoadmapEditController extends GetxController {
               }
               Get.back();
               Get.snackbar(
-                'Deleted',
-                'Sub-step has been deleted',
+                'Berhasil',
+                'Sub-step berhasil dihapus',
                 backgroundColor: Colors.red,
                 colorText: Colors.white,
+                borderRadius: 12,
+                margin: const EdgeInsets.all(16),
+                snackPosition: SnackPosition.TOP,
+                duration: const Duration(seconds: 2),
+                titleText: Text(
+                  'Berhasil',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                ),
+                messageText: Text(
+                  'Sub-step berhasil dihapus',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                ),
               );
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 2,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.delete_outline, size: 18, color:Colors.white),
+                const SizedBox(width: 8),
+                Text(
+                  'Hapus',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -366,12 +663,104 @@ class RoadmapEditController extends GetxController {
   void deleteResource(String mainStepId, String subStepId, RoadmapResource resource) {
     Get.dialog(
       AlertDialog(
-        title: const Text('Delete Resource'),
-        content: Text('Are you sure you want to delete "${resource.title}"?'),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.warning_rounded,
+              color: Colors.red,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Hapus Rekomendasi',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Montserrat',
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Apakah Anda yakin ingin menghapus rekomendasi ini?',
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Montserrat',
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.background,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.outline.withOpacity(0.5)),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    resource.type == 'course' ? Icons.school_outlined :
+                    resource.type == 'certificate' ? Icons.verified_outlined :
+                    resource.type == 'job' ? Icons.work_outline :
+                    Icons.link_outlined,
+                    size: 20,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '"${resource.title}"',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontFamily: 'Montserrat',
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Tindakan ini tidak dapat dibatalkan.',
+              style: TextStyle(
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Batal',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -385,14 +774,57 @@ class RoadmapEditController extends GetxController {
               }
               Get.back();
               Get.snackbar(
-                'Deleted',
-                'Resource has been deleted',
+                'Berhasil',
+                'Rekomendasi berhasil dihapus',
                 backgroundColor: Colors.red,
                 colorText: Colors.white,
+                borderRadius: 12,
+                margin: const EdgeInsets.all(16),
+                snackPosition: SnackPosition.TOP,
+                duration: const Duration(seconds: 2),
+                titleText: Text(
+                  'Berhasil',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                ),
+                messageText: Text(
+                  'Rekomendasi berhasil dihapus',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Montserrat',
+                    color: Colors.white,
+                  ),
+                ),
               );
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 2,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.delete_outline, size: 18, color:Colors.white),
+                const SizedBox(width: 8),
+                Text(
+                  'Hapus',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -407,33 +839,126 @@ class RoadmapEditController extends GetxController {
 
     Get.dialog(
       AlertDialog(
-        title: const Text('Add Sub-Step'),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          'Tambah Sub-Step',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Montserrat',
+            color: AppColors.textPrimary,
+          ),
+        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Title Field
               TextFormField(
                 controller: titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                  border: OutlineInputBorder(),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Montserrat',
+                  color: AppColors.textPrimary,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Judul Sub-Step',
+                  labelStyle: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Montserrat',
+                    color: AppColors.textSecondary,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.outline),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.outline),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.primary, width: 2),
+                  ),
+                  filled: true,
+                  fillColor: AppColors.background,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
               ),
               const SizedBox(height: 16),
+              // Description Field
               TextFormField(
                 controller: descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Montserrat',
+                  color: AppColors.textPrimary,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Deskripsi',
+                  labelStyle: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Montserrat',
+                    color: AppColors.textSecondary,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.outline),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.outline),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.primary, width: 2),
+                  ),
+                  filled: true,
+                  fillColor: AppColors.background,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 maxLines: 3,
               ),
               const SizedBox(height: 16),
+              // Duration Field
               TextFormField(
                 controller: durationController,
-                decoration: const InputDecoration(
-                  labelText: 'Estimated Duration',
-                  border: OutlineInputBorder(),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontFamily: 'Montserrat',
+                  color: AppColors.textPrimary,
+                ),
+                decoration: InputDecoration(
+                  labelText: 'Estimasi Durasi',
+                  hintText: 'Contoh: 1 minggu, 3 hari',
+                  labelStyle: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Montserrat',
+                    color: AppColors.textSecondary,
+                  ),
+                  hintStyle: TextStyle(
+                    fontSize: 12,
+                    fontFamily: 'Montserrat',
+                    color: AppColors.textSecondary.withOpacity(0.7),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.outline),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.outline),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.primary, width: 2),
+                  ),
+                  filled: true,
+                  fillColor: AppColors.background,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
               ),
             ],
@@ -442,7 +967,21 @@ class RoadmapEditController extends GetxController {
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Batal',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -462,14 +1001,79 @@ class RoadmapEditController extends GetxController {
                 }
                 Get.back();
                 Get.snackbar(
-                  'Added',
-                  'Sub-step has been added',
+                  'Berhasil',
+                  'Sub-step berhasil ditambahkan',
                   backgroundColor: Colors.green,
                   colorText: Colors.white,
+                  borderRadius: 12,
+                  margin: const EdgeInsets.all(16),
+                  snackPosition: SnackPosition.TOP,
+                  duration: const Duration(seconds: 2),
+                  titleText: Text(
+                    'Berhasil',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Montserrat',
+                      color: Colors.white,
+                    ),
+                  ),
+                  messageText: Text(
+                    'Sub-step berhasil ditambahkan',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Montserrat',
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              } else {
+                Get.snackbar(
+                  'Peringatan',
+                  'Judul sub-step tidak boleh kosong',
+                  backgroundColor: Colors.orange,
+                  colorText: Colors.white,
+                  borderRadius: 12,
+                  margin: const EdgeInsets.all(16),
+                  snackPosition: SnackPosition.TOP,
+                  duration: const Duration(seconds: 2),
+                  titleText: Text(
+                    'Peringatan',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Montserrat',
+                      color: Colors.white,
+                    ),
+                  ),
+                  messageText: Text(
+                    'Judul sub-step tidak boleh kosong',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: 'Montserrat',
+                      color: Colors.white,
+                    ),
+                  ),
                 );
               }
             },
-            child: const Text('Add'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 2,
+            ),
+            child: Text(
+              'Tambah',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Montserrat',
+              ),
+            ),
           ),
         ],
       ),
