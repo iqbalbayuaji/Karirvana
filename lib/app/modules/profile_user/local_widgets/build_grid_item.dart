@@ -57,6 +57,9 @@ Widget buildGridItem(int index) {
             break;
           case 3:
             // Navigate to Course
+            if (Get.context != null) {
+              Get.toNamed(Routes.COURSE_MANAGE);
+            }
             break;
           case 4:
             // Navigate to Certification

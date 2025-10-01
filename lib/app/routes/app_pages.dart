@@ -12,6 +12,8 @@ import '../modules/Interview_Practice_History_Chat/bindings/interview_practice_h
 import '../modules/Interview_Practice_History_Chat/views/interview_practice_history_chat_view.dart';
 import '../modules/career_assistant/bindings/career_assistant_binding.dart';
 import '../modules/career_assistant/views/career_assistant_view.dart';
+import '../modules/certification_manage/bindings/certification_manage_binding.dart';
+import '../modules/certification_manage/views/certification_manage_view.dart';
 import '../modules/certification_store/bindings/certification_store_binding.dart';
 import '../modules/certification_store/views/certification_store_view.dart';
 import '../modules/certification_store_main/bindings/certification_store_main_binding.dart';
@@ -197,6 +199,11 @@ class AppPages {
       name: _Paths.COURSE_MANAGE,
       page: () => const CourseManageView(),
       binding: CourseManageBinding(),
+    ),
+    GetPage(
+      name: _Paths.CERTIFICATION_MANAGE,
+      page: () => const CertificationManageView(),
+      binding: CertificationManageBinding(),
     ),
   ];
 }

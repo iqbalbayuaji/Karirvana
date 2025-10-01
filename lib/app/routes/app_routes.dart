@@ -31,6 +31,7 @@ abstract class Routes {
   static const ROADMAP_MANAGE = _Paths.ROADMAP_MANAGE;
   static const ROADMAP_EDIT = _Paths.ROADMAP_EDIT;
   static const COURSE_MANAGE = _Paths.COURSE_MANAGE;
+  static const CERTIFICATION_MANAGE = _Paths.CERTIFICATION_MANAGE;
 }
 
 abstract class _Paths {
@@ -63,4 +64,5 @@ abstract class _Paths {
   static const ROADMAP_MANAGE = '/roadmap-manage';
   static const ROADMAP_EDIT = '/roadmap-edit';
   static const COURSE_MANAGE = '/course-manage';
+  static const CERTIFICATION_MANAGE = '/certification-manage';
 }
