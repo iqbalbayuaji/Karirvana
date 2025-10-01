@@ -154,8 +154,29 @@ class JadwalManageController extends GetxController {
     }
   }
 
-  /// Add new task (called from JadwalAddController)
-  void addTask(TaskModel task) {
-    tasks.insert(0, task); // Add to beginning of list
+  /// Add new task (called from JadwalAddController and Career Assistant)
+  Future<void> addTask(TaskModel task) async {
+    try {
+      // Add to local state immediately for better UX
+      tasks.insert(0, task); // Add to beginning of list
+      
+      // Save to Firebase
+      await _taskService.addTask(task);
+      
+      print('✅ Task added successfully: ${task.title}');
+    } catch (e) {
+      // Remove from local state on error
+      tasks.removeWhere((t) => t.id == task.id);
+      
+      print('❌ Error adding task: ${e.toString()}');
+      Get.snackbar(
+        'Error',
+        'Gagal menambahkan task: ${e.toString()}',
+        backgroundColor: Colors.red[400]!,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
+      rethrow;
+    }
   }
 }

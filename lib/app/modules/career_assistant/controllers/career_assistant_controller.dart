@@ -630,7 +630,7 @@ class CareerAssistantController extends GetxController {
       // Add tasks to jadwal_manage
       print('📊 Adding tasks to jadwal_manage...');
       for (final task in scheduleTasks) {
-        jadwalController.addTask(task);
+        await jadwalController.addTask(task);
       }
       
       print('✅ Schedule tasks added successfully');
@@ -663,9 +663,14 @@ class CareerAssistantController extends GetxController {
         ),
       );
       
-      // Clear schedule and return to welcome
+      // Clear schedule data but stay in current chat
       _clearScheduleData();
-      backToWelcome();
+      
+      // Add confirmation message to chat
+      messages.add(ChatMessage.bot(
+        "✅ Jadwal belajar berhasil disimpan ke Jadwal Management! Anda dapat melanjutkan percakapan atau membuat jadwal baru jika diperlukan."
+      ));
+      _scrollToBottom();
     } catch (e) {
       print('❌ Error saving schedule: ${e.toString()}');
       print('📍 Error type: ${e.runtimeType}');
