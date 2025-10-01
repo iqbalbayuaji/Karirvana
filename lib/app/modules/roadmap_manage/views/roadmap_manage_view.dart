@@ -119,15 +119,15 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Roadmap Web Frontend Programmer',
-                      style: TextStyle(
+                    Obx(() => Text(
+                      controller.roadmapTitle.value,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Montserrat',
                         color: AppColors.textPrimary,
                       ),
-                    ),
+                    )),
                     const SizedBox(height: 16),
                     Obx(() => Text(
                       '${(controller.overallProgress * 100).toInt()}% Selesai',
