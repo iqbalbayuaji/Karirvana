@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:karirvana/app/modules/career_assistant/local_widgets/chatbot_chips.dart';
 import 'package:karirvana/app/modules/career_assistant/local_widgets/roadmap_display_widget.dart';
+import 'package:karirvana/app/modules/career_assistant/local_widgets/schedule_display_widget.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 import 'package:karirvana/app/widgets/bottom_navbar.dart';
 import '../controllers/career_assistant_controller.dart';
@@ -219,7 +220,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
                 ),
                 chatbot_chips(
                   chipsData: chatbotChipsData(name: "Jadwal Belajar"),
-                  onTap: () => controller.sendMessage("Bagaimana cara membuat jadwal belajar yang efektif untuk pengembangan karir?"),
+                  onTap: () => controller.startScheduleMode(),
                 ),
                 chatbot_chips(
                   chipsData: chatbotChipsData(name: "konsultasi karir"),
@@ -266,6 +267,17 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
               expandedSubSteps: controller.expandedSubSteps,
               onSave: () => controller.saveRoadmap(),
               onRegenerate: () => controller.regenerateRoadmap(),
+            ),
+          ],
+          
+          // Schedule Display (when generated)
+          if (controller.hasGeneratedSchedule.value) ...[
+            SizedBox(height: screenHeight * 0.03),
+            ScheduleDisplayWidget(
+              tasks: controller.scheduleTasks,
+              title: controller.scheduleTitle.value,
+              description: controller.scheduleDescription.value,
+              duration: controller.scheduleDuration.value,
             ),
           ],
         ],
