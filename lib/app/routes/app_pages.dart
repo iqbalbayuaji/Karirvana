@@ -46,6 +46,8 @@ import '../modules/job_openings_main/bindings/job_openings_main_binding.dart';
 import '../modules/job_openings_main/views/job_openings_main_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/notification/bindings/notification_binding.dart';
+import '../modules/notification/views/notification_view.dart';
 import '../modules/personalization/bindings/personalization_binding.dart';
 import '../modules/personalization/views/personalization_view.dart';
 import '../modules/profile_user/bindings/profile_user_binding.dart';
@@ -204,6 +206,11 @@ class AppPages {
       name: _Paths.CERTIFICATION_MANAGE,
       page: () => const CertificationManageView(),
       binding: CertificationManageBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATION,
+      page: () => const NotificationView(),
+      binding: NotificationBinding(),
     ),
   ];
 }
