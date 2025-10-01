@@ -79,24 +79,7 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      controller.refreshRoadmap();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: AppColors.outline),
-                      ),
-                      child: const Icon(
-                        Icons.refresh,
-                        color: AppColors.textPrimary,
-                        size: 20,
-                      ),
-                    ),
-                  ),
+                  const SizedBox(width: 40), // Placeholder untuk menjaga alignment
                 ],
               ),
             );

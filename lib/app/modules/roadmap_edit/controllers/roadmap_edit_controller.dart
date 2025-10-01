@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../styles/app_colors.dart';
 import '../../roadmap_manage/models/roadmap_models.dart';
+import '../../roadmap_manage/controllers/roadmap_manage_controller.dart';
 
 class RoadmapEditController extends GetxController {
   // Roadmap data - same structure as roadmap_manage
@@ -14,7 +15,44 @@ class RoadmapEditController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initializeSampleData();
+    _loadDataFromRoadmapManage();
+  }
+
+  @override
+  void onClose() {
+    // Sync any changes back to RoadmapManageController when closing
+    syncToRoadmapManage();
+    super.onClose();
+  }
+
+  // Load data from RoadmapManageController
+  void _loadDataFromRoadmapManage() {
+    try {
+      isLoading.value = true;
+      
+      // Check if RoadmapManageController is registered
+      if (Get.isRegistered<RoadmapManageController>()) {
+        final manageController = Get.find<RoadmapManageController>();
+        
+        // Copy data from roadmap_manage
+        roadmapTitle.value = manageController.roadmapTitle.value;
+        roadmapSteps.value = List<RoadmapMainStep>.from(manageController.roadmapSteps);
+        
+        print('✅ Loaded roadmap data from RoadmapManageController');
+        print('📋 Title: ${roadmapTitle.value}');
+        print('🪜 Steps: ${roadmapSteps.length}');
+        
+      } else {
+        print('⚠️ RoadmapManageController not found, using sample data');
+        _initializeSampleData();
+      }
+      
+    } catch (e) {
+      print('❌ Error loading from RoadmapManageController: $e');
+      _initializeSampleData();
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   void _initializeSampleData() {
@@ -260,6 +298,29 @@ class RoadmapEditController extends GetxController {
       expandedSubSteps.add(subStepId);
     }
     expandedSubSteps.refresh();
+  }
+
+  // Refresh data from RoadmapManageController
+  void refreshFromRoadmapManage() {
+    print('🔄 Refreshing data from RoadmapManageController...');
+    _loadDataFromRoadmapManage();
+  }
+
+  // Sync changes back to RoadmapManageController (if needed)
+  void syncToRoadmapManage() {
+    try {
+      if (Get.isRegistered<RoadmapManageController>()) {
+        final manageController = Get.find<RoadmapManageController>();
+        
+        // Update roadmap_manage with current data
+        manageController.roadmapTitle.value = roadmapTitle.value;
+        manageController.roadmapSteps.value = List<RoadmapMainStep>.from(roadmapSteps);
+        
+        print('✅ Synced changes back to RoadmapManageController');
+      }
+    } catch (e) {
+      print('❌ Error syncing to RoadmapManageController: $e');
+    }
   }
 
   // Edit methods

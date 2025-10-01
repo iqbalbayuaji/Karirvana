@@ -63,6 +63,9 @@ Widget buildGridItem(int index) {
             break;
           case 4:
             // Navigate to Certification
+            if (Get.context != null) {
+              Get.toNamed(Routes.CERTIFICATION_MANAGE);
+            }
             break;
         }
       },
