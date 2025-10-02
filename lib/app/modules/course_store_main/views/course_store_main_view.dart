@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../styles/app_colors.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/course_store_main_controller.dart';
 import '../local_widgets/filter_chip.dart';
 import '../local_widgets/course_card.dart';
@@ -205,7 +206,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                     return CourseCard(
                       course: course,
                       onTap: () {
-                        
+                        Get.toNamed(Routes.COURSE_STORE, arguments: {'courseId': course.id});
                       },
                     );
                   },

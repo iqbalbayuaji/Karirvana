@@ -44,17 +44,9 @@ class CourseCard extends StatelessWidget {
                       height: 100,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        gradient: LinearGradient(
-                          colors: _getCategoryGradient(course.category),
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          _getCategoryIcon(course.category),
-                          color: Colors.white,
-                          size: 32,
+                        image: DecorationImage(
+                          image: AssetImage(_getCourseImage(course.category, course.title)),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -264,6 +256,42 @@ class CourseCard extends StatelessWidget {
         return Color(0xFFEF4444);
       default:
         return AppColors.textSecondary;
+    }
+  }
+
+  String _getCourseImage(String category, String title) {
+    // Map course images based on category and title
+    switch (category) {
+      case 'Programming':
+        if (title.toLowerCase().contains('flutter')) {
+          return 'assets/course/course-frontend-1.jpg';
+        } else if (title.toLowerCase().contains('python')) {
+          return 'assets/course/course-python.jpg';
+        } else if (title.toLowerCase().contains('react')) {
+          return 'assets/course/course-programming-1.jpg';
+        }
+        return 'assets/course/course-programming-1.jpg';
+      
+      case 'Design':
+        if (title.toLowerCase().contains('ui') || title.toLowerCase().contains('ux')) {
+          return 'assets/course/course-uiux-1.jpg';
+        }
+        return 'assets/course/course-uiux-2.jpg';
+      
+      case 'Marketing':
+        return 'assets/course/course-marketing-1.png';
+      
+      case 'Data Science':
+        return 'assets/course/course-python.jpg';
+      
+      case 'Business':
+        return 'assets/course/course-akuntansi-1.jpg';
+      
+      case 'Mobile Development':
+        return 'assets/course/course-frontend-1.jpg';
+      
+      default:
+        return 'assets/images/hero.jpg'; // Fallback to original image
     }
   }
 

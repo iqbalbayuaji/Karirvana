@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../controllers/homepage_controller.dart';
+import '../../course_store_main/controllers/course_store_main_controller.dart';
 
 class HomepageBinding extends Bindings {
   @override
@@ -12,6 +13,15 @@ class HomepageBinding extends Bindings {
         return HomepageController();
       },
     );
+    
+    // Register CourseStoreMainController for recommendations
+    Get.lazyPut<CourseStoreMainController>(
+      () {
+        print('🔍 DEBUG: Creating CourseStoreMainController instance for homepage');
+        return CourseStoreMainController();
+      },
+    );
+    
     print('🔍 DEBUG: HomepageBinding dependencies() completed');
   }
 }

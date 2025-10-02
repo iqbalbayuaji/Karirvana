@@ -4,47 +4,87 @@ import '../../course_store_main/controllers/course_store_main_controller.dart';
 class CourseStoreController extends GetxController {
   final Rx<Course?> selectedCourse = Rx<Course?>(null);
   final isLoading = false.obs;
+  late CourseStoreMainController courseStoreMainController;
 
   @override
   void onInit() {
     super.onInit();
-    // Get course data from arguments or default to first course
-    final courseId = Get.arguments as String?;
+    
+    // Get or create CourseStoreMainController
+    try {
+      courseStoreMainController = Get.find<CourseStoreMainController>();
+    } catch (e) {
+      courseStoreMainController = Get.put(CourseStoreMainController());
+    }
+    
+    // Get course data from arguments
+    final arguments = Get.arguments;
+    String? courseId;
+    
+    if (arguments is Map<String, dynamic>) {
+      courseId = arguments['courseId'] as String?;
+    } else if (arguments is String) {
+      courseId = arguments;
+    }
+    
     loadCourse(courseId);
   }
 
   void loadCourse(String? courseId) {
     isLoading.value = true;
     
-    // Sample course data - same structure as course_store_main
-    final courses = [
-      Course(
-        id: '1',
-        title: 'Microsoft Excel Beginner Course',
-        instructor: 'Dr. Ahmad Wijaya',
-        category: 'Programming',
-        description: 'Pelajari Microsoft Excel dari dasar hingga mahir. Kursus ini dirancang khusus untuk pemula yang ingin menguasai spreadsheet dan analisis data. Dengan metode pembelajaran yang mudah dipahami dan praktis.',
-        imageUrl: 'assets/images/hero.jpg',
-        rating: 4.8,
-        totalStudents: 2847,
-        totalLessons: 24,
-        duration: '8 jam',
-        originalPrice: 599000,
-        discountedPrice: 299000,
-        isFree: false,
-        level: 'Pemula',
-        discount: '50% Off',
-        showDiscount: true,
-      ),
-    ];
+    // Ensure courses are loaded
+    if (courseStoreMainController.allCourses.isEmpty) {
+      courseStoreMainController.loadCourses();
+    }
     
     // Find course by ID or use first course
-    selectedCourse.value = courses.firstWhere(
-      (course) => course.id == courseId,
-      orElse: () => courses.first,
-    );
+    if (courseId != null && courseStoreMainController.allCourses.isNotEmpty) {
+      selectedCourse.value = courseStoreMainController.allCourses.firstWhere(
+        (course) => course.id == courseId,
+        orElse: () => courseStoreMainController.allCourses.first,
+      );
+    } else if (courseStoreMainController.allCourses.isNotEmpty) {
+      selectedCourse.value = courseStoreMainController.allCourses.first;
+    }
     
     isLoading.value = false;
+  }
+
+  // Get course image based on category and title
+  String getCourseImage(String category, String title) {
+    switch (category) {
+      case 'Programming':
+        if (title.toLowerCase().contains('flutter')) {
+          return 'assets/course/course-frontend-1.jpg';
+        } else if (title.toLowerCase().contains('python')) {
+          return 'assets/course/course-python.jpg';
+        } else if (title.toLowerCase().contains('react')) {
+          return 'assets/course/course-programming-1.jpg';
+        }
+        return 'assets/course/course-programming-1.jpg';
+      
+      case 'Design':
+        if (title.toLowerCase().contains('ui') || title.toLowerCase().contains('ux')) {
+          return 'assets/course/course-uiux-1.jpg';
+        }
+        return 'assets/course/course-uiux-2.jpg';
+      
+      case 'Marketing':
+        return 'assets/course/course-marketing-1.png';
+      
+      case 'Data Science':
+        return 'assets/course/course-python.jpg';
+      
+      case 'Business':
+        return 'assets/course/course-akuntansi-1.jpg';
+      
+      case 'Mobile Development':
+        return 'assets/course/course-frontend-1.jpg';
+      
+      default:
+        return 'assets/images/hero.jpg';
+    }
   }
 
   String formatPrice(int price) {

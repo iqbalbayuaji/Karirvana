@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 
 import '../../../routes/app_pages.dart';
+import '../../course_store_main/controllers/course_store_main_controller.dart';
 
 class RekomendasiContainer extends StatelessWidget {
   final int index;
@@ -12,111 +13,97 @@ class RekomendasiContainer extends StatelessWidget {
     required this.index,
   });
 
-  static final List<Map<String, dynamic>> _recommendations = [
-    {
-      'title': 'Microsoft Excel Beginner Course',
-      'instructor': 'Dr. Ahmad Wijaya',
-      'category': 'Programming',
-      'description': 'Belajar Microsoft Excel dari dasar hingga mahir dengan project nyata',
-      'originalPrice': 200000,
-      'discountedPrice': 140000,
-      'imageUrl': 'assets/images/hero.jpg',
-      'rating': 4.8,
-      'totalStudents': 1250,
-      'totalLessons': 32,
-      'duration': '8 jam',
-      'isFree': false,
-      'level': 'Pemula',
-      'discount': '30% Off',
-      'showDiscount': true,
-    },
-    {
-      'title': 'Flutter Development Bootcamp',
-      'instructor': 'Sarah Putri',
-      'category': 'Mobile Development',
-      'description': 'Membangun aplikasi mobile dengan Flutter dari dasar hingga mahir',
-      'originalPrice': 350000,
-      'discountedPrice': 175000,
-      'imageUrl': 'assets/images/hero.jpg',
-      'rating': 4.9,
-      'totalStudents': 890,
-      'totalLessons': 45,
-      'duration': '12 jam',
-      'isFree': false,
-      'level': 'Pemula',
-      'discount': '50% Off',
-      'showDiscount': true,
-    },
-    {
-      'title': 'Digital Marketing Fundamentals',
-      'instructor': 'Budi Santoso',
-      'category': 'Marketing',
-      'description': 'Strategi pemasaran digital yang terbukti efektif',
-      'originalPrice': 180000,
-      'discountedPrice': 135000,
-      'imageUrl': 'assets/images/hero.jpg',
-      'rating': 4.7,
-      'totalStudents': 2100,
-      'totalLessons': 28,
-      'duration': '6 jam',
-      'isFree': false,
-      'level': 'Menengah',
-      'discount': '25% Off',
-      'showDiscount': true,
-    },
-    {
-      'title': 'Data Science with Python',
-      'instructor': 'Prof. Lisa Chen',
-      'category': 'Data Science',
-      'description': 'Analisis data menggunakan Python dan library populer',
-      'originalPrice': 250000,
-      'discountedPrice': 0,
-      'imageUrl': 'assets/images/hero.jpg',
-      'rating': 4.6,
-      'totalStudents': 1580,
-      'totalLessons': 38,
-      'duration': '15 jam',
-      'isFree': false,
-      'level': 'Menengah',
-      'discount': '',
-      'showDiscount': false,
-    },
-    {
-      'title': 'UI/UX Design Masterclass',
-      'instructor': 'Michael Johnson',
-      'category': 'Design',
-      'description': 'Pelajari prinsip desain UI/UX yang efektif dan modern',
-      'originalPrice': 300000,
-      'discountedPrice': 180000,
-      'imageUrl': 'assets/images/hero.jpg',
-      'rating': 4.5,
-      'totalStudents': 750,
-      'totalLessons': 25,
-      'duration': '10 jam',
-      'isFree': false,
-      'level': 'Lanjutan',
-      'discount': '40% Off',
-      'showDiscount': true,
-    },
-  ];
-
   String _formatPrice(int price) {
     return 'Rp ${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
   }
 
+  String _getCourseImage(String category, String title) {
+    // Map course images based on category and title
+    switch (category) {
+      case 'Programming':
+        if (title.toLowerCase().contains('flutter')) {
+          return 'assets/course/course-frontend-1.jpg';
+        } else if (title.toLowerCase().contains('python')) {
+          return 'assets/course/course-python.jpg';
+        } else if (title.toLowerCase().contains('react')) {
+          return 'assets/course/course-programming-1.jpg';
+        }
+        return 'assets/course/course-programming-1.jpg';
+      
+      case 'Design':
+        if (title.toLowerCase().contains('ui') || title.toLowerCase().contains('ux')) {
+          return 'assets/course/course-uiux-1.jpg';
+        }
+        return 'assets/course/course-uiux-2.jpg';
+      
+      case 'Marketing':
+        return 'assets/course/course-marketing-1.png';
+      
+      case 'Data Science':
+        return 'assets/course/course-python.jpg';
+      
+      case 'Business':
+        return 'assets/course/course-akuntansi-1.jpg';
+      
+      case 'Mobile Development':
+        return 'assets/course/course-frontend-1.jpg';
+      
+      default:
+        return 'assets/images/hero.jpg'; // Fallback to original image
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final recommendation = _recommendations[index % _recommendations.length];
-    final String title = recommendation['title'];
-    final int originalPrice = recommendation['originalPrice'];
-    final int discountedPrice = recommendation['discountedPrice'];
-    final String imageUrl = recommendation['imageUrl'];
-    final String discount = recommendation['discount'];
-    final bool showDiscount = recommendation['showDiscount'];
+    // Try to get course data from CourseStoreMainController
+    CourseStoreMainController courseController;
+    
+    try {
+      courseController = Get.find<CourseStoreMainController>();
+    } catch (e) {
+      // If controller not found, register it
+      courseController = Get.put(CourseStoreMainController());
+    }
+    
+    // Ensure courses are loaded
+    if (courseController.allCourses.isEmpty) {
+      courseController.loadCourses();
+    }
+    
+    // Get course from the controller
+    final course = courseController.allCourses.isNotEmpty 
+        ? courseController.allCourses[index % courseController.allCourses.length]
+        : null;
+    
+    // If no course data available, show loading or empty state
+    if (course == null) {
+      return Container(
+        margin: const EdgeInsets.fromLTRB(10, 5, 15, 20),
+        width: 220,
+        height: 200,
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Center(
+          child: CircularProgressIndicator(
+            color: AppColors.primary,
+          ),
+        ),
+      );
+    }
+    
+    final String title = course.title;
+    final int originalPrice = course.originalPrice;
+    final int discountedPrice = course.discountedPrice;
+    final String imageUrl = _getCourseImage(course.category, course.title);
+    final String discount = course.discount;
+    final bool showDiscount = course.showDiscount;
+    final bool isFree = course.isFree;
     
     return GestureDetector(
       onTap: () {
-        Get.toNamed(Routes.COURSE_STORE);
+        Get.toNamed(Routes.COURSE_STORE, arguments: {'courseId': course.id});
       },
       child: Stack(
         children: [
@@ -200,7 +187,19 @@ class RekomendasiContainer extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          ] else
+                          ] else if (isFree)
+                            Text(
+                              'GRATIS',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Color(0xFF10B981),
+                                fontFamily: "Montserrat",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )
+                          else
                             Text(
                               _formatPrice(originalPrice),
                               maxLines: 1,

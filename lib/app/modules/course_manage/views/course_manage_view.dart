@@ -141,6 +141,8 @@ class CourseManageView extends GetView<CourseManageController> {
       id: course.id,
       title: course.title,
       instructor: course.provider, // Use provider as instructor
+      instructorBio: 'Instructor berpengalaman dalam bidang ${course.title}',
+      instructorImage: 'assets/images/default_instructor.jpg',
       category: 'Programming', // Default category
       description: course.description,
       imageUrl: '', // No image for managed courses
@@ -154,6 +156,12 @@ class CourseManageView extends GetView<CourseManageController> {
       level: '', // Empty level to hide default text
       discount: '',
       showDiscount: false,
+      language: 'Bahasa Indonesia',
+      hasCertificate: false,
+      totalReviews: 0,
+      requirements: ['Tidak ada persyaratan khusus'],
+      whatYouWillLearn: ['Materi akan disesuaikan dengan kebutuhan'],
+      modules: [], // Empty modules for managed courses
     );
   }
 

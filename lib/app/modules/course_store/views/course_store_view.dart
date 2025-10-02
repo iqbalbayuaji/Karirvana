@@ -69,14 +69,13 @@ class CourseStoreView extends GetView<CourseStoreController> {
                         width: double.infinity,
                         height: 300,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.primary,
-                              AppColors.primaryContainer,
-                            ],
+                          image: DecorationImage(
+                            image: AssetImage(
+                              controller.getCourseImage(course.category, course.title)
+                            ),
+                            fit: BoxFit.cover,
                           ),
+                          borderRadius: BorderRadius.circular(0),
                         ),
                       ),
                       
@@ -241,7 +240,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                           SizedBox(height: 20),
                           
                           Text(
-                            "Deskripsi Kursus",
+                            "Deskripsi Course",
                             style: TextStyle(
                               color: AppColors.textPrimary,
                               fontFamily: "Montserrat",
@@ -274,14 +273,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                           ),
                           SizedBox(height: 6),
                           
-                          ...List.generate(4, (index) {
-                            List<String> features = [
-                              "Dasar-dasar Microsoft Excel dan interface",
-                              "Membuat dan mengelola spreadsheet",
-                              "Formula dan fungsi Excel yang penting",
-                              "Membuat chart dan visualisasi data"
-                            ];
-                            
+                          ...List.generate(course.whatYouWillLearn.length, (index) {
                             return Padding(
                               padding: EdgeInsets.only(bottom: 12),
                               child: Row(
@@ -299,7 +291,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                   SizedBox(width: 12),
                                   Expanded(
                                     child: Text(
-                                      features[index],
+                                      course.whatYouWillLearn[index],
                                       style: TextStyle(
                                         color: AppColors.textSecondary,
                                         fontFamily: "Montserrat",
@@ -319,7 +311,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Modul Kursus",
+                                "Modul Course",
                                 style: TextStyle(
                                   color: AppColors.textPrimary,
                                   fontFamily: "Montserrat",
@@ -328,7 +320,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                 ),
                               ),
                               Text(
-                                "${course.totalLessons} Modul",
+                                "${course.modules.length} Modul",
                                 style: TextStyle(
                                   color: AppColors.textSecondary,
                                   fontFamily: "Montserrat",
@@ -342,88 +334,81 @@ class CourseStoreView extends GetView<CourseStoreController> {
                           SizedBox(height: 15),
             
                           SizedBox(
-                            height: 100,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                List<Map<String, dynamic>> modules = [
-                                  {
-                                    'title': 'Pengenalan Excel',
-                                    'icon': CupertinoIcons.play_circle,
-                                  },
-                                  {
-                                    'title': 'Dasar Formula',
-                                    'icon': CupertinoIcons.function,
-                                  },
-                                  {
-                                    'title': 'Membuat Tabel',
-                                    'icon': CupertinoIcons.table,
-                                  },
-                                  {
-                                    'title': 'Grafik & Chart',
-                                    'icon': CupertinoIcons.chart_bar,
-                                  },
-                                  {
-                                    'title': 'Tips & Trik',
-                                    'icon': CupertinoIcons.lightbulb,
-                                  },
-                                ];
-                                
-                                return Container(
-                                  margin: EdgeInsets.only(right: 12),
-                                  width: 140,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.surface,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: AppColors.surfaceVariant,
-                                      width: 1,
+                            height: 120,
+                            child: course.modules.isEmpty 
+                              ? Center(
+                                  child: Text(
+                                    'Belum ada modul tersedia',
+                                    style: TextStyle(
+                                      color: AppColors.textSecondary,
+                                      fontFamily: "Montserrat",
+                                      fontSize: 14,
                                     ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.05),
-                                        blurRadius: 8,
-                                        offset: Offset(0, 2),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: course.modules.length,
+                                  itemBuilder: (context, index) {
+                                    final module = course.modules[index];
+                                    
+                                    return Container(
+                                      margin: EdgeInsets.only(right: 12),
+                                      width: 140,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.surface,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: AppColors.outline.withOpacity(0.2),
+                                          width: 1,
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 12),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Container(
-                                          width: 32,
-                                          height: 32,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.primary.withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: Icon(
-                                            modules[index]['icon'],
-                                            size: 18,
-                                            color: AppColors.primary,
-                                          ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(12),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Container(
+                                              width: 32,
+                                              height: 32,
+                                              decoration: BoxDecoration(
+                                                color: AppColors.primary.withOpacity(0.1),
+                                                borderRadius: BorderRadius.circular(8),
+                                              ),
+                                              child: Icon(
+                                                Icons.play_circle_outline,
+                                                color: AppColors.primary,
+                                                size: 18,
+                                              ),
+                                            ),
+                                            Text(
+                                              module.title,
+                                              style: TextStyle(
+                                                color: AppColors.textPrimary,
+                                                fontFamily: "Montserrat",
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              "${module.lessons.length} lessons • ${module.totalDurationMinutes} min",
+                                              style: TextStyle(
+                                                color: AppColors.textSecondary,
+                                                fontFamily: "Montserrat",
+                                                fontSize: 10,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          modules[index]['title'],
-                                          style: TextStyle(
-                                            color: AppColors.textPrimary,
-                                            fontFamily: "Montserrat",
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
                           ),
                           
                           SizedBox(height: 25),
@@ -432,13 +417,6 @@ class CourseStoreView extends GetView<CourseStoreController> {
                             margin: EdgeInsets.symmetric(horizontal: 30),
                             padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
                             decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.10),
-                                  blurRadius: 15,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
                               color: AppColors.surfaceVariant,
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(
@@ -454,15 +432,15 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                   children: [
                                     _buildDetailItem(CupertinoIcons.time, "Durasi", course.duration),
                                     SizedBox(height: 20),
-                                    _buildDetailItem(CupertinoIcons.play_circle, "Video", "${course.totalLessons} video"),
+                                    _buildDetailItem(CupertinoIcons.play_circle, "Video", "${course.modules.fold(0, (sum, module) => sum + module.lessons.length)} video"),
                                   ],
                                 ),
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    _buildDetailItem(CupertinoIcons.doc_text, "Materi", "${course.totalLessons} modul"),
+                                    _buildDetailItem(CupertinoIcons.doc_text, "Materi", "${course.modules.length} modul"),
                                     SizedBox(height: 20),
-                                    _buildDetailItem(CupertinoIcons.checkmark_seal, "Sertifikat", "Ya"),
+                                    _buildDetailItem(CupertinoIcons.checkmark_seal, "Sertifikat", course.hasCertificate ? "Ya" : "Tidak"),
                                   ],
                                 ),
                               ],
