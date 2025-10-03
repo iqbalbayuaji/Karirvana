@@ -1,0 +1,62 @@
+[
+  {
+    "id": "programming",
+    "name": "Programming",
+    "displayName": "Pemrograman",
+    "description": "Kursus pemrograman dan pengembangan software",
+    "icon": "code",
+    "color": "#4F46E5",
+    "isActive": true,
+    "order": 1
+  },
+  {
+    "id": "design",
+    "name": "Design",
+    "displayName": "Desain",
+    "description": "Kursus UI/UX dan desain grafis",
+    "icon": "palette",
+    "color": "#3B82F6",
+    "isActive": true,
+    "order": 2
+  },
+  {
+    "id": "business",
+    "name": "Business",
+    "displayName": "Bisnis",
+    "description": "Kursus strategi bisnis dan manajemen",
+    "icon": "business",
+    "color": "#10B981",
+    "isActive": true,
+    "order": 3
+  },
+  {
+    "id": "marketing",
+    "name": "Marketing",
+    "displayName": "Pemasaran",
+    "description": "Kursus digital marketing dan strategi pemasaran",
+    "icon": "trending_up",
+    "color": "#F59E0B",
+    "isActive": true,
+    "order": 4
+  },
+  {
+    "id": "data_science",
+    "name": "Data Science",
+    "displayName": "Data Science",
+    "description": "Kursus analisis data dan machine learning",
+    "icon": "analytics",
+    "color": "#8B5CF6",
+    "isActive": true,
+    "order": 5
+  },
+  {
+    "id": "mobile_development",
+    "name": "Mobile Development",
+    "displayName": "Pengembangan Mobile",
+    "description": "Kursus pengembangan aplikasi mobile",
+    "icon": "phone_android",
+    "color": "#EF4444",
+    "isActive": true,
+    "order": 6
+  }
+]

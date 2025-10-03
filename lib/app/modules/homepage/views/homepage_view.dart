@@ -9,12 +9,12 @@ import 'package:karirvana/app/widgets/bottom_navbar.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/homepage_controller.dart';
 import '../local_widget/Rekomendasi_Container.dart';
+import '../local_widget/Rekomendasi_Container_certification.dart';
 import '../local_widget/icon_features.dart';
 import '../local_widget/course_progress_carousel.dart';
 
 class HomepageView extends GetView<HomepageController> {
   const HomepageView({super.key});
-  
   // Sample data for courses - in real app this would come from controller/API
   List<CourseData> _getSampleCourses() {
     return [
@@ -290,7 +290,7 @@ class HomepageView extends GetView<HomepageController> {
                                               itemBuilder: (context, index) {
                                                 return Row(
                                                   children: [
-                                                    RekomendasiContainer(
+                                                    RekomendasiContainerCertification(
                                                       index: index,
                                                     ),
                                                   ],
