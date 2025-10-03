@@ -305,27 +305,28 @@ class HomepageView extends GetView<HomepageController> {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 25),
-                                        child: Container(
-                                          height: 90,
-                                          width: double.infinity,
-                                          padding: EdgeInsets.symmetric(horizontal: 20),
-                                          decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(0.35),
-                                                blurRadius: 18,
-                                                offset: const Offset(0, 8),
-                                              )
-                                            ],
-                                            gradient: LinearGradient(
-                                            colors: AppColors.heroGradientSecondary,
-                                            begin: Alignment.topRight,
-                                            end: Alignment.bottomCenter,
-                                          ),
-                                            borderRadius: BorderRadius.circular(15),
-                                          ),
-                                          
-                                          child: Row(
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(15),
+                                          child: Container(
+                                            height: 90,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black.withOpacity(0.35),
+                                                  blurRadius: 18,
+                                                  offset: const Offset(0, 8),
+                                                )
+                                              ],
+                                              gradient: LinearGradient(
+                                                colors: AppColors.heroGradientSecondary,
+                                                begin: Alignment.topRight,
+                                                end: Alignment.bottomCenter,
+                                              ),
+                                              borderRadius: BorderRadius.circular(15),
+                                            ),
+                                            child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
@@ -342,28 +343,32 @@ class HomepageView extends GetView<HomepageController> {
                                                   size: 29,
                                                 ),
                                               ),
-                                              Container(
-                                                width: 190,
-                                                child: Expanded(
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 12),
                                                   child: Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
-                                                      Text("Vana Plus",
+                                                      Text(
+                                                        "Vana Plus",
                                                         style: TextStyle(
-                                                        fontFamily: "Montserrat",
-                                                        fontSize: 15,
-                                                        color: AppColors.textOnPrimary,
-                                                        fontWeight: FontWeight.w600,
+                                                          fontFamily: "Montserrat",
+                                                          fontSize: 15,
+                                                          color: AppColors.textOnPrimary,
+                                                          fontWeight: FontWeight.w600,
                                                         ),
                                                       ),
-                                                      Text("Nantikan Fitur Premium yang akan datang",
+                                                      Text(
+                                                        "Nantikan Fitur Premium yang akan datang",
                                                         style: TextStyle(
                                                           fontFamily: "Montserrat",
                                                           fontSize: 13,
                                                           color: AppColors.textOnPrimary,
                                                           fontWeight: FontWeight.w400,
-                                                          ),
+                                                        ),
+                                                        overflow: TextOverflow.ellipsis,
+                                                        maxLines: 2,
                                                       )
                                                     ],
                                                   ),
@@ -375,6 +380,7 @@ class HomepageView extends GetView<HomepageController> {
                                                 size: 25,
                                               )
                                             ],
+                                          ),
                                           ),
                                         ),
                                       ),

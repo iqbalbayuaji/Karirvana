@@ -140,26 +140,43 @@ class InterviewPracticeChatView extends GetView<InterviewPracticeChatController>
             ),
           ),
           // End Interview Button - compact header style
-          GestureDetector(
-            onTap: () => controller.endInterview(),
+          Obx(() => GestureDetector(
+            onTap: controller.isEndingInterview.value 
+                ? null 
+                : () => controller.endInterview(),
             child: Container(
               width: 37,
               height: 37,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.red.withOpacity(0.1),
+                color: controller.isEndingInterview.value
+                    ? Colors.grey.withOpacity(0.1)
+                    : Colors.red.withOpacity(0.1),
                 border: Border.all(
-                  color: Colors.red.withOpacity(0.3),
+                  color: controller.isEndingInterview.value
+                      ? Colors.grey.withOpacity(0.3)
+                      : Colors.red.withOpacity(0.3),
                   width: 1,
                 ),
               ),
-              child: Icon(
-                Icons.stop,
-                color: Colors.red.shade400,
-                size: 20,
-              ),
+              child: controller.isEndingInterview.value
+                  ? SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.grey.shade400,
+                        ),
+                      ),
+                    )
+                  : Icon(
+                      Icons.stop,
+                      color: Colors.red.shade400,
+                      size: 20,
+                    ),
             ),
-          ),
+          )),
         ],
       ),
     );

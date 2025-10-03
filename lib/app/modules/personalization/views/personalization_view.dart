@@ -24,6 +24,7 @@ class PersonalizationView extends GetView<PersonalizationController> {
   Widget _buildStage1View(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(

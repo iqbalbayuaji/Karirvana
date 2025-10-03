@@ -49,8 +49,8 @@ class InterviewPracticeFeedbackView
                   
                   const SizedBox(height: 20),
                   
-                  // AI Insights Section
-                  _buildAIInsightsSection(),
+                  // AI Insights Section (without recommended actions)
+                  _buildAIAnalysisSection(),
                   
                   const SizedBox(height: 20),
                   
@@ -217,6 +217,7 @@ class InterviewPracticeFeedbackView
     return Obx(() {
       final strengths = controller.strengths;
       final improvements = controller.improvements;
+      final recommendedActions = controller.recommendedActions;
       
       return Column(
         children: [
@@ -239,6 +240,18 @@ class InterviewPracticeFeedbackView
             items: improvements.map((item) => '•  $item').toList(),
             itemColor: Colors.orange.shade400,
           ),
+          
+          // Recommended Actions Section (only show if data exists)
+          if (recommendedActions.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            _buildExpandableSection(
+              title: 'Rekomendasi Aksi',
+              icon: Icons.trending_up,
+              iconColor: Colors.amber.shade600,
+              items: recommendedActions.map((item) => '•  $item').toList(),
+              itemColor: Colors.amber.shade600,
+            ),
+          ],
         ],
       );
     });
@@ -373,148 +386,64 @@ class InterviewPracticeFeedbackView
     );
   }
 
-  Widget _buildAIInsightsSection() {
+  Widget _buildAIAnalysisSection() {
     return Obx(() {
       final detailedAnalysis = controller.detailedAnalysis.value;
-      final recommendedActions = controller.recommendedActions;
       
-      // Only show AI insights if they exist
-      if (detailedAnalysis.isEmpty && recommendedActions.isEmpty) {
+      // Only show AI analysis if it exists
+      if (detailedAnalysis.isEmpty) {
         return const SizedBox.shrink();
       }
       
-      return Column(
-        children: [
-          // AI Analysis Section
-          if (detailedAnalysis.isNotEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.psychology_outlined,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Analisis AI',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Montserrat',
+                    color: AppColors.textPrimary,
                   ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.psychology_outlined,
-                        color: AppColors.primary,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Analisis AI',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Montserrat',
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    detailedAnalysis,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontFamily: 'Montserrat',
-                      color: AppColors.textSecondary,
-                      height: 1.5,
-                    ),
-                    
-                  ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              detailedAnalysis,
+              style: const TextStyle(
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+                height: 1.5,
               ),
             ),
-          
-          // Spacing between sections
-          if (detailedAnalysis.isNotEmpty && recommendedActions.isNotEmpty)
-            const SizedBox(height: 16),
-          
-          // Recommended Actions Section
-          if (recommendedActions.isNotEmpty)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.lightbulb_outline,
-                        color: Colors.amber.shade600,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Rekomendasi Aksi',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Montserrat',
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  ...recommendedActions.map((action) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(top: 6, right: 8),
-                          width: 6,
-                          height: 6,
-                          decoration: BoxDecoration(
-                            color: Colors.amber.shade600,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        Expanded(
-                          child: Text(
-                            action,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Montserrat',
-                              color: AppColors.textSecondary,
-                              height: 1.4,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )).toList(),
-                ],
-              ),
-            ),
-        ],
+          ],
+        ),
       );
     });
   }

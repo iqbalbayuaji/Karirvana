@@ -9,6 +9,7 @@ class PersonalizationStage2View extends GetView<PersonalizationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(

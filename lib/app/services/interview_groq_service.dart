@@ -173,7 +173,9 @@ PENTING:
 - Jangan gunakan template umum
 - Nilai harus realistis berdasarkan kualitas jawaban
 - Strengths dan improvements harus relevan dengan percakapan
-- Output HARUS dalam format JSON yang valid''';
+- Output HARUS dalam format JSON yang valid
+- JANGAN gunakan markdown code blocks (```json)
+- LANGSUNG return JSON object tanpa teks tambahan''';
 
       // Prepare conversation for analysis
       String conversationSummary = conversationHistory
@@ -185,7 +187,7 @@ PENTING:
         {'role': 'system', 'content': feedbackSystemPrompt},
         {
           'role': 'user',
-          'content': 'Analisis percakapan wawancara berikut dan berikan feedback dalam format JSON:\n\n$conversationSummary'
+          'content': 'Analisis percakapan wawancara berikut dan berikan feedback dalam format JSON (tanpa markdown, langsung JSON object):\n\n$conversationSummary'
         },
       ];
 
@@ -207,14 +209,52 @@ PENTING:
         final data = jsonDecode(response.body);
         final content = data['choices'][0]['message']['content'];
         
+        print('🤖 AI Feedback Response received');
+        print('📊 Response length: ${content.length} characters');
+        
         try {
-          // Parse the JSON response from Groq
-          final feedbackJson = jsonDecode(content);
+          // Clean the content to extract JSON from markdown code blocks
+          String cleanContent = content.trim();
+          
+          // Remove markdown code block markers if present
+          if (cleanContent.contains('```json')) {
+            final startIndex = cleanContent.indexOf('```json') + 7;
+            final endIndex = cleanContent.lastIndexOf('```');
+            if (endIndex > startIndex) {
+              cleanContent = cleanContent.substring(startIndex, endIndex).trim();
+            }
+          } else if (cleanContent.contains('```')) {
+            // Handle generic code blocks
+            final startIndex = cleanContent.indexOf('```') + 3;
+            final endIndex = cleanContent.lastIndexOf('```');
+            if (endIndex > startIndex) {
+              cleanContent = cleanContent.substring(startIndex, endIndex).trim();
+            }
+          }
+          
+          // Remove any leading text before JSON starts
+          final jsonStartIndex = cleanContent.indexOf('{');
+          if (jsonStartIndex > 0) {
+            cleanContent = cleanContent.substring(jsonStartIndex);
+          }
+          
+          // Remove any trailing text after JSON ends
+          final jsonEndIndex = cleanContent.lastIndexOf('}');
+          if (jsonEndIndex > 0 && jsonEndIndex < cleanContent.length - 1) {
+            cleanContent = cleanContent.substring(0, jsonEndIndex + 1);
+          }
+          
+          print('🧹 Cleaned content length: ${cleanContent.length} characters');
+          
+          // Parse the cleaned JSON response from Groq
+          final feedbackJson = jsonDecode(cleanContent);
+          print('✅ Successfully parsed AI feedback JSON');
+          print('📈 Overall Score: ${feedbackJson['overallScore']}');
           
           // Validate and return the feedback
           return {
-            'overallScore': feedbackJson['overallScore'] ?? 75,
-            'detailedScores': feedbackJson['detailedScores'] ?? {
+            'overallScore': _convertToInt(feedbackJson['overallScore']) ?? 75,
+            'detailedScores': _convertToIntMap(feedbackJson['detailedScores']) ?? {
               'fluency': 75,
               'confidence': 75,
               'structure': 75,
@@ -231,7 +271,7 @@ PENTING:
               'Berikan detail lebih spesifik dalam jawaban',
               'Latih struktur jawaban yang lebih sistematis'
             ]),
-            'performanceBreakdown': feedbackJson['performanceBreakdown'] ?? {
+            'performanceBreakdown': _convertToDoubleMap(feedbackJson['performanceBreakdown']) ?? {
               'Excellent': 30.0,
               'Good': 45.0,
               'Needs Improvement': 25.0,
@@ -243,8 +283,9 @@ PENTING:
             ]),
           };
         } catch (jsonError) {
-          print('Error parsing JSON feedback: $jsonError');
-          print('Raw content: $content');
+          print('❌ Error parsing JSON feedback: $jsonError');
+          print('📄 Raw AI content: $content');
+          print('⚠️ Using fallback feedback due to JSON parsing error');
           // Return fallback feedback if JSON parsing fails
           return _getFallbackFeedback();
         }
@@ -255,6 +296,83 @@ PENTING:
     } catch (e) {
       print('Error generating interview feedback: $e');
       return _getFallbackFeedback();
+    }
+  }
+
+  /// Convert single value to int
+  static int? _convertToInt(dynamic value) {
+    if (value == null) return null;
+    
+    try {
+      if (value is int) {
+        return value;
+      } else if (value is double) {
+        return value.round();
+      } else if (value is String) {
+        return int.tryParse(value);
+      }
+      return null;
+    } catch (e) {
+      print('❌ Error converting to int: $e');
+      return null;
+    }
+  }
+
+  /// Convert Map with int/double values to Map<String, int>
+  static Map<String, int>? _convertToIntMap(dynamic data) {
+    if (data == null) return null;
+    
+    try {
+      final Map<String, dynamic> sourceMap = Map<String, dynamic>.from(data);
+      final Map<String, int> result = {};
+      
+      sourceMap.forEach((key, value) {
+        if (value is int) {
+          result[key] = value;
+        } else if (value is double) {
+          result[key] = value.round();
+        } else if (value is String) {
+          // Try to parse string numbers
+          final parsed = int.tryParse(value);
+          if (parsed != null) {
+            result[key] = parsed;
+          }
+        }
+      });
+      
+      return result.isNotEmpty ? result : null;
+    } catch (e) {
+      print('❌ Error converting to int map: $e');
+      return null;
+    }
+  }
+
+  /// Convert Map with int/double values to Map<String, double>
+  static Map<String, double>? _convertToDoubleMap(dynamic data) {
+    if (data == null) return null;
+    
+    try {
+      final Map<String, dynamic> sourceMap = Map<String, dynamic>.from(data);
+      final Map<String, double> result = {};
+      
+      sourceMap.forEach((key, value) {
+        if (value is int) {
+          result[key] = value.toDouble();
+        } else if (value is double) {
+          result[key] = value;
+        } else if (value is String) {
+          // Try to parse string numbers
+          final parsed = double.tryParse(value);
+          if (parsed != null) {
+            result[key] = parsed;
+          }
+        }
+      });
+      
+      return result.isNotEmpty ? result : null;
+    } catch (e) {
+      print('❌ Error converting to double map: $e');
+      return null;
     }
   }
 

@@ -23,20 +23,22 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
           child: Column(
             children: [
               _buildHeader(),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildProgressOverview(),
-                    const SizedBox(height: 24),
-                    _buildRoadmapSteps(),
-                    const SizedBox(height: 24),
-                  ],
-                ),
+              Expanded(
+                child: controller.roadmapSteps.isEmpty
+                    ? _buildEmptyState()
+                    : SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildProgressOverview(),
+                            const SizedBox(height: 24),
+                            _buildRoadmapSteps(),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
+                      ),
               ),
-            ),
             ],
           ),
         );
@@ -52,7 +54,7 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Get.back();
+                      Get.toNamed(Routes.PROFILE_USER);
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
@@ -137,7 +139,7 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
               ),
               GestureDetector(
                 onTap: () {
-
+                  controller.showDeleteConfirmation();
                 },
                 child: Icon(
                   Icons.delete_outlined,
@@ -677,5 +679,136 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
           ),
         );
     }
+  }
+
+  Widget _buildEmptyState() {
+    return Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Empty state icon
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(60),
+            ),
+            child: Icon(
+              Icons.route_outlined,
+              size: 60,
+              color: AppColors.primary.withOpacity(0.7),
+            ),
+          ),
+          const SizedBox(height: 32),
+          
+          // Empty state title
+          Text(
+            'Belum Ada Roadmap Karir',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Montserrat',
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 16),
+          
+          // Empty state description
+          Text(
+            'Mulai perjalanan karir Anda dengan membuat roadmap yang dipersonalisasi. AI kami akan membantu Anda merencanakan langkah-langkah untuk mencapai tujuan karir.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              fontFamily: 'Montserrat',
+              color: AppColors.textSecondary,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 40),
+          
+          // Action buttons
+          Column(
+            children: [
+              // Primary action button - Generate Roadmap
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    controller.generateNewRoadmap();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.textOnPrimary,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.auto_awesome,
+                        size: 24,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Buat Roadmap dengan AI',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Secondary action button - Refresh
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton(
+                  onPressed: () {
+                    controller.refreshRoadmap();
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    side: BorderSide(color: AppColors.primary, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.refresh,
+                        size: 24,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Refresh Roadmap',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

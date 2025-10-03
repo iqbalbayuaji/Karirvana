@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../routes/app_pages.dart';
 import '../../../styles/app_colors.dart';
 import '../../roadmap_manage/models/roadmap_models.dart';
 import '../../roadmap_manage/controllers/roadmap_manage_controller.dart';
@@ -1320,15 +1321,32 @@ class RoadmapEditController extends GetxController {
     );
   }
 
-  void saveRoadmap() {
-    // TODO: Implement save to Firebase or local storage
-    Get.snackbar(
-      'Saved',
-      'Roadmap has been saved successfully',
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-    );
-    Get.back(); // Return to roadmap_manage
+  Future<void> saveRoadmap() async {
+    try {
+      print('💾 Saving roadmap changes...');
+      
+      // Sync changes back to RoadmapManageController
+      syncToRoadmapManage();
+      
+      // Also save to Firebase if RoadmapManageController is available
+      if (Get.isRegistered<RoadmapManageController>()) {
+        final roadmapManageController = Get.find<RoadmapManageController>();
+        await roadmapManageController.saveRoadmap();
+        
+        print('✅ Roadmap saved successfully from roadmap_edit');
+        // Don't show snackbar here - let roadmap_manage handle it
+      } else {
+        // Fallback: just log if roadmap_manage is not available
+        print('⚠️ RoadmapManageController not found, changes saved locally only');
+      }
+      
+    } catch (e) {
+      print('❌ Save failed: $e');
+      // Let roadmap_manage handle error feedback if needed
+    } finally {
+      // Always return to roadmap_manage regardless of success or failure
+      Get.toNamed(Routes.ROADMAP_MANAGE);
+    }
   }
 
   double get overallProgress {

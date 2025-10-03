@@ -23,42 +23,43 @@ class JobOpeningsView extends GetView<JobOpeningsController> {
                   children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 25),
-                child: Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                            onTap: () {
-                              Get.back();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: AppColors.surface,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: AppColors.outline),
-                              ),
-                              child: const Icon(
-                                Icons.arrow_back,
-                                color: AppColors.textPrimary,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                          Text(
-                              'Detail Pekerjaan',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Montserrat',
-                                color: AppColors.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(width: 33),
-                    ],
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: AppColors.outline),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: AppColors.textPrimary,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Detail Pekerjaan',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Montserrat',
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 33),
+                  ],
                 ),
               ),
               Text(

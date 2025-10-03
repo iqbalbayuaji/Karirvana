@@ -15,6 +15,7 @@ class CareerAssistantView extends GetView<CareerAssistantController> {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: [

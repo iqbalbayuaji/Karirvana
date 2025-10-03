@@ -219,7 +219,10 @@ class RekomendasiContainerCertification extends StatelessWidget {
           if (showDiscount)
             Container(
               height: 24,
-              width: 70,
+              constraints: BoxConstraints(
+                minWidth: 70,
+                maxWidth: 85,
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
                 color: AppColors.primary,
@@ -233,13 +236,17 @@ class RekomendasiContainerCertification extends StatelessWidget {
                     end: Alignment.bottomRight,
                   ),
               ),
-              child: Text(
-                discount,
-                style: TextStyle(
-                  color: AppColors.textOnPrimary,
-                  fontFamily: "Montserrat",
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
+              child: Center(
+                child: Text(
+                  discount,
+                  style: TextStyle(
+                    color: AppColors.textOnPrimary,
+                    fontFamily: "Montserrat",
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.visible,
                 ),
               ),
             )

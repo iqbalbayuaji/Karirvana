@@ -298,6 +298,7 @@ class InterviewStorageService {
       }).toList();
       
       // Generate feedback using Groq API
+      print('🔄 Calling Groq API for feedback generation...');
       final aiFeeback = await InterviewGroqService.generateInterviewFeedback(
         conversationHistory: conversationHistory,
         difficulty: difficulty,
@@ -308,6 +309,8 @@ class InterviewStorageService {
       final feedbackId = _firestore.collection(_interviewCollection).doc().id;
       
       print('✅ AI feedback generated successfully');
+      print('📊 Feedback data: ${aiFeeback.keys.join(', ')}');
+      print('🎯 Overall Score from AI: ${aiFeeback['overallScore']}');
       
       return InterviewFeedback(
         id: feedbackId,
@@ -342,6 +345,7 @@ class InterviewStorageService {
       
     } catch (e) {
       print('❌ Error generating AI feedback: $e');
+      print('🔄 Falling back to sample feedback due to AI error');
       // Fallback to basic feedback if AI generation fails
       return generateSampleFeedback(sessionId, messages);
     }
@@ -350,6 +354,7 @@ class InterviewStorageService {
   /// Generate sample feedback (fallback when AI fails)
   static InterviewFeedback generateSampleFeedback(String sessionId, List<ChatMessage> messages) {
     // Fallback feedback generation when AI is not available
+    print('⚠️ Using FALLBACK feedback - AI generation failed');
     final feedbackId = _firestore.collection(_interviewCollection).doc().id;
     
     return InterviewFeedback(

@@ -27,6 +27,7 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
   final isLoading = false.obs;
   final partialSpeechResult = ''.obs;
   final isSpeechAvailable = false.obs;
+  final isEndingInterview = false.obs;
 
   // Conversation history
   final List<Map<String, String>> conversationHistory = [];
@@ -372,21 +373,31 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
   }
 
   Future<void> endInterview() async {
-    // Stop any ongoing speech or listening
-    if (isListening.value) {
-      await stopListening();
+    // Prevent spam clicking
+    if (isEndingInterview.value) {
+      print('⚠️ Interview ending already in progress, ignoring request');
+      return;
     }
     
-    if (isAISpeaking.value) {
-      await TextToSpeechService.stop();
+    isEndingInterview.value = true;
+    print('🔚 Starting interview end process...');
+    
+    try {
+      // Stop any ongoing speech or listening
+      if (isListening.value) {
+        await stopListening();
+      }
+      
+      if (isAISpeaking.value) {
+        await TextToSpeechService.stop();
+        isAISpeaking.value = false;
+      }
+      
+      // Update states
+      isInterviewActive.value = false;
+      isListening.value = false;
       isAISpeaking.value = false;
-    }
-    
-    // Update states
-    isInterviewActive.value = false;
-    isListening.value = false;
-    isAISpeaking.value = false;
-    isLoading.value = false;
+      isLoading.value = false;
     
     // Complete interview session with AI-generated feedback (manual end)
     if (_currentSessionId != null) {
@@ -426,12 +437,21 @@ class InterviewPracticeChatController extends GetxController with GetTickerProvi
       print('Error speaking end message: $e');
     }
     
-    // Navigate to feedback page after a short delay
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      Get.offNamed('/interview-practice-feedback', arguments: {
-        'sessionId': _currentSessionId,
+      // Navigate to feedback page after a short delay
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        Get.offNamed('/interview-practice-feedback', arguments: {
+          'sessionId': _currentSessionId,
+        });
       });
-    });
+      
+    } catch (e) {
+      print('❌ Error during interview end process: $e');
+    } finally {
+      // Reset ending state after a delay to prevent immediate re-clicking
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        isEndingInterview.value = false;
+      });
+    }
   }
 
   @override

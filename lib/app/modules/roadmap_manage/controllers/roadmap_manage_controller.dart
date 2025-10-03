@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../models/roadmap_models.dart';
 import '../../../services/firebase_roadmap_service.dart';
+import '../../../styles/app_colors.dart';
 import '../../career_assistant/controllers/career_assistant_controller.dart';
 
 class RoadmapManageController extends GetxController {
@@ -76,14 +78,14 @@ class RoadmapManageController extends GetxController {
         print('📋 Title: ${roadmapTitle.value}');
         print('🪜 Steps: ${roadmapSteps.length}');
       } else {
-        // No roadmap in Firebase, use sample data
-        print('📭 No roadmap in Firebase, using sample data');
-        _initializeSampleData();
+        // No roadmap in Firebase, show empty state
+        print('📭 No roadmap in Firebase, showing empty state');
+        roadmapSteps.value = [];
       }
     } catch (e) {
       print('❌ Error loading from Firebase: $e');
-      // Fallback to sample data
-      _initializeSampleData();
+      // Show empty state on error
+      roadmapSteps.value = [];
     } finally {
       isLoading.value = false;
     }
@@ -251,10 +253,20 @@ class RoadmapManageController extends GetxController {
         steps: roadmapSteps.toList(),
       );
       
-      Get.snackbar('Berhasil', 'Roadmap berhasil disimpan!');
+      Get.snackbar(
+        'Berhasil',
+        'Roadmap berhasil disimpan!',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
     } catch (e) {
       print('❌ Manual save failed: $e');
-      Get.snackbar('Error', 'Gagal menyimpan roadmap: $e');
+      Get.snackbar(
+        'Error',
+        'Gagal menyimpan roadmap: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -266,7 +278,184 @@ class RoadmapManageController extends GetxController {
   // Generate schedule from roadmap
   void generateSchedule() {
     // TODO: Integrate with jadwal_manage system
-    Get.snackbar('Info', 'Fitur generate schedule akan segera tersedia!');
+    Get.snackbar(
+      'Info', 
+      'Fitur generate schedule akan segera tersedia!',
+      backgroundColor: Colors.blue,
+      colorText: Colors.white,
+    );
+  }
+
+  // Delete roadmap
+  Future<void> deleteRoadmap() async {
+    try {
+      isLoading.value = true;
+      print('🗑️ Deleting roadmap...');
+      
+      // Clear local data
+      roadmapSteps.value = [];
+      roadmapTitle.value = 'My Career Roadmap';
+      expandedSteps.clear();
+      expandedSubSteps.clear();
+      
+      // Delete from Firebase
+      await FirebaseRoadmapService.deleteRoadmap();
+      
+      // Clear from CareerAssistantController if available
+      if (Get.isRegistered<CareerAssistantController>()) {
+        final careerController = Get.find<CareerAssistantController>();
+        // Use backToWelcome to clear all data including roadmap
+        careerController.backToWelcome();
+      }
+      
+      print('✅ Roadmap deleted successfully');
+      Get.snackbar(
+        'Berhasil', 
+        'Roadmap berhasil dihapus!',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      print('❌ Delete failed: $e');
+      Get.snackbar(
+        'Error', 
+        'Gagal menghapus roadmap: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Show delete confirmation dialog
+  void showDeleteConfirmation() {
+    final screenWidth = MediaQuery.of(Get.context!).size.width;
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Hapus Roadmap?',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Montserrat',
+                            color: AppColors.textPrimary,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SizedBox(
+                        width: screenWidth * 0.2,
+                      )
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+                  // Description text
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Apakah Anda yakin ingin menghapus roadmap ini? Semua progress dan data akan hilang permanen.',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.textSecondary,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SizedBox(
+                        width: screenWidth * 0.05,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 30),
+              
+              // Buttons
+              Column(
+                children: [
+                  // Delete Button (Red)
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.back(); // Close dialog
+                        deleteRoadmap(); // Perform delete
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Hapus Roadmap',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+                  // Cancel Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.primary),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Batal',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: true,
+    );
   }
 
   // Manual refresh method (can be called from UI)
@@ -280,56 +469,4 @@ class RoadmapManageController extends GetxController {
     await _loadRoadmapFromFirebase();
   }
 
-  // Initialize sample data (fallback)
-  void _initializeSampleData() {
-    roadmapTitle.value = 'Frontend Developer Career Path';
-    roadmapSteps.value = [
-      RoadmapMainStep(
-        id: 'step_1',
-        title: 'Foundation Learning',
-        description: 'Master the basics of web development',
-        isCompleted: false,
-        estimatedDuration: '2-3 months',
-        subSteps: [
-          RoadmapSubStep(
-            id: 'html_css_basics',
-            title: 'HTML & CSS Fundamentals',
-            description: 'Learn basic structure and styling of websites',
-            isCompleted: false,
-            estimatedDuration: '2-3 weeks',
-            resources: [
-              RoadmapResource(
-                type: 'course',
-                title: 'HTML & CSS Complete Course',
-                provider: 'Karirvana Academy',
-              ),
-            ],
-          ),
-        ],
-      ),
-      RoadmapMainStep(
-        id: 'step_2',
-        title: 'JavaScript Mastery',
-        description: 'Learn programming for web interactivity',
-        isCompleted: false,
-        estimatedDuration: '1-2 months',
-        subSteps: [
-          RoadmapSubStep(
-            id: 'javascript_fundamentals',
-            title: 'JavaScript Essentials',
-            description: 'Master JavaScript programming language',
-            isCompleted: false,
-            estimatedDuration: '4-6 weeks',
-            resources: [
-              RoadmapResource(
-                type: 'course',
-                title: 'JavaScript Complete Guide',
-                provider: 'Karirvana Academy',
-              ),
-            ],
-          ),
-        ],
-      ),
-    ];
-  }
 }

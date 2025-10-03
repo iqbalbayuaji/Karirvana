@@ -172,7 +172,7 @@ class CourseStoreMainController extends GetxController {
         discountedPrice: 175000,
         isFree: false,
         level: 'Pemula',
-        discount: '50% Off',
+        discount: '40% Off',
         showDiscount: true,
         language: 'Bahasa Indonesia',
         hasCertificate: true,

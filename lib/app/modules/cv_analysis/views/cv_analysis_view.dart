@@ -67,7 +67,7 @@ class CvAnalysisView extends GetView<CvAnalysisController> {
               padding: const EdgeInsets.fromLTRB(0, 30, 0, 25),
               child: Center(
                 child: Text(
-                  "Analisis CV",
+                  "Hasil Analisis",
                   style: TextStyle(
                     fontFamily: 'Montserrat',
                     fontWeight: FontWeight.bold,

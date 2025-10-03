@@ -49,7 +49,7 @@ class NotificationView extends GetView<NotificationController> {
                     ),
                   ),
                   const SizedBox(
-                    width: 24,
+                    width: 30,
                   )
                 ],
               ),
@@ -74,7 +74,7 @@ class NotificationView extends GetView<NotificationController> {
                         'Tidak ada Notifikasi',
                         style: TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           fontFamily: 'Montserrat',
                           color: AppColors.textPrimary,
                         ),
