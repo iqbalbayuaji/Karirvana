@@ -19,6 +19,9 @@ class Certification {
   final String discount;
   final bool showDiscount;
   final String validityPeriod;
+  final int totalReviews;
+  final List<String> benefits;
+  final List<String> requirements;
 
   Certification({
     required this.id,
@@ -38,6 +41,9 @@ class Certification {
     required this.discount,
     required this.showDiscount,
     required this.validityPeriod,
+    required this.totalReviews,
+    required this.benefits,
+    required this.requirements,
   });
 
   // Getter for backward compatibility
@@ -108,6 +114,20 @@ class CertificationStoreMainController extends GetxController {
         discount: '50% Off',
         showDiscount: true,
         validityPeriod: '2 tahun',
+        totalReviews: 1850,
+        benefits: [
+          'Sertifikat resmi dari Google Developers',
+          'Pengakuan industri internasional',
+          'Akses ke komunitas Flutter developer',
+          'Portfolio project yang dapat dipamerkan',
+          'Peningkatan peluang karir sebagai mobile developer'
+        ],
+        requirements: [
+          'Pengalaman dasar pemrograman Dart',
+          'Pemahaman konsep OOP',
+          'Akses komputer dengan spesifikasi memadai',
+          'Koneksi internet stabil untuk ujian online'
+        ],
       ),
       Certification(
         id: '2',
@@ -127,6 +147,20 @@ class CertificationStoreMainController extends GetxController {
         discount: '50% Off',
         showDiscount: true,
         validityPeriod: '1 tahun',
+        totalReviews: 2450,
+        benefits: [
+          'Sertifikat resmi Meta Blueprint',
+          'Kredibilitas dalam digital marketing',
+          'Akses ke tools dan resource eksklusif',
+          'Networking dengan profesional marketing',
+          'Update terbaru tentang platform Meta'
+        ],
+        requirements: [
+          'Pengalaman dasar marketing',
+          'Pemahaman media sosial',
+          'Akses ke platform Meta (Facebook/Instagram)',
+          'Kemampuan analisis data dasar'
+        ],
       ),
       Certification(
         id: '3',
@@ -146,6 +180,20 @@ class CertificationStoreMainController extends GetxController {
         discount: '',
         showDiscount: false,
         validityPeriod: '1 tahun',
+        totalReviews: 4200,
+        benefits: [
+          'Sertifikat gratis dari Google',
+          'Pemahaman mendalam Google Analytics',
+          'Skill analisis data website',
+          'Peningkatan value sebagai digital marketer',
+          'Akses ke Google Analytics Academy'
+        ],
+        requirements: [
+          'Akun Google',
+          'Pemahaman dasar website',
+          'Kemampuan berpikir analitis',
+          'Tidak ada biaya pendaftaran'
+        ],
       ),
       Certification(
         id: '4',
@@ -165,6 +213,20 @@ class CertificationStoreMainController extends GetxController {
         discount: '',
         showDiscount: false,
         validityPeriod: '3 tahun',
+        totalReviews: 1320,
+        benefits: [
+          'Sertifikat PMP yang diakui global',
+          'Peningkatan salary hingga 25%',
+          'Kredibilitas sebagai project manager',
+          'Akses ke PMI community',
+          'Continuing education opportunities'
+        ],
+        requirements: [
+          'Pengalaman project management 3+ tahun',
+          'Pendidikan minimal S1',
+          '35 jam training project management',
+          'Biaya ujian dan maintenance'
+        ],
       ),
       Certification(
         id: '5',
@@ -184,6 +246,20 @@ class CertificationStoreMainController extends GetxController {
         discount: '30% Off',
         showDiscount: true,
         validityPeriod: '3 tahun',
+        totalReviews: 3150,
+        benefits: [
+          'Sertifikat AWS resmi',
+          'Pemahaman cloud computing fundamentals',
+          'Peluang karir di cloud technology',
+          'Akses ke AWS training resources',
+          'Foundation untuk sertifikasi AWS lanjutan'
+        ],
+        requirements: [
+          'Pemahaman dasar IT',
+          'Pengalaman dengan teknologi cloud (opsional)',
+          'Kemampuan bahasa Inggris',
+          'Akses komputer untuk ujian online'
+        ],
       ),
       Certification(
         id: '6',
@@ -203,6 +279,20 @@ class CertificationStoreMainController extends GetxController {
         discount: '20% Off',
         showDiscount: true,
         validityPeriod: '3 tahun',
+        totalReviews: 1180,
+        benefits: [
+          'Sertifikat CEH yang diakui industri',
+          'Expertise dalam ethical hacking',
+          'Peluang karir cybersecurity specialist',
+          'Akses ke EC-Council community',
+          'Continuing education credits'
+        ],
+        requirements: [
+          'Pengalaman IT/Security minimal 2 tahun',
+          'Pemahaman networking dan sistem operasi',
+          'Background teknis yang kuat',
+          'Komitmen untuk etika hacking'
+        ],
       ),
     ];
     

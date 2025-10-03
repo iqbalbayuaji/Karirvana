@@ -15,28 +15,28 @@ class CarouselContainer extends StatelessWidget {
       'year': '2002',
       'company': 'PT Garuda Indonesia Tbk.',
       'testimonial': '"Saya merasa terbantu dengan adanya aplikasi karirvana ini, karena dapat membantu saya mengembangkan diri"',
-      'imageUrl': 'assets/images/hero.jpg',
+      'imageUrl': 'assets/profile/Portrait of a confident young smart looking man _ Premium AI-generated image.jpeg',
     },
     {
       'name': 'Siti Nurhaliza Putri',
       'year': '2001',
       'company': 'PT Telkom Indonesia Tbk.',
       'testimonial': '"Aplikasi ini sangat membantu dalam menemukan peluang karir yang sesuai dengan passion saya"',
-      'imageUrl': 'assets/images/hero.jpg',
+      'imageUrl': 'assets/profile/Nailed it_.jpeg',
     },
     {
       'name': 'Ahmad Rizki Pratama',
       'year': '2003',
       'company': 'PT Bank Central Asia Tbk.',
       'testimonial': '"Fitur-fitur yang ada sangat lengkap dan mudah digunakan untuk pengembangan karir"',
-      'imageUrl': 'assets/images/hero.jpg',
+      'imageUrl': 'assets/profile/AMS studio.jpeg',
     },
     {
       'name': 'Maya Sari Dewi',
       'year': '2000',
       'company': 'PT Unilever Indonesia Tbk.',
       'testimonial': '"Berkat aplikasi ini, saya berhasil mendapatkan pekerjaan impian di perusahaan multinasional"',
-      'imageUrl': 'assets/images/hero.jpg',
+      'imageUrl': 'assets/profile/Senior businessman portrait on white background _ Premium AI-generated image.jpeg',
     },
   ];
 

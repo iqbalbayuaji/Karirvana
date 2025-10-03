@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class TaskModel {
   final String id;
   final String userId;
@@ -148,16 +150,16 @@ extension TaskCategoryExtension on TaskCategory {
     }
   }
 
-  int get iconCode {
+  IconData get icon {
     switch (this) {
       case TaskCategory.work:
-        return 0xe1a9; // work
+        return Icons.work;
       case TaskCategory.personal:
-        return 0xe7fd; // person
+        return Icons.person;
       case TaskCategory.study:
-        return 0xe80c; // school
+        return Icons.school;
       case TaskCategory.other:
-        return 0xe5c3; // more_horiz
+        return Icons.more_horiz;
     }
   }
 }

@@ -13,6 +13,35 @@ class CertificationCard extends StatelessWidget {
     this.onTap,
   });
 
+  String _getCertificationImage(String category, String title) {
+    // Map certification categories to images
+    switch (category.toLowerCase()) {
+      case 'it & programming':
+      case 'programming':
+        return 'assets/course/course-programming-1.jpg';
+      case 'digital marketing':
+      case 'marketing':
+        return 'assets/course/course-marketing-1.png';
+      case 'data analytics':
+      case 'data science':
+        return 'assets/course/course-python.jpg';
+      case 'design':
+      case 'ui/ux':
+        return 'assets/course/course-uiux-1.jpg';
+      case 'business':
+      case 'project management':
+        return 'assets/course/course-akuntansi-1.jpg';
+      case 'finance':
+        return 'assets/course/course-akuntansi-2.jpg';
+      case 'cloud computing':
+        return 'assets/course/course-backend-1.webp';
+      case 'cyber security':
+        return 'assets/course/course-programming-1.jpg';
+      default:
+        return 'assets/course/course-programming-1.jpg';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -34,27 +63,18 @@ class CertificationCard extends StatelessWidget {
               ],
             ),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(
                   alignment: Alignment.topRight,
                   children: [
                     Container(
                       width: 90,
-                      height: 100,
+                      height: 120,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
-                        gradient: LinearGradient(
-                          colors: _getCategoryGradient(certification.category),
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          _getCategoryIcon(certification.category),
-                          color: Colors.white,
-                          size: 32,
+                        image: DecorationImage(
+                          image: AssetImage(_getCertificationImage(certification.category, certification.title)),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -239,43 +259,6 @@ class CertificationCard extends StatelessWidget {
     );
   }
 
-  List<Color> _getCategoryGradient(String category) {
-    switch (category) {
-      case 'IT & Programming':
-        return [AppColors.primary, Color(0xFF6366F1)];
-      case 'Digital Marketing':
-        return [AppColors.tertiary, Color(0xFFEC4899)];
-      case 'Data Analytics':
-        return [Color(0xFF10B981), Color(0xFF059669)];
-      case 'Project Management':
-        return [Color(0xFFF59E0B), Color(0xFFEF4444)];
-      case 'Cyber Security':
-        return [Color(0xFFA855F7), Color(0xFF9333EA)];
-      case 'Cloud Computing':
-        return [Color(0xFFEF4444), Color(0xFFDC2626)];
-      default:
-        return AppColors.heroGradient;
-    }
-  }
-
-  IconData _getCategoryIcon(String category) {
-    switch (category) {
-      case 'IT & Programming':
-        return CupertinoIcons.device_laptop;
-      case 'Digital Marketing':
-        return CupertinoIcons.chart_bar_fill;
-      case 'Data Analytics':
-        return CupertinoIcons.graph_circle_fill;
-      case 'Project Management':
-        return CupertinoIcons.briefcase_fill;
-      case 'Cyber Security':
-        return CupertinoIcons.shield_fill;
-      case 'Cloud Computing':
-        return CupertinoIcons.cloud_fill;
-      default:
-        return CupertinoIcons.doc_checkmark_fill;
-    }
-  }
 
   Color _getLevelColor(String level) {
     switch (level) {

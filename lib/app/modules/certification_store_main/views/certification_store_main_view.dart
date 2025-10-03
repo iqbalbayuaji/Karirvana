@@ -206,7 +206,7 @@ class CertificationStoreMainView extends GetView<CertificationStoreMainControlle
                     return CertificationCard(
                       certification: certification,
                       onTap: () {
-
+                        Get.toNamed('/certification-store', arguments: {'certificationId': certification.id});
                       },
                     );
                   },

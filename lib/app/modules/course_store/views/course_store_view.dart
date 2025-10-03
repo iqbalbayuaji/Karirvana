@@ -158,20 +158,6 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                   ),
                                 ),
                               SizedBox(width: 15),
-                              Container(
-                                alignment: Alignment.center,
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: AppColors.secondaryContainer,
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                child: Icon(
-                                  CupertinoIcons.cart,
-                                  color: AppColors.textPrimary,
-                                  size: 24,
-                                ),
-                              )
                             ],
                           ),
             

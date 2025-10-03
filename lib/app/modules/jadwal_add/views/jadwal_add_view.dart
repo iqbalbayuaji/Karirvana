@@ -463,7 +463,7 @@ class JadwalAddView extends GetView<JadwalAddController> {
               child: Row(
                 children: [
                   Icon(
-                    IconData(category.iconCode, fontFamily: 'MaterialIcons'),
+                    category.icon,
                     color: isSelected ? AppColors.primary : AppColors.textSecondary,
                     size: 18,
                   ),

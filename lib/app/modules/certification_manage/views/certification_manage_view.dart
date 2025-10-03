@@ -155,6 +155,9 @@ class CertificationManageView extends GetView<CertificationManageController> {
       validityPeriod: '2 tahun', // Default validity
       description: certification.description,
       imageUrl: '', // No image for managed certifications
+      totalReviews: 0,
+      benefits: ['Sertifikasi yang disesuaikan dengan kebutuhan'],
+      requirements: ['Tidak ada persyaratan khusus'],
     );
   }
 

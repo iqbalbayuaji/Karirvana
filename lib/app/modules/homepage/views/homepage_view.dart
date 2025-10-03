@@ -10,7 +10,6 @@ import '../../../routes/app_pages.dart';
 import '../controllers/homepage_controller.dart';
 import '../local_widget/Rekomendasi_Container.dart';
 import '../local_widget/icon_features.dart';
-import '../local_widget/kemitraan_container.dart';
 import '../local_widget/course_progress_carousel.dart';
 
 class HomepageView extends GetView<HomepageController> {
@@ -95,7 +94,9 @@ class HomepageView extends GetView<HomepageController> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Get.toNamed(Routes.NOTIFICATION);
+                                      },
                                       icon: const Icon(
                                         CupertinoIcons.bell_fill,
                                         size: 27,
@@ -139,7 +140,7 @@ class HomepageView extends GetView<HomepageController> {
                                 const SizedBox(height: 90),
                                 Container(
                                   width: double.infinity,
-                                  height: 2000,
+                                  height: 1450,
                                   decoration: const BoxDecoration(
                                     color: AppColors.background,
                                     borderRadius: BorderRadius.only(
@@ -565,43 +566,6 @@ class HomepageView extends GetView<HomepageController> {
                                             ),
                                           ),
                                       ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 25),
-                                        child: 
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                      "Kemitraan",
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontFamily: "Montserrat",
-                                                        color: AppColors.textSecondary,
-                                                        fontWeight: FontWeight.w600,
-                                                      ),
-                                                      ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                            height: 10,
-                                          ),
-                                          SizedBox(
-                                            height: 143,
-                                            child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: 6,
-                                              padding: const EdgeInsets.only(left: 25),
-                                              itemBuilder: (context, index) {
-                                                return KemitraanContainer(
-                                                  index: index,
-                                                );
-                                              },
-                                            ),
-                                          )
                                     ],
                                   ),
                                 ),

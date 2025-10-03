@@ -111,7 +111,7 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
   }) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(Routes.COURSE_USER, arguments: course);
+        // Get.toNamed(Routes.COURSE_USER, arguments: course);
       },
       child: Container(
         margin: EdgeInsets.symmetric(
@@ -173,16 +173,18 @@ class _CourseProgressCarouselState extends State<CourseProgressCarousel>
                           ),
                           Row(
                             children: [
-                              Text(
-                                course.lastActivity,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: "Montserrat",
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
+                              Expanded(
+                                child: Text(
+                                  course.lastActivity,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: "Montserrat",
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
                               ),
                               const Text(
                                 " - ",
