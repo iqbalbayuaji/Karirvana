@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-// Model for certification
-class Certification {
+// Model for managed certification (user's enrolled certifications)
+class ManagedCertification {
   final String id;
   final String title;
   final String provider;
@@ -10,7 +10,7 @@ class Certification {
   final String? certificateUrl;
   final bool isCompleted;
 
-  Certification({
+  ManagedCertification({
     required this.id,
     required this.title,
     required this.provider,
@@ -24,7 +24,7 @@ class Certification {
 class CertificationManageController extends GetxController {
   // Certification data
   final isLoading = false.obs;
-  final certifications = <Certification>[].obs;
+  final certifications = <ManagedCertification>[].obs;
 
   @override
   void onInit() {

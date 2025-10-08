@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../styles/app_colors.dart';
-import '../controllers/course_store_main_controller.dart';
+import '../../../data/models/course_model.dart';
 
 class CourseCard extends StatelessWidget {
   final Course course;
@@ -80,6 +80,7 @@ class CourseCard extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         course.title,
@@ -291,7 +292,7 @@ class CourseCard extends StatelessWidget {
         return 'assets/course/course-frontend-1.jpg';
       
       default:
-        return 'assets/images/hero.jpg'; // Fallback to original image
+        return 'assets/course/course-programming-1.jpg'; // Fallback image
     }
   }
 

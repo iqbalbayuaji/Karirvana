@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../styles/app_colors.dart';
+import '../../../data/models/course_model.dart';
 import '../controllers/course_manage_controller.dart';
 import '../../course_store_main/local_widgets/course_card.dart';
-import '../../course_store_main/controllers/course_store_main_controller.dart' as store;
 
 class CourseManageView extends GetView<CourseManageController> {
   const CourseManageView({super.key});
@@ -136,37 +136,30 @@ class CourseManageView extends GetView<CourseManageController> {
   }
 
   // Convert manage course to store course model
-  store.Course _convertToStoreCourse(Course course) {
-    return store.Course(
+  Course _convertToStoreCourse(ManagedCourse course) {
+    return Course(
       id: course.id,
       title: course.title,
       instructor: course.provider, // Use provider as instructor
-      instructorBio: 'Instructor berpengalaman dalam bidang ${course.title}',
-      instructorImage: 'assets/images/default_instructor.jpg',
-      category: 'Programming', // Default category
       description: course.description,
-      imageUrl: '', // No image for managed courses
+      price: 0, // Free for managed courses
+      originalPrice: 0,
+      discountPercentage: 0,
       rating: 4.5, // Default rating
-      totalStudents: 0, // Default students
-      totalLessons: 10, // Default lessons
-      duration: '4 minggu', // Default duration
-      originalPrice: 0, // Free for managed courses
-      discountedPrice: 0,
-      isFree: true,
-      level: '', // Empty level to hide default text
-      discount: '',
-      showDiscount: false,
-      language: 'Bahasa Indonesia',
-      hasCertificate: false,
       totalReviews: 0,
-      requirements: ['Tidak ada persyaratan khusus'],
-      whatYouWillLearn: ['Materi akan disesuaikan dengan kebutuhan'],
-      modules: [], // Empty modules for managed courses
+      duration: '4 minggu', // Default duration
+      level: 'Pemula', // Default level
+      category: 'Programming', // Default category
+      imageUrl: '', // No image for managed courses
+      isFree: true,
+      isPopular: false,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
   }
 
   // Build custom course card with proper status display
-  Widget _buildCustomCourseCard(Course course, store.Course storeCourse) {
+  Widget _buildCustomCourseCard(ManagedCourse course, Course storeCourse) {
     return Stack(
       children: [
         CourseCard(
@@ -197,7 +190,7 @@ class CourseManageView extends GetView<CourseManageController> {
   }
 
   // Get status text for display
-  String _getStatusText(Course course) {
+  String _getStatusText(ManagedCourse course) {
     if (course.isCompleted) {
       return 'Completed';
     } else if (course.progress > 0) {
@@ -208,7 +201,7 @@ class CourseManageView extends GetView<CourseManageController> {
   }
 
   // Get status color
-  Color _getStatusColor(Course course) {
+  Color _getStatusColor(ManagedCourse course) {
     if (course.isCompleted) {
       return const Color(0xFF10B981); // Green for completed
     } else if (course.progress > 0) {

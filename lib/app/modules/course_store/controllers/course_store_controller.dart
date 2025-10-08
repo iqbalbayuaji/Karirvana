@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../data/models/course_model.dart';
 import '../../course_store_main/controllers/course_store_main_controller.dart';
 
 class CourseStoreController extends GetxController {
@@ -83,7 +84,7 @@ class CourseStoreController extends GetxController {
         return 'assets/course/course-frontend-1.jpg';
       
       default:
-        return 'assets/images/hero.jpg';
+        return 'assets/course/course-programming-1.jpg';
     }
   }
 

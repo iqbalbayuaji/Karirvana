@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:karirvana/app/styles/app_colors.dart';
 
 import '../../../routes/app_pages.dart';
 import '../../certification_store_main/controllers/certification_store_main_controller.dart';
 
-class RekomendasiContainerCertification extends StatelessWidget {
+class RekomendasiContainerCertification extends StatefulWidget {
   final int index;
 
   const RekomendasiContainerCertification({
@@ -13,95 +14,94 @@ class RekomendasiContainerCertification extends StatelessWidget {
     required this.index,
   });
 
+  @override
+  State<RekomendasiContainerCertification> createState() => _RekomendasiContainerCertificationState();
+}
+
+class _RekomendasiContainerCertificationState extends State<RekomendasiContainerCertification> {
+  CertificationStoreMainController? _certificationController;
+  bool _isInitialized = false;
+  
   String _formatPrice(int price) {
-    return 'Rp ${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
+    return NumberFormat('#,##0', 'id_ID').format(price);
   }
 
-  String _getCertificationImage(String category, String title) {
-    // Map certification images based on category and title
-    switch (category) {
-      case 'IT & Programming':
-        if (title.toLowerCase().contains('flutter')) {
-          return 'assets/course/course-frontend-1.jpg';
-        } else if (title.toLowerCase().contains('python')) {
-          return 'assets/course/course-python.jpg';
-        } else if (title.toLowerCase().contains('react')) {
-          return 'assets/course/course-programming-1.jpg';
-        }
-        return 'assets/course/course-programming-1.jpg';
-      
-      case 'Digital Marketing':
-        return 'assets/course/course-marketing-1.png';
-      
-      case 'Data Analytics':
-        return 'assets/course/course-python.jpg';
-      
-      case 'Project Management':
-        return 'assets/course/course-akuntansi-1.jpg';
-      
-      case 'Cyber Security':
-        return 'assets/course/course-programming-1.jpg';
-      
-      case 'Cloud Computing':
-        return 'assets/course/course-frontend-1.jpg';
-      
-      default:
-        return 'assets/images/hero.jpg'; // Fallback to original image
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeController();
+  }
+
+  void _initializeController() {
+    if (_isInitialized) return;
+    
+    try {
+      _certificationController = Get.find<CertificationStoreMainController>();
+    } catch (e) {
+      _certificationController = Get.put(CertificationStoreMainController());
     }
+    
+    _isInitialized = true;
   }
 
   @override
   Widget build(BuildContext context) {
-    // Try to get certification data from CertificationStoreMainController
-    CertificationStoreMainController certificationController;
-    
-    try {
-      certificationController = Get.find<CertificationStoreMainController>();
-    } catch (e) {
-      // If controller not found, register it
-      certificationController = Get.put(CertificationStoreMainController());
+    if (_certificationController == null) {
+      _initializeController();
     }
     
-    // Ensure certifications are loaded
-    if (certificationController.allCertifications.isEmpty) {
-      certificationController.loadCertifications();
-    }
+    return Obx(() {
+      // Get certification from the controller
+      final certification = _certificationController!.allCertifications.isNotEmpty 
+          ? _certificationController!.allCertifications[widget.index % _certificationController!.allCertifications.length]
+          : null;
+      
     
-    // Get certification from the controller
-    final certification = certificationController.allCertifications.isNotEmpty 
-        ? certificationController.allCertifications[index % certificationController.allCertifications.length]
-        : null;
-    
-    // If no certification data available, show loading or empty state
-    if (certification == null) {
-      return Container(
-        margin: const EdgeInsets.fromLTRB(10, 5, 15, 20),
-        width: 220,
-        height: 200,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primary,
+      // If no certification data available, show loading or empty state
+      if (certification == null) {
+        return Container(
+          margin: const EdgeInsets.fromLTRB(10, 5, 15, 20),
+          width: 220,
+          height: 200,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(15),
           ),
-        ),
-      );
-    }
+          child: Center(
+            child: _certificationController!.isLoading.value 
+                ? CircularProgressIndicator(color: AppColors.primary)
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.school_outlined, color: AppColors.textSecondary, size: 40),
+                      SizedBox(height: 8),
+                      Text(
+                        'Sertifikasi tidak tersedia',
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontFamily: "Montserrat",
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        );
+      }
     
     final String title = certification.title;
     final int originalPrice = certification.originalPrice;
     final int discountedPrice = certification.discountedPrice;
-    final String imageUrl = _getCertificationImage(certification.category, certification.title);
+    final String imageUrl = certification.imageUrl; // Use imageUrl from certification data
     final String discount = certification.discount;
     final bool showDiscount = certification.showDiscount;
     final bool isFree = certification.isFree;
     
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed(Routes.CERTIFICATION_STORE, arguments: {'certificationId': certification.id});
-      },
+      return GestureDetector(
+        onTap: () {
+          Get.toNamed(Routes.CERTIFICATION_STORE, arguments: {'certificationId': certification.id});
+        },
       child: Stack(
         children: [
           Container(
@@ -250,8 +250,9 @@ class RekomendasiContainerCertification extends StatelessWidget {
                 ),
               ),
             )
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }

@@ -8,6 +8,7 @@ import 'app/routes/app_pages.dart';
 import 'app/services/firebase_auth_service.dart';
 import 'app/services/firestore_service.dart';
 import 'app/services/cloudinary_service.dart';
+import 'app/services/firebase_course_service.dart';
 import 'app/widgets/auth_wrapper.dart';
 import 'firebase_options.dart';
 
@@ -36,6 +37,9 @@ void main() async {
   
   // Register Firestore Service
   Get.put(FirestoreService.instance);
+  
+  // Register Firebase Course Service
+  Get.put(FirebaseCourseService());
   
   // Initialize Cloudinary Service
   try {

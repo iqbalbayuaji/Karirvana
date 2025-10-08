@@ -5,13 +5,21 @@ import 'package:karirvana/app/styles/app_colors.dart';
 import '../../../routes/app_pages.dart';
 import '../../course_store_main/controllers/course_store_main_controller.dart';
 
-class RekomendasiContainer extends StatelessWidget {
+class RekomendasiContainer extends StatefulWidget {
   final int index;
 
   const RekomendasiContainer({
     super.key,
     required this.index,
   });
+
+  @override
+  State<RekomendasiContainer> createState() => _RekomendasiContainerState();
+}
+
+class _RekomendasiContainerState extends State<RekomendasiContainer> {
+  CourseStoreMainController? _courseController;
+  bool _isInitialized = false;
 
   String _formatPrice(int price) {
     return 'Rp ${price.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}';
@@ -49,49 +57,57 @@ class RekomendasiContainer extends StatelessWidget {
         return 'assets/course/course-frontend-1.jpg';
       
       default:
-        return 'assets/images/hero.jpg'; // Fallback to original image
+        return 'assets/course/course-programming-1.jpg'; // Fallback image
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Try to get course data from CourseStoreMainController
-    CourseStoreMainController courseController;
+  void initState() {
+    super.initState();
+    _initializeController();
+  }
+
+  void _initializeController() {
+    if (_isInitialized) return;
     
     try {
-      courseController = Get.find<CourseStoreMainController>();
+      _courseController = Get.find<CourseStoreMainController>();
     } catch (e) {
-      // If controller not found, register it
-      courseController = Get.put(CourseStoreMainController());
+      _courseController = Get.put(CourseStoreMainController());
     }
     
-    // Ensure courses are loaded
-    if (courseController.allCourses.isEmpty) {
-      courseController.loadCourses();
+    _isInitialized = true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_courseController == null) {
+      _initializeController();
     }
     
-    // Get course from the controller
-    final course = courseController.allCourses.isNotEmpty 
-        ? courseController.allCourses[index % courseController.allCourses.length]
-        : null;
+    return Obx(() {
+      // Get course from the controller
+      final course = _courseController!.allCourses.isNotEmpty 
+          ? _courseController!.allCourses[widget.index % _courseController!.allCourses.length]
+          : null;
     
-    // If no course data available, show loading or empty state
-    if (course == null) {
-      return Container(
-        margin: const EdgeInsets.fromLTRB(10, 5, 15, 20),
-        width: 220,
-        height: 200,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primary,
+      // If no course data available, show loading or empty state
+      if (course == null) {
+        return Container(
+          margin: const EdgeInsets.fromLTRB(10, 5, 15, 20),
+          width: 220,
+          height: 200,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(15),
           ),
-        ),
-      );
-    }
+          child: Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primary,
+            ),
+          ),
+        );
+      }
     
     final String title = course.title;
     final int originalPrice = course.originalPrice;
@@ -101,10 +117,10 @@ class RekomendasiContainer extends StatelessWidget {
     final bool showDiscount = course.showDiscount;
     final bool isFree = course.isFree;
     
-    return GestureDetector(
-      onTap: () {
-        Get.toNamed(Routes.COURSE_STORE, arguments: {'courseId': course.id});
-      },
+      return GestureDetector(
+        onTap: () {
+          Get.toNamed(Routes.COURSE_STORE, arguments: {'courseId': course.id});
+        },
       child: Stack(
         children: [
           Container(
@@ -249,8 +265,9 @@ class RekomendasiContainer extends StatelessWidget {
                 ),
               ),
             )
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }

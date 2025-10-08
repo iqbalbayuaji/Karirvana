@@ -253,7 +253,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                             style: TextStyle(
                               color: AppColors.textPrimary,
                               fontFamily: "Montserrat",
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -336,7 +336,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                   scrollDirection: Axis.horizontal,
                                   itemCount: course.modules.length,
                                   itemBuilder: (context, index) {
-                                    final module = course.modules[index];
+                                    final moduleData = course.modules[index] as Map<String, dynamic>;
                                     
                                     return Container(
                                       margin: EdgeInsets.only(right: 12),
@@ -369,7 +369,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                               ),
                                             ),
                                             Text(
-                                              module.title,
+                                              moduleData['title'] as String,
                                               style: TextStyle(
                                                 color: AppColors.textPrimary,
                                                 fontFamily: "Montserrat",
@@ -377,16 +377,6 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                                 fontWeight: FontWeight.w600,
                                               ),
                                               maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Text(
-                                              "${module.lessons.length} lessons • ${module.totalDurationMinutes} min",
-                                              style: TextStyle(
-                                                color: AppColors.textSecondary,
-                                                fontFamily: "Montserrat",
-                                                fontSize: 10,
-                                              ),
-                                              maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ],
@@ -418,7 +408,7 @@ class CourseStoreView extends GetView<CourseStoreController> {
                                   children: [
                                     _buildDetailItem(CupertinoIcons.time, "Durasi", course.duration),
                                     SizedBox(height: 20),
-                                    _buildDetailItem(CupertinoIcons.play_circle, "Video", "${course.modules.fold(0, (sum, module) => sum + module.lessons.length)} video"),
+                                    _buildDetailItem(CupertinoIcons.play_circle, "Video", "10 video"),
                                   ],
                                 ),
                                 Column(
@@ -558,29 +548,6 @@ class CourseStoreView extends GetView<CourseStoreController> {
                     ),
                   ],
                 ),
-                
-                Positioned(
-                  top: 40,
-                  left: 25,
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: AppColors.outline),
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back,
-                        color: AppColors.textPrimary,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -642,6 +609,30 @@ class CourseStoreView extends GetView<CourseStoreController> {
                       )
                     ),
               ],
+            ),
+          ),
+          
+          // Back button (fixed position)
+          Positioned(
+            top: 40,
+            left: 25,
+            child: GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.outline),
+                ),
+                child: const Icon(
+                  Icons.arrow_back,
+                  color: AppColors.textPrimary,
+                  size: 20,
+                ),
+              ),
             ),
           ),
         ],

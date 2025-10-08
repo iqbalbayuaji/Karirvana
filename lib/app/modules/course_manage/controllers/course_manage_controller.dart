@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-// Model for course
-class Course {
+// Model for managed course (user's enrolled courses)
+class ManagedCourse {
   final String id;
   final String title;
   final String provider;
@@ -11,7 +11,7 @@ class Course {
   final DateTime? enrolledDate;
   final DateTime? completedDate;
 
-  Course({
+  ManagedCourse({
     required this.id,
     required this.title,
     required this.provider,
@@ -26,7 +26,7 @@ class Course {
 class CourseManageController extends GetxController {
   // Course data
   final isLoading = false.obs;
-  final courses = <Course>[].obs;
+  final courses = <ManagedCourse>[].obs;
 
   @override
   void onInit() {

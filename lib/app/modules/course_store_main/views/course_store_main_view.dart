@@ -199,7 +199,7 @@ class CourseStoreMainView extends GetView<CourseStoreMainController> {
                 }
                 
                 return ListView.builder(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   itemCount: controller.filteredCourses.length,
                   itemBuilder: (context, index) {
                     final course = controller.filteredCourses[index];

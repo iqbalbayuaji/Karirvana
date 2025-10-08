@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../styles/app_colors.dart';
 import '../controllers/certification_manage_controller.dart';
-import '../../certification_store_main/local_widgets/certification_card.dart';
-import '../../certification_store_main/controllers/certification_store_main_controller.dart' as store;
 
 class CertificationManageView extends GetView<CertificationManageController> {
   const CertificationManageView({super.key});
@@ -54,15 +52,13 @@ class CertificationManageView extends GetView<CertificationManageController> {
               ),
               child: const Icon(
                 Icons.arrow_back,
-                color: AppColors.textPrimary,
-                size: 20,
+                color: AppColors.primary,
+                size: 24,
               ),
             ),
           ),
           const Text(
-            'Certification Manage',
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
+            'Kelola Sertifikat',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -70,9 +66,24 @@ class CertificationManageView extends GetView<CertificationManageController> {
               color: AppColors.textPrimary,
             ),
           ),
-          const SizedBox(
-            width: 10,
-          )
+          GestureDetector(
+            onTap: () {
+              controller.addCertification();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppColors.outline),
+              ),
+              child: const Icon(
+                Icons.add,
+                color: AppColors.primary,
+                size: 24,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -81,41 +92,70 @@ class CertificationManageView extends GetView<CertificationManageController> {
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              width: 120,
-              height: 120,
-              child: const Icon(
-                Icons.workspace_premium,
-                size: 60,
-                color: AppColors.textSecondary,
-              ),
+            const Icon(
+              Icons.workspace_premium,
+              size: 80,
+              color: AppColors.textSecondary,
             ),
             const SizedBox(height: 24),
             const Text(
               'Belum Ada Sertifikat',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Montserrat',
                 color: AppColors.textPrimary,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             const Text(
-              'Anda belum memiliki sertifikat apapun.\nMulai tambahkan sertifikat untuk melacak pencapaian Anda!',
-              textAlign: TextAlign.center,
+              'Mulai perjalanan sertifikasi Anda untuk meningkatkan kredibilitas profesional',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 16,
                 fontFamily: 'Montserrat',
                 color: AppColors.textSecondary,
-                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () {
+                controller.addCertification();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.textOnPrimary,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Jelajahi Sertifikat',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () {
+                controller.refreshCertifications();
+              },
+              child: const Text(
+                'Refresh',
+                style: TextStyle(
+                  fontFamily: 'Montserrat',
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -128,79 +168,89 @@ class CertificationManageView extends GetView<CertificationManageController> {
       itemCount: controller.certifications.length,
       itemBuilder: (context, index) {
         final certification = controller.certifications[index];
-        // Convert to store certification model
-        final storeCertification = _convertToStoreCertification(certification);
-        return _buildCustomCertificationCard(certification, storeCertification);
+        return _buildCertificationCard(certification);
       },
     );
   }
 
-  // Convert manage certification to store certification model
-  store.Certification _convertToStoreCertification(Certification certification) {
-    return store.Certification(
-      id: certification.id,
-      title: certification.title,
-      provider: certification.provider,
-      category: 'IT & Programming', // Default category
-      level: '', // Empty level to hide default text
-      rating: 4.5, // Default rating
-      totalParticipants: 0, // Default participants
-      totalModules: 1, // Default modules
-      duration: '1 bulan', // Default duration
-      originalPrice: 0, // Free for managed certifications
-      discountedPrice: 0,
-      isFree: true,
-      showDiscount: false,
-      discount: '',
-      validityPeriod: '2 tahun', // Default validity
-      description: certification.description,
-      imageUrl: '', // No image for managed certifications
-      totalReviews: 0,
-      benefits: ['Sertifikasi yang disesuaikan dengan kebutuhan'],
-      requirements: ['Tidak ada persyaratan khusus'],
-    );
-  }
-
-  // Build custom certification card with proper status display
-  Widget _buildCustomCertificationCard(Certification certification, store.Certification storeCertification) {
-    return Stack(
-      children: [
-        CertificationCard(
-          certification: storeCertification,
-          onTap: () {
-            // Handle certification tap - no popup
-          },
-        ),
-        // Override status text
-        Positioned(
-          right: 22,
-          bottom: 26,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Text(
-              _getStatusText(certification),
-              style: TextStyle(
-                fontFamily: "Montserrat",
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: _getStatusColor(certification),
+  Widget _buildCertificationCard(ManagedCertification certification) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    certification.title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat',
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: certification.isCompleted ? AppColors.tertiary : AppColors.secondary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    certification.isCompleted ? 'Selesai' : 'Dalam Progress',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              certification.provider,
+              style: const TextStyle(
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
               ),
             ),
-          ),
+            const SizedBox(height: 8),
+            Text(
+              certification.description,
+              style: const TextStyle(
+                fontSize: 14,
+                fontFamily: 'Montserrat',
+                color: AppColors.textSecondary,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (certification.completedDate != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Selesai: ${certification.completedDate!.day}/${certification.completedDate!.month}/${certification.completedDate!.year}',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontFamily: 'Montserrat',
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ],
         ),
-      ],
+      ),
     );
-  }
-
-  // Get status text for display
-  String _getStatusText(Certification certification) {
-    return certification.isCompleted ? 'Completed' : 'Added';
-  }
-
-  // Get status color
-  Color _getStatusColor(Certification certification) {
-    return certification.isCompleted 
-        ? const Color(0xFF10B981) // Green for completed
-        : const Color(0xFFF59E0B); // Orange for added
   }
 }

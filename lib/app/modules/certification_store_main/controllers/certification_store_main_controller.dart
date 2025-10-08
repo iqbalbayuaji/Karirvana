@@ -1,54 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../data/models/certification_model.dart';
+import '../../../services/firebase_course_service.dart';
 
-class Certification {
-  final String id;
-  final String title;
-  final String provider;
-  final String category;
-  final String description;
-  final String imageUrl;
-  final double rating;
-  final int totalParticipants;
-  final int totalModules;
-  final String duration;
-  final int originalPrice;
-  final int discountedPrice;
-  final bool isFree;
-  final String level;
-  final String discount;
-  final bool showDiscount;
-  final String validityPeriod;
-  final int totalReviews;
-  final List<String> benefits;
-  final List<String> requirements;
-
-  Certification({
-    required this.id,
-    required this.title,
-    required this.provider,
-    required this.category,
-    required this.description,
-    required this.imageUrl,
-    required this.rating,
-    required this.totalParticipants,
-    required this.totalModules,
-    required this.duration,
-    required this.originalPrice,
-    required this.discountedPrice,
-    required this.isFree,
-    required this.level,
-    required this.discount,
-    required this.showDiscount,
-    required this.validityPeriod,
-    required this.totalReviews,
-    required this.benefits,
-    required this.requirements,
-  });
-
-  // Getter for backward compatibility
-  int get price => showDiscount && discountedPrice > 0 ? discountedPrice : originalPrice;
-}
+// Note: Certification model is now imported from certification_model.dart
 
 class CertificationStoreMainController extends GetxController {
   final searchController = TextEditingController();
@@ -58,21 +13,26 @@ class CertificationStoreMainController extends GetxController {
   
   final allCertifications = <Certification>[].obs;
   final filteredCertifications = <Certification>[].obs;
-
-  final filters = [
-    'Semua',
-    'IT & Programming',
-    'Digital Marketing',
-    'Data Analytics',
-    'Project Management',
-    'Cyber Security',
-    'Cloud Computing'
-  ];
+  final filters = <String>[].obs;
+  
+  final FirebaseCourseService _courseService = FirebaseCourseService();
 
   @override
   void onInit() {
     super.onInit();
-    loadCertifications();
+    
+    // Set categories immediately to prevent duplication
+    filters.value = [
+      'Semua',
+      'Business',
+      'Data Analytics',
+      'Digital Marketing',
+      'IT & Programming'
+    ];
+    
+    
+    // Initialize Firebase with custom IDs first
+    _initializeFirebaseWithCustomIds();
     
     // Listen to search changes
     searchController.addListener(() {
@@ -91,215 +51,60 @@ class CertificationStoreMainController extends GetxController {
     super.onClose();
   }
 
-  void loadCertifications() {
-    isLoading.value = true;
+  /// Load certifications from Firebase
+  Future<void> loadCertifications() async {
+    // Prevent multiple simultaneous loads
+    if (isLoading.value) return;
     
-    // Sample certification data
-    allCertifications.value = [
-      Certification(
-        id: '1',
-        title: 'Certified Flutter Developer',
-        provider: 'Google Developers',
-        category: 'IT & Programming',
-        description: 'Sertifikasi resmi pengembangan aplikasi mobile dengan Flutter',
-        imageUrl: 'https://via.placeholder.com/300x200/4F46E5/FFFFFF?text=Flutter',
-        rating: 4.9,
-        totalParticipants: 2500,
-        totalModules: 12,
-        duration: '3 bulan',
-        originalPrice: 1500000,
-        discountedPrice: 750000,
-        isFree: false,
-        level: 'Menengah',
-        discount: '50% Off',
-        showDiscount: true,
-        validityPeriod: '2 tahun',
-        totalReviews: 1850,
-        benefits: [
-          'Sertifikat resmi dari Google Developers',
-          'Pengakuan industri internasional',
-          'Akses ke komunitas Flutter developer',
-          'Portfolio project yang dapat dipamerkan',
-          'Peningkatan peluang karir sebagai mobile developer'
-        ],
-        requirements: [
-          'Pengalaman dasar pemrograman Dart',
-          'Pemahaman konsep OOP',
-          'Akses komputer dengan spesifikasi memadai',
-          'Koneksi internet stabil untuk ujian online'
-        ],
-      ),
-      Certification(
-        id: '2',
-        title: 'Digital Marketing Professional',
-        provider: 'Meta Blueprint',
-        category: 'Digital Marketing',
-        description: 'Sertifikasi profesional pemasaran digital dari Meta',
-        imageUrl: 'https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=Marketing',
-        rating: 4.8,
-        totalParticipants: 3200,
-        totalModules: 8,
-        duration: '2 bulan',
-        originalPrice: 800000,
-        discountedPrice: 400000,
-        isFree: false,
-        level: 'Pemula',
-        discount: '50% Off',
-        showDiscount: true,
-        validityPeriod: '1 tahun',
-        totalReviews: 2450,
-        benefits: [
-          'Sertifikat resmi Meta Blueprint',
-          'Kredibilitas dalam digital marketing',
-          'Akses ke tools dan resource eksklusif',
-          'Networking dengan profesional marketing',
-          'Update terbaru tentang platform Meta'
-        ],
-        requirements: [
-          'Pengalaman dasar marketing',
-          'Pemahaman media sosial',
-          'Akses ke platform Meta (Facebook/Instagram)',
-          'Kemampuan analisis data dasar'
-        ],
-      ),
-      Certification(
-        id: '3',
-        title: 'Google Analytics Certified',
-        provider: 'Google Analytics',
-        category: 'Data Analytics',
-        description: 'Sertifikasi analisis data dengan Google Analytics',
-        imageUrl: 'https://via.placeholder.com/300x200/10B981/FFFFFF?text=Analytics',
-        rating: 4.7,
-        totalParticipants: 5600,
-        totalModules: 6,
-        duration: '1 bulan',
-        originalPrice: 0,
-        discountedPrice: 0,
-        isFree: true,
-        level: 'Pemula',
-        discount: '',
-        showDiscount: false,
-        validityPeriod: '1 tahun',
-        totalReviews: 4200,
-        benefits: [
-          'Sertifikat gratis dari Google',
-          'Pemahaman mendalam Google Analytics',
-          'Skill analisis data website',
-          'Peningkatan value sebagai digital marketer',
-          'Akses ke Google Analytics Academy'
-        ],
-        requirements: [
-          'Akun Google',
-          'Pemahaman dasar website',
-          'Kemampuan berpikir analitis',
-          'Tidak ada biaya pendaftaran'
-        ],
-      ),
-      Certification(
-        id: '4',
-        title: 'PMP Certification',
-        provider: 'Project Management Institute',
-        category: 'Project Management',
-        description: 'Sertifikasi manajemen proyek profesional internasional',
-        imageUrl: 'https://via.placeholder.com/300x200/F59E0B/FFFFFF?text=PMP',
-        rating: 4.9,
-        totalParticipants: 1800,
-        totalModules: 15,
-        duration: '4 bulan',
-        originalPrice: 2500000,
-        discountedPrice: 0,
-        isFree: false,
-        level: 'Lanjutan',
-        discount: '',
-        showDiscount: false,
-        validityPeriod: '3 tahun',
-        totalReviews: 1320,
-        benefits: [
-          'Sertifikat PMP yang diakui global',
-          'Peningkatan salary hingga 25%',
-          'Kredibilitas sebagai project manager',
-          'Akses ke PMI community',
-          'Continuing education opportunities'
-        ],
-        requirements: [
-          'Pengalaman project management 3+ tahun',
-          'Pendidikan minimal S1',
-          '35 jam training project management',
-          'Biaya ujian dan maintenance'
-        ],
-      ),
-      Certification(
-        id: '5',
-        title: 'AWS Cloud Practitioner',
-        provider: 'Amazon Web Services',
-        category: 'Cloud Computing',
-        description: 'Sertifikasi dasar layanan cloud computing AWS',
-        imageUrl: 'https://via.placeholder.com/300x200/EF4444/FFFFFF?text=AWS',
-        rating: 4.6,
-        totalParticipants: 4200,
-        totalModules: 10,
-        duration: '2 bulan',
-        originalPrice: 1200000,
-        discountedPrice: 840000,
-        isFree: false,
-        level: 'Pemula',
-        discount: '30% Off',
-        showDiscount: true,
-        validityPeriod: '3 tahun',
-        totalReviews: 3150,
-        benefits: [
-          'Sertifikat AWS resmi',
-          'Pemahaman cloud computing fundamentals',
-          'Peluang karir di cloud technology',
-          'Akses ke AWS training resources',
-          'Foundation untuk sertifikasi AWS lanjutan'
-        ],
-        requirements: [
-          'Pemahaman dasar IT',
-          'Pengalaman dengan teknologi cloud (opsional)',
-          'Kemampuan bahasa Inggris',
-          'Akses komputer untuk ujian online'
-        ],
-      ),
-      Certification(
-        id: '6',
-        title: 'Certified Ethical Hacker',
-        provider: 'EC-Council',
-        category: 'Cyber Security',
-        description: 'Sertifikasi keamanan siber dan ethical hacking',
-        imageUrl: 'https://via.placeholder.com/300x200/A855F7/FFFFFF?text=Security',
-        rating: 4.8,
-        totalParticipants: 1500,
-        totalModules: 18,
-        duration: '6 bulan',
-        originalPrice: 3500000,
-        discountedPrice: 2800000,
-        isFree: false,
-        level: 'Lanjutan',
-        discount: '20% Off',
-        showDiscount: true,
-        validityPeriod: '3 tahun',
-        totalReviews: 1180,
-        benefits: [
-          'Sertifikat CEH yang diakui industri',
-          'Expertise dalam ethical hacking',
-          'Peluang karir cybersecurity specialist',
-          'Akses ke EC-Council community',
-          'Continuing education credits'
-        ],
-        requirements: [
-          'Pengalaman IT/Security minimal 2 tahun',
-          'Pemahaman networking dan sistem operasi',
-          'Background teknis yang kuat',
-          'Komitmen untuk etika hacking'
-        ],
-      ),
-    ];
-    
-    filteredCertifications.value = allCertifications;
-    isLoading.value = false;
+    try {
+      isLoading.value = true;
+      
+      final certifications = await _courseService.getAllCertifications();
+      
+      allCertifications.value = certifications;
+      filteredCertifications.value = certifications;
+      
+      print('✅ Loaded ${certifications.length} certifications from Firebase');
+      
+    } catch (e) {
+      print('❌ Error loading certifications: $e');
+      
+      // Show error message
+      Get.snackbar(
+        'Error',
+        'Gagal memuat data sertifikasi: $e',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: const Color(0xFFEF4444),
+        colorText: const Color(0xFFFFFFFF),
+      );
+      
+      // Keep empty list on error
+      allCertifications.value = [];
+      filteredCertifications.value = [];
+      
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  /// Load categories from Firebase
+  Future<void> loadCategories() async {
+    try {
+      final categories = await _courseService.getCertificationCategories();
+      
+      if (categories.isNotEmpty) {
+        filters.value = ['Semua', ...categories];
+        print('✅ Loaded ${categories.length} certification categories from Firebase');
+      }
+      
+    } catch (e) {
+      print('❌ Error loading categories: $e');
+      // Keep existing categories to prevent duplication
+    }
   }
 
+
+  /// Filter certifications based on category and search query
   void filterCertifications() {
     List<Certification> filtered = allCertifications;
     
@@ -320,6 +125,47 @@ class CertificationStoreMainController extends GetxController {
     
     filteredCertifications.value = filtered;
   }
+  
+  /// Search certifications using Firebase service
+  Future<void> searchCertifications(String query) async {
+    try {
+      isLoading.value = true;
+      
+      final certifications = await _courseService.searchCertifications(query);
+      filteredCertifications.value = certifications;
+      
+    } catch (e) {
+      print('❌ Error searching certifications: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  /// Get certifications by category from Firebase
+  Future<void> getCertificationsByCategory(String category) async {
+    if (category == 'Semua') {
+      await loadCertifications();
+      return;
+    }
+    
+    try {
+      isLoading.value = true;
+      
+      final certifications = await _courseService.getCertificationsByCategory(category);
+      filteredCertifications.value = certifications;
+      
+    } catch (e) {
+      print('❌ Error getting certifications by category: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  /// Refresh certifications data
+  Future<void> refreshCertifications() async {
+    await loadCertifications();
+    await loadCategories();
+  }
 
   void setFilter(String filter) {
     selectedFilter.value = filter;
@@ -329,4 +175,235 @@ class CertificationStoreMainController extends GetxController {
     searchController.clear();
     searchQuery.value = '';
   }
+
+  /// Initialize Firebase with custom IDs (cert_1, cert_2, etc.)
+  Future<void> _initializeFirebaseWithCustomIds() async {
+    try {
+      // Check if Firebase already has certification data
+      final existingCertifications = await _courseService.getAllCertifications();
+      
+      if (existingCertifications.isEmpty) {
+        print('🔥 Firebase empty, initializing with custom IDs...');
+        
+        // Add each sample certification to Firebase with custom IDs
+        final sampleCertifications = _getSampleCertifications();
+        for (var cert in sampleCertifications) {
+          // Use addCertificationWithId to set custom document ID
+          await _courseService.addCertificationWithId(cert.id, cert);
+        }
+        
+        print('✅ Firebase initialized with ${sampleCertifications.length} certifications using custom IDs');
+      } else {
+        print('✅ Firebase already has ${existingCertifications.length} certifications');
+      }
+      
+      // Load certifications after initialization
+      await loadCertifications();
+      
+      // Skip categories loading to prevent duplication
+      // await loadCategories();
+      
+    } catch (e) {
+      print('❌ Error initializing Firebase: $e');
+      
+      // Fallback to sample data
+      final sampleData = _getSampleCertifications();
+      allCertifications.value = sampleData;
+      filteredCertifications.value = sampleData;
+    }
+  }
+
+  /// Get sample certifications with custom IDs
+  List<Certification> _getSampleCertifications() {
+    final now = DateTime.now();
+    return [
+      Certification(
+        id: 'cert_1',
+        title: 'Flutter Developer Certification',
+        provider: 'Google',
+        category: 'IT & Programming',
+        description: 'Sertifikasi resmi untuk pengembang Flutter dari Google. Memvalidasi kemampuan dalam membangun aplikasi mobile cross-platform.',
+        price: 1250000,
+        originalPrice: 2500000,
+        discountPercentage: 50,
+        rating: 4.8,
+        totalReviews: 15420,
+        duration: '3 bulan',
+        level: 'Intermediate',
+        imageUrl: 'assets/course/course-frontend-1.jpg',
+        isFree: false,
+        validityPeriod: '2 tahun',
+        benefits: [
+          'Sertifikat resmi dari Google',
+          'Akses ke komunitas developer Flutter',
+          'Materi pembelajaran terkini',
+          'Project portfolio guidance',
+          'Job placement assistance'
+        ],
+        requirements: [
+          'Pengalaman dasar programming',
+          'Familiar dengan Dart language',
+          'Memiliki laptop/PC untuk development'
+        ],
+        createdAt: now,
+        updatedAt: now,
+      ),
+      Certification(
+        id: 'cert_2',
+        title: 'Digital Marketing Professional',
+        provider: 'Meta',
+        category: 'Digital Marketing',
+        description: 'Sertifikasi digital marketing komprehensif yang mencakup social media, content marketing, dan advertising strategy.',
+        price: 1800000,
+        originalPrice: 1800000,
+        discountPercentage: 0,
+        rating: 4.7,
+        totalReviews: 28350,
+        duration: '2 bulan',
+        level: 'Beginner',
+        imageUrl: 'assets/course/course-marketing-1.png',
+        isFree: false,
+        validityPeriod: '1 tahun',
+        benefits: [
+          'Sertifikat dari Meta (Facebook)',
+          'Akses ke Meta Business tools',
+          'Campaign management training',
+          'Analytics dan reporting skills',
+          'Industry networking opportunities'
+        ],
+        requirements: [
+          'Tidak ada pengalaman khusus diperlukan',
+          'Akses internet stabil',
+          'Motivasi untuk belajar digital marketing'
+        ],
+        createdAt: now,
+        updatedAt: now,
+      ),
+      Certification(
+        id: 'cert_3',
+        title: 'Google Analytics Certified',
+        provider: 'Google',
+        category: 'Data Analytics',
+        description: 'Sertifikasi resmi Google Analytics untuk menguasai web analytics, data interpretation, dan digital marketing insights.',
+        price: 0,
+        originalPrice: 0,
+        discountPercentage: 0,
+        rating: 4.9,
+        totalReviews: 45670,
+        duration: '1 bulan',
+        level: 'Beginner',
+        imageUrl: 'assets/course/course-python.jpg',
+        isFree: true,
+        validityPeriod: '1 tahun',
+        benefits: [
+          'Sertifikat gratis dari Google',
+          'Skill web analytics profesional',
+          'Understanding customer behavior',
+          'Data-driven decision making',
+          'Career advancement opportunities'
+        ],
+        requirements: [
+          'Basic computer skills',
+          'Interest in data analysis',
+          'Google account'
+        ],
+        createdAt: now,
+        updatedAt: now,
+      ),
+      Certification(
+        id: 'cert_4',
+        title: 'Project Management Professional (PMP)',
+        provider: 'PMI',
+        category: 'Business',
+        description: 'Sertifikasi manajemen proyek paling bergengsi di dunia. Diakui secara global untuk project manager profesional.',
+        price: 6800000,
+        originalPrice: 8500000,
+        discountPercentage: 20,
+        rating: 4.6,
+        totalReviews: 12890,
+        duration: '6 bulan',
+        level: 'Advanced',
+        imageUrl: 'assets/course/course-akuntansi-1.jpg',
+        isFree: false,
+        validityPeriod: '3 tahun',
+        benefits: [
+          'Sertifikasi global PMI',
+          'Peningkatan salary potential',
+          'Professional credibility',
+          'Networking dengan PM professionals',
+          'Continuing education support'
+        ],
+        requirements: [
+          'Bachelor degree atau equivalent',
+          '3+ tahun pengalaman project management',
+          '35 jam formal project management education'
+        ],
+        createdAt: now,
+        updatedAt: now,
+      ),
+      Certification(
+        id: 'cert_5',
+        title: 'AWS Cloud Practitioner',
+        provider: 'Amazon Web Services',
+        category: 'IT & Programming',
+        description: 'Sertifikasi entry-level AWS untuk memahami cloud computing fundamentals dan AWS core services.',
+        price: 1200000,
+        originalPrice: 1500000,
+        discountPercentage: 20,
+        rating: 4.5,
+        totalReviews: 32150,
+        duration: '2 bulan',
+        level: 'Beginner',
+        imageUrl: 'assets/course/course-frontend-1.jpg',
+        isFree: false,
+        validityPeriod: '3 tahun',
+        benefits: [
+          'AWS official certification',
+          'Cloud computing expertise',
+          'Industry-recognized credential',
+          'Career opportunities in cloud',
+          'Access to AWS community'
+        ],
+        requirements: [
+          'Basic IT knowledge',
+          'Interest in cloud technology',
+          'No prior AWS experience needed'
+        ],
+        createdAt: now,
+        updatedAt: now,
+      ),
+      Certification(
+        id: 'cert_6',
+        title: 'Certified Ethical Hacker (CEH)',
+        provider: 'EC-Council',
+        category: 'Cyber Security',
+        description: 'Sertifikasi cybersecurity untuk ethical hacking dan penetration testing. Diakui industri untuk security professionals.',
+        price: 9600000,
+        originalPrice: 12000000,
+        discountPercentage: 20,
+        rating: 4.7,
+        totalReviews: 8750,
+        duration: '4 bulan',
+        level: 'Advanced',
+        imageUrl: 'assets/course/course-programming-1.jpg',
+        isFree: false,
+        validityPeriod: '3 tahun',
+        benefits: [
+          'EC-Council official certification',
+          'Ethical hacking expertise',
+          'Penetration testing skills',
+          'High-demand security career',
+          'Professional recognition'
+        ],
+        requirements: [
+          'Networking fundamentals',
+          'Basic security knowledge',
+          '2+ tahun IT experience recommended'
+        ],
+        createdAt: now,
+        updatedAt: now,
+      ),
+    ];
+  }
+
 }

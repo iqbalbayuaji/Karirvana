@@ -58,6 +58,8 @@ import '../modules/roadmap_edit/bindings/roadmap_edit_binding.dart';
 import '../modules/roadmap_edit/views/roadmap_edit_view.dart';
 import '../modules/roadmap_manage/bindings/roadmap_manage_binding.dart';
 import '../modules/roadmap_manage/views/roadmap_manage_view.dart';
+import '../modules/admin_panel/bindings/admin_panel_binding.dart';
+import '../modules/admin_panel/views/admin_panel_view.dart';
 
 part 'app_routes.dart';
 
@@ -211,6 +213,11 @@ class AppPages {
       name: _Paths.NOTIFICATION,
       page: () => const NotificationView(),
       binding: NotificationBinding(),
+    ),
+    GetPage(
+      name: _Paths.ADMIN_PANEL,
+      page: () => const AdminPanelView(),
+      binding: AdminPanelBinding(),
     ),
   ];
 }

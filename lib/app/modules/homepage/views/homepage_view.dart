@@ -403,7 +403,7 @@ class HomepageView extends GetView<HomepageController> {
                                             child: Column(
                                               children: [
                                                 Text(
-                                                  "Carousel",
+                                                  "Ulasan",
                                                   style: TextStyle(
                                                     fontFamily: "Montserrat",
                                                     fontSize: 17,

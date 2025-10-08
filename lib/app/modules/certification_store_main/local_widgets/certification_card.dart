@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../styles/app_colors.dart';
-import '../controllers/certification_store_main_controller.dart';
+import '../../../data/models/certification_model.dart';
 
 class CertificationCard extends StatelessWidget {
   final Certification certification;

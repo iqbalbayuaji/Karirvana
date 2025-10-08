@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../data/models/certification_model.dart';
 import '../../certification_store_main/controllers/certification_store_main_controller.dart';
 
 class CertificationStoreController extends GetxController {
@@ -11,6 +12,11 @@ class CertificationStoreController extends GetxController {
   void onInit() {
     super.onInit();
     _initializeController();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
     _loadCertificationData();
   }
 
@@ -22,7 +28,7 @@ class CertificationStoreController extends GetxController {
     }
   }
 
-  void _loadCertificationData() {
+  Future<void> _loadCertificationData() async {
     isLoading.value = true;
     
     // Get certification ID from arguments
@@ -35,43 +41,36 @@ class CertificationStoreController extends GetxController {
       certificationId = args;
     }
     
-    // Find certification by ID or use first one
-    if (certificationId != null) {
-      selectedCertification.value = _mainController.allCertifications
-          .firstWhereOrNull((cert) => cert.id == certificationId);
+    // Ensure certifications are loaded first
+    if (_mainController.allCertifications.isEmpty) {
+      await _mainController.loadCertifications();
+      // Add small delay to ensure data is fully loaded
+      await Future.delayed(Duration(milliseconds: 100));
     }
     
-    // Fallback to first certification if not found
-    if (selectedCertification.value == null && _mainController.allCertifications.isNotEmpty) {
+    // Find certification by ID or use first one (matching course store pattern)
+    if (certificationId != null && _mainController.allCertifications.isNotEmpty) {
+      // Try to find exact match
+      var foundCert = _mainController.allCertifications.firstWhereOrNull(
+        (cert) => cert.id == certificationId,
+      );
+      
+      if (foundCert != null) {
+        selectedCertification.value = foundCert;
+      } else {
+        selectedCertification.value = _mainController.allCertifications.first;
+      }
+    } else if (_mainController.allCertifications.isNotEmpty) {
       selectedCertification.value = _mainController.allCertifications.first;
     }
-    
     isLoading.value = false;
   }
 
-  String getCertificationImage(String category, String title) {
-    // Map certification categories to images
-    switch (category.toLowerCase()) {
-      case 'it & programming':
-      case 'programming':
-        return 'assets/course/course-programming-1.jpg';
-      case 'digital marketing':
-      case 'marketing':
-        return 'assets/course/course-marketing-1.png';
-      case 'data analytics':
-      case 'data science':
-        return 'assets/course/course-python.jpg';
-      case 'design':
-      case 'ui/ux':
-        return 'assets/course/course-uiux-1.jpg';
-      case 'business':
-        return 'assets/course/course-akuntansi-1.jpg';
-      case 'finance':
-        return 'assets/course/course-akuntansi-2.jpg';
-      default:
-        return 'assets/course/course-programming-1.jpg';
-    }
+  // Method to reload certification data (can be called when needed)
+  void reloadCertification() {
+    _loadCertificationData();
   }
+
 
   String formatPrice(int price) {
     if (price == 0) return "Gratis";

@@ -22,6 +22,7 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
         }
 
         final certification = controller.selectedCertification.value;
+        
         if (certification == null) {
           return Center(
             child: Text(
@@ -48,9 +49,7 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                         height: 300,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(
-                              controller.getCertificationImage(certification.category, certification.title)
-                            ),
+                            image: AssetImage(certification.imageUrl),
                             fit: BoxFit.cover,
                           ),
                           borderRadius: BorderRadius.circular(0),
@@ -400,9 +399,16 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                                     color: AppColors.surface,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: AppColors.outline.withOpacity(0.2),
+                                      color: AppColors.surfaceVariant,
                                       width: 1,
                                     ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 8,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
                                   child: Padding(
                                     padding: EdgeInsets.all(16),
@@ -410,31 +416,64 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              review['name'],
-                                              style: TextStyle(
-                                                color: AppColors.textPrimary,
-                                                fontFamily: "Montserrat",
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
+                                            CircleAvatar(
+                                              radius: 20,
+                                              backgroundColor: AppColors.primary.withOpacity(0.1),
+                                              child: Text(
+                                                review['name'][0],
+                                                style: TextStyle(
+                                                  color: AppColors.primary,
+                                                  fontFamily: "Montserrat",
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
-                                            Row(
-                                              children: List.generate(5, (starIndex) {
-                                                return Icon(
-                                                  starIndex < review['rating'].floor()
-                                                      ? CupertinoIcons.star_fill
-                                                      : CupertinoIcons.star,
-                                                  color: Colors.amber,
-                                                  size: 14,
-                                                );
-                                              }),
+                                            SizedBox(width: 12),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    review['name'],
+                                                    style: TextStyle(
+                                                      color: AppColors.textPrimary,
+                                                      fontFamily: "Montserrat",
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      ...List.generate(5, (starIndex) {
+                                                        return Icon(
+                                                          starIndex < review['rating'].floor()
+                                                              ? CupertinoIcons.star_fill
+                                                              : CupertinoIcons.star,
+                                                          color: starIndex < review['rating'].floor()
+                                                              ? Colors.amber
+                                                              : AppColors.textSecondary,
+                                                          size: 14,
+                                                        );
+                                                      }),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        review['date'],
+                                                        style: TextStyle(
+                                                          color: AppColors.textSecondary,
+                                                          fontFamily: "Montserrat",
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
-                                        SizedBox(height: 8),
+                                        SizedBox(height: 12),
                                         Text(
                                           review['comment'],
                                           style: TextStyle(
@@ -443,15 +482,8 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                                             fontSize: 13,
                                             height: 1.4,
                                           ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          review['date'],
-                                          style: TextStyle(
-                                            color: AppColors.textSecondary.withOpacity(0.7),
-                                            fontFamily: "Montserrat",
-                                            fontSize: 12,
-                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
                                     ),

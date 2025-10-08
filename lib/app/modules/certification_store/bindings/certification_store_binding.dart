@@ -5,8 +5,10 @@ import '../controllers/certification_store_controller.dart';
 class CertificationStoreBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<CertificationStoreController>(
-      () => CertificationStoreController(),
+    // Use Get.put instead of Get.lazyPut to ensure fresh controller each time
+    Get.put<CertificationStoreController>(
+      CertificationStoreController(),
+      permanent: false, // Allow controller to be disposed and recreated
     );
   }
 }

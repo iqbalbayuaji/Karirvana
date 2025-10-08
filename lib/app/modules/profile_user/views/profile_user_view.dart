@@ -117,7 +117,7 @@ class ProfileUserView extends GetView<ProfileUserController> {
                                       mainAxisSpacing: 15,
                                       childAspectRatio: 1.4,
                                     ),
-                                    itemCount: 5,
+                                    itemCount: 6,
                                     itemBuilder: (context, index) {
                                       return buildGridItem(index);
                                     },

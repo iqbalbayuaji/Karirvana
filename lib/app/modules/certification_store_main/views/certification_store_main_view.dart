@@ -199,7 +199,7 @@ class CertificationStoreMainView extends GetView<CertificationStoreMainControlle
                 }
                 
                 return ListView.builder(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   itemCount: controller.filteredCertifications.length,
                   itemBuilder: (context, index) {
                     final certification = controller.filteredCertifications[index];
