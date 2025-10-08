@@ -552,7 +552,7 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                               ),
                               child: Center(
                                 child: Text(
-                                  certification.isFree? "Daftar Gratis" : "Daftar Sertifikasi",
+                                  "Ikuti Sertifikasi",
                                   style: TextStyle(
                                     color: AppColors.textOnPrimary,
                                     fontFamily: "Montserrat",

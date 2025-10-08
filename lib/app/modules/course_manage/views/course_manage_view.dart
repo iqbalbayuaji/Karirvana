@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../styles/app_colors.dart';
-import '../../../data/models/course_model.dart';
 import '../controllers/course_manage_controller.dart';
-import '../../course_store_main/local_widgets/course_card.dart';
+import '../local_widgets/course_card.dart';
 
 class CourseManageView extends GetView<CourseManageController> {
   const CourseManageView({super.key});
@@ -13,20 +12,19 @@ class CourseManageView extends GetView<CourseManageController> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
-          );
-        }
-
+        print('🔍 CourseManageView rebuild - courses count: ${controller.courses.length}');
+        print('📋 Courses: ${controller.courses.map((c) => c.title).toList()}');
+        
         return SafeArea(
           child: Column(
             children: [
               _buildHeader(),
               Expanded(
-                child: controller.hasCourses
-                    ? _buildCoursesList()
-                    : _buildEmptyState(),
+                child: controller.isLoading.value
+                    ? _buildLoadingState()
+                    : controller.hasCourses
+                        ? _buildCoursesList()
+                        : _buildEmptyState(),
               ),
             ],
           ),
@@ -60,7 +58,7 @@ class CourseManageView extends GetView<CourseManageController> {
             ),
           ),
           const Text(
-            'Course Manage',
+            'Kelola Course',
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
             style: TextStyle(
@@ -86,8 +84,7 @@ class CourseManageView extends GetView<CourseManageController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 120,
-              height: 120,
+              
               child: const Icon(
                 Icons.school,
                 size: 60,
@@ -122,92 +119,48 @@ class CourseManageView extends GetView<CourseManageController> {
     );
   }
 
+  Widget _buildLoadingState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Animated loading circle similar to Interview Practice
+          const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primary,
+              strokeWidth: 3,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Memuat Course...',
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCoursesList() {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: controller.courses.length,
       itemBuilder: (context, index) {
         final course = controller.courses[index];
-        // Convert to store course model
-        final storeCourse = _convertToStoreCourse(course);
-        return _buildCustomCourseCard(course, storeCourse);
+        return ManagedCourseCard(
+          course: course,
+          onTap: () {
+            // No action - just display course info
+            print('Tapped course: ${course.title}');
+          },
+        );
       },
     );
   }
 
-  // Convert manage course to store course model
-  Course _convertToStoreCourse(ManagedCourse course) {
-    return Course(
-      id: course.id,
-      title: course.title,
-      instructor: course.provider, // Use provider as instructor
-      description: course.description,
-      price: 0, // Free for managed courses
-      originalPrice: 0,
-      discountPercentage: 0,
-      rating: 4.5, // Default rating
-      totalReviews: 0,
-      duration: '4 minggu', // Default duration
-      level: 'Pemula', // Default level
-      category: 'Programming', // Default category
-      imageUrl: '', // No image for managed courses
-      isFree: true,
-      isPopular: false,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-  }
-
-  // Build custom course card with proper status display
-  Widget _buildCustomCourseCard(ManagedCourse course, Course storeCourse) {
-    return Stack(
-      children: [
-        CourseCard(
-          course: storeCourse,
-          onTap: () {
-            // Handle course tap - no popup
-          },
-        ),
-        // Override status text
-        Positioned(
-          right: 22,
-          bottom: 26,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Text(
-              _getStatusText(course),
-              style: TextStyle(
-                fontFamily: "Montserrat",
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: _getStatusColor(course),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Get status text for display
-  String _getStatusText(ManagedCourse course) {
-    if (course.isCompleted) {
-      return 'Completed';
-    } else if (course.progress > 0) {
-      return 'On Progress';
-    } else {
-      return 'Added';
-    }
-  }
-
-  // Get status color
-  Color _getStatusColor(ManagedCourse course) {
-    if (course.isCompleted) {
-      return const Color(0xFF10B981); // Green for completed
-    } else if (course.progress > 0) {
-      return const Color(0xFFEF4444); // Red for on progress
-    } else {
-      return const Color(0xFFF59E0B); // Orange for added
-    }
-  }
 }

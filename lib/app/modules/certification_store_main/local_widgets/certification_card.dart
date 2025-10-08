@@ -62,8 +62,10 @@ class CertificationCard extends StatelessWidget {
                 ),
               ],
             ),
-            child: Row(
-              children: [
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                 Stack(
                   alignment: Alignment.topRight,
                   children: [
@@ -108,33 +110,39 @@ class CertificationCard extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      Text(
-                        certification.title,
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.textPrimary,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 2),
-                      Text(
-                        certification.provider,
-                        style: TextStyle(
-                          fontFamily: "Montserrat",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                      // Top section - Title and Provider
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            certification.title,
+                            style: TextStyle(
+                              fontFamily: "Montserrat",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.textPrimary,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            certification.provider,
+                            style: TextStyle(
+                              fontFamily: "Montserrat",
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
                           color: AppColors.textSecondary,
-                        ),
-                      ),
-                      
-                      SizedBox(height: 4),
-                      
-                      // Validity Period
-                      Container(
+                            ),
+                          ),
+                          
+                          SizedBox(height: 4),
+                          
+                          // Validity Period
+                          Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 6,
                           vertical: 2,
@@ -153,8 +161,10 @@ class CertificationCard extends StatelessWidget {
                           ),
                         ),
                       ),
+                        ],
+                      ),
           
-                      SizedBox(height: 6),
+                      // Bottom section - Price and Level
           
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -225,6 +235,7 @@ class CertificationCard extends StatelessWidget {
                   ),
                 ),
               ],
+              ),
             ),
           ),
           if (certification.showDiscount)

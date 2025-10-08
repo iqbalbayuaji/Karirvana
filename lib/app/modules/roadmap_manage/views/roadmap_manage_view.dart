@@ -12,19 +12,16 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
-          );
-        }
-
-        return SafeArea(
-          child: Column(
-            children: [
-              _buildHeader(),
-              Expanded(
-                child: controller.roadmapSteps.isEmpty
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: Obx(() {
+                if (controller.isLoading.value) {
+                  return _buildLoadingState();
+                }
+                return controller.roadmapSteps.isEmpty
                     ? _buildEmptyState()
                     : SingleChildScrollView(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -37,12 +34,12 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                             const SizedBox(height: 24),
                           ],
                         ),
-                      ),
+                      );
+              }),
               ),
             ],
           ),
-        );
-      }),
+        ),
     );
   }
 
@@ -806,6 +803,33 @@ class RoadmapManageView extends GetView<RoadmapManageController> {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Simple loading indicator consistent with other pages
+          const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primary,
+              strokeWidth: 3,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Memuat Roadmap Karir...',
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textSecondary,
+            ),
           ),
         ],
       ),

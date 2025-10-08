@@ -11,20 +11,16 @@ class CertificationManageView extends GetView<CertificationManageController> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Obx(() {
-        if (controller.isLoading.value) {
-          return const Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
-          );
-        }
-
         return SafeArea(
           child: Column(
             children: [
               _buildHeader(),
               Expanded(
-                child: controller.hasCertifications
-                    ? _buildCertificationsList()
-                    : _buildEmptyState(),
+                child: controller.isLoading.value
+                    ? _buildLoadingState()
+                    : controller.hasCertifications
+                        ? _buildCertificationsList()
+                        : _buildEmptyState(),
               ),
             ],
           ),
@@ -66,31 +62,16 @@ class CertificationManageView extends GetView<CertificationManageController> {
               color: AppColors.textPrimary,
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              controller.addCertification();
-            },
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.outline),
-              ),
-              child: const Icon(
-                Icons.add,
-                color: AppColors.primary,
-                size: 24,
-              ),
-            ),
-          ),
+          const SizedBox(
+            width: 24,
+          )
         ],
       ),
     );
   }
 
   Widget _buildEmptyState() {
-    return Center(
+    return const Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
@@ -98,14 +79,14 @@ class CertificationManageView extends GetView<CertificationManageController> {
           children: [
             const Icon(
               Icons.workspace_premium,
-              size: 80,
+              size: 60,
               color: AppColors.textSecondary,
             ),
             const SizedBox(height: 24),
             const Text(
               'Belum Ada Sertifikat',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Montserrat',
                 color: AppColors.textPrimary,
@@ -116,48 +97,42 @@ class CertificationManageView extends GetView<CertificationManageController> {
             const Text(
               'Mulai perjalanan sertifikasi Anda untuk meningkatkan kredibilitas profesional',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontFamily: 'Montserrat',
                 color: AppColors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () {
-                controller.addCertification();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.textOnPrimary,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Jelajahi Sertifikat',
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () {
-                controller.refreshCertifications();
-              },
-              child: const Text(
-                'Refresh',
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Animated loading circle similar to Interview Practice
+          const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primary,
+              strokeWidth: 3,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'Memuat Sertifikat...',
+            style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -179,6 +154,10 @@ class CertificationManageView extends GetView<CertificationManageController> {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: AppColors.outline,
+          width: 1,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),

@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/models/course_model.dart';
+import '../../../routes/app_pages.dart';
 import '../../course_store_main/controllers/course_store_main_controller.dart';
+import '../../course_manage/controllers/course_manage_controller.dart';
 
 class CourseStoreController extends GetxController {
   final Rx<Course?> selectedCourse = Rx<Course?>(null);
@@ -97,5 +100,39 @@ class CourseStoreController extends GetxController {
       return '${(number / 1000).toStringAsFixed(1)}k';
     }
     return number.toString();
+  }
+
+  // Enroll in current course
+  Future<void> enrollCourse() async {
+    if (selectedCourse.value == null) return;
+    
+    try {
+      // Get or create CourseManageController (permanent)
+      CourseManageController courseManageController;
+      try {
+        courseManageController = Get.find<CourseManageController>();
+      } catch (e) {
+        courseManageController = Get.put(CourseManageController(), permanent: true);
+      }
+      
+      // Enroll in the course
+      bool success = await courseManageController.enrollCourse(selectedCourse.value!);
+      
+      Get.toNamed(Routes.COURSE_MANAGE);
+      if (success) {
+        // Optionally navigate back or show additional UI
+        // Get.back(); // Uncomment if you want to go back after enrollment
+      }
+      
+    } catch (e) {
+      print('Error enrolling course: $e');
+      Get.snackbar(
+        'Error', 
+        'Terjadi kesalahan saat mendaftar course.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: const Color(0xFFEF4444),
+        colorText: const Color(0xFFFFFFFF),
+      );
+    }
   }
 }

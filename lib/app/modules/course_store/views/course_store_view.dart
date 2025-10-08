@@ -566,20 +566,25 @@ class CourseStoreView extends GetView<CourseStoreController> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              height: 55,
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Beli Sekarang",
-                                  style: TextStyle(
-                                    color: AppColors.textOnPrimary,
-                                    fontFamily: "Montserrat",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                            child: GestureDetector(
+                              onTap: () {
+                                controller.enrollCourse();
+                              },
+                              child: Container(
+                                height: 55,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Ikuti Course",
+                                    style: TextStyle(
+                                      color: AppColors.textOnPrimary,
+                                      fontFamily: "Montserrat",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
