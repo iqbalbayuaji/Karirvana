@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../styles/app_colors.dart';
 import '../controllers/certification_manage_controller.dart';
+import '../local_widgets/managed_certification_card.dart';
 
 class CertificationManageView extends GetView<CertificationManageController> {
   const CertificationManageView({super.key});
   
   @override
   Widget build(BuildContext context) {
+    print('🎯 CertificationManageView build() - Controller hashCode: ${controller.hashCode}');
+    print('📋 Certifications count in view: ${controller.certifications.length}');
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Obx(() {
@@ -16,11 +20,20 @@ class CertificationManageView extends GetView<CertificationManageController> {
             children: [
               _buildHeader(),
               Expanded(
-                child: controller.isLoading.value
-                    ? _buildLoadingState()
-                    : controller.hasCertifications
-                        ? _buildCertificationsList()
-                        : _buildEmptyState(),
+                child: () {
+                  print('🔍 View Decision: isLoading=${controller.isLoading.value}, hasCertifications=${controller.hasCertifications}, count=${controller.certifications.length}');
+                  
+                  if (controller.isLoading.value) {
+                    print('➡️ Showing loading state');
+                    return _buildLoadingState();
+                  } else if (controller.hasCertifications) {
+                    print('➡️ Showing certifications list');
+                    return _buildCertificationsList();
+                  } else {
+                    print('➡️ Showing empty state');
+                    return _buildEmptyState();
+                  }
+                }(),
               ),
             ],
           ),
@@ -138,98 +151,26 @@ class CertificationManageView extends GetView<CertificationManageController> {
   }
 
   Widget _buildCertificationsList() {
+    print('🎯 _buildCertificationsList() called with ${controller.certifications.length} items');
+    for (int i = 0; i < controller.certifications.length; i++) {
+      print('📋 Certification $i: ${controller.certifications[i].title}');
+    }
+    
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: controller.certifications.length,
       itemBuilder: (context, index) {
         final certification = controller.certifications[index];
-        return _buildCertificationCard(certification);
+        print('🎨 Building card for: ${certification.title}');
+        return ManagedCertificationCard(
+          certification: certification,
+          onTap: () {
+            // No action - just display certification info
+            print('Tapped certification: ${certification.title}');
+          },
+        );
       },
     );
   }
 
-  Widget _buildCertificationCard(ManagedCertification certification) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: AppColors.outline,
-          width: 1,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    certification.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Montserrat',
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: certification.isCompleted ? AppColors.tertiary : AppColors.secondary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    certification.isCompleted ? 'Selesai' : 'Dalam Progress',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              certification.provider,
-              style: const TextStyle(
-                fontSize: 14,
-                fontFamily: 'Montserrat',
-                color: AppColors.textSecondary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              certification.description,
-              style: const TextStyle(
-                fontSize: 14,
-                fontFamily: 'Montserrat',
-                color: AppColors.textSecondary,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            if (certification.completedDate != null) ...[
-              const SizedBox(height: 8),
-              Text(
-                'Selesai: ${certification.completedDate!.day}/${certification.completedDate!.month}/${certification.completedDate!.year}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'Montserrat',
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
 }

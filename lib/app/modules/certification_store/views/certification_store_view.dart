@@ -211,7 +211,7 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 6),
                           Text(
                             certification.description,
                             style: TextStyle(
@@ -229,7 +229,7 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                             style: TextStyle(
                               color: AppColors.textPrimary,
                               fontFamily: "Montserrat",
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -267,7 +267,7 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                             );
                           }),
 
-                          SizedBox(height: 25),
+                          SizedBox(height: 15),
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -278,17 +278,17 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                                   color: AppColors.textPrimary,
                                   fontFamily: "Montserrat",
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
                           ),
 
-                          SizedBox(height: 15),
+                          SizedBox(height: 6),
 
                           ...List.generate(certification.requirements.length, (index) {
                             return Padding(
-                              padding: EdgeInsets.only(bottom: 8),
+                              padding: EdgeInsets.only(bottom: 12),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -544,20 +544,28 @@ class CertificationStoreView extends GetView<CertificationStoreController> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: Container(
-                              height: 55,
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Ikuti Sertifikasi",
-                                  style: TextStyle(
-                                    color: AppColors.textOnPrimary,
-                                    fontFamily: "Montserrat",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                            child: GestureDetector(
+                              onTap: () {
+                                print('🔥 Button "Ikuti Sertifikasi" tapped!');
+                                print('🔍 Controller: ${controller.runtimeType}');
+                                print('🔍 Selected certification: ${controller.selectedCertification.value?.title ?? "null"}');
+                                controller.enrollCertification();
+                              },
+                              child: Container(
+                                height: 55,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Ikuti Sertifikasi",
+                                    style: TextStyle(
+                                      color: AppColors.textOnPrimary,
+                                      fontFamily: "Montserrat",
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),

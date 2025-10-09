@@ -26,10 +26,7 @@ Widget buildGridItem(int index) {
         'title': 'Certification',
         'icon': Icons.verified_outlined,
       },
-      {
-        'title': 'Admin Panel',
-        'icon': Icons.admin_panel_settings,
-      },
+
     ];
 
     // Consistent color and gradient for all items
@@ -67,12 +64,6 @@ Widget buildGridItem(int index) {
             // Navigate to Certification
             if (Get.context != null) {
               Get.toNamed(Routes.CERTIFICATION_MANAGE);
-            }
-            break;
-          case 5:
-            // Navigate to Admin Panel
-            if (Get.context != null) {
-              Get.toNamed(Routes.ADMIN_PANEL);
             }
             break;
         }

@@ -250,4 +250,302 @@ class FirestoreService {
       return null;
     });
   }
+
+  // ==================== COURSE MANAGEMENT ====================
+  
+  // Get user's managed courses collection reference
+  CollectionReference? get _userCoursesCollection {
+    if (currentUserId == null) return null;
+    return _usersCollection.doc(currentUserId).collection('managed_courses');
+  }
+  
+  // Check if course is already enrolled
+  Future<bool> isCourseAlreadyEnrolled(String courseId) async {
+    try {
+      if (_userCoursesCollection == null) {
+        return false;
+      }
+      
+      final doc = await _userCoursesCollection!.doc(courseId).get();
+      return doc.exists;
+    } catch (e) {
+      print('Error checking course enrollment: $e');
+      return false;
+    }
+  }
+
+  // Save enrolled course to Firebase
+  Future<bool> saveEnrolledCourse({
+    required String courseId,
+    required String title,
+    required String provider,
+    required String description,
+    double progress = 0.0,
+    bool isCompleted = false,
+    DateTime? enrolledDate,
+    DateTime? completedDate,
+  }) async {
+    try {
+      if (_userCoursesCollection == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      // Check if already enrolled
+      final alreadyEnrolled = await isCourseAlreadyEnrolled(courseId);
+      if (alreadyEnrolled) {
+        print('Course already enrolled: $courseId');
+        return false;
+      }
+      
+      final courseData = {
+        'id': courseId,
+        'title': title,
+        'provider': provider,
+        'description': description,
+        'progress': progress,
+        'isCompleted': isCompleted,
+        'enrolledDate': enrolledDate ?? DateTime.now(),
+        'completedDate': completedDate,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      
+      await _userCoursesCollection!.doc(courseId).set(courseData);
+      return true;
+    } catch (e) {
+      print('Error saving enrolled course: $e');
+      return false;
+    }
+  }
+
+  // Save enrolled course with modules to Firebase (Enhanced version)
+  Future<bool> saveEnrolledCourseWithModules(dynamic managedCourse) async {
+    try {
+      if (_userCoursesCollection == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      // Check if already enrolled
+      final alreadyEnrolled = await isCourseAlreadyEnrolled(managedCourse.id);
+      if (alreadyEnrolled) {
+        print('Course already enrolled: ${managedCourse.id}');
+        return false;
+      }
+      
+      // Convert ManagedCourse to Firebase data
+      final courseData = managedCourse.toFirestore();
+      courseData['createdAt'] = FieldValue.serverTimestamp();
+      courseData['updatedAt'] = FieldValue.serverTimestamp();
+      
+      await _userCoursesCollection!.doc(managedCourse.id).set(courseData);
+      return true;
+    } catch (e) {
+      print('Error saving enrolled course with modules: $e');
+      return false;
+    }
+  }
+  
+  // Get all enrolled courses
+  Future<List<Map<String, dynamic>>> getEnrolledCourses() async {
+    try {
+      if (_userCoursesCollection == null) {
+        return [];
+      }
+      
+      final querySnapshot = await _userCoursesCollection!
+          .orderBy('enrolledDate', descending: true)
+          .get();
+      
+      return querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      print('Error getting enrolled courses: $e');
+      return [];
+    }
+  }
+  
+  // Update course progress
+  Future<bool> updateCourseProgress({
+    required String courseId,
+    required double progress,
+    bool? isCompleted,
+    DateTime? completedDate,
+  }) async {
+    try {
+      if (_userCoursesCollection == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      final updateData = {
+        'progress': progress,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      
+      if (isCompleted != null) {
+        updateData['isCompleted'] = isCompleted;
+      }
+      
+      if (completedDate != null) {
+        updateData['completedDate'] = completedDate;
+      }
+      
+      await _userCoursesCollection!.doc(courseId).update(updateData);
+      return true;
+    } catch (e) {
+      print('Error updating course progress: $e');
+      return false;
+    }
+  }
+  
+  // Remove enrolled course
+  Future<bool> removeEnrolledCourse(String courseId) async {
+    try {
+      if (_userCoursesCollection == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      await _userCoursesCollection!.doc(courseId).delete();
+      return true;
+    } catch (e) {
+      print('Error removing enrolled course: $e');
+      return false;
+    }
+  }
+
+  // ==================== CERTIFICATION MANAGEMENT ====================
+  
+  // Get user's managed certifications collection reference
+  CollectionReference? get _userCertificationsCollection {
+    if (currentUserId == null) return null;
+    return _usersCollection.doc(currentUserId).collection('managed_certifications');
+  }
+  
+  // Check if certification is already enrolled
+  Future<bool> isCertificationAlreadyEnrolled(String certificationId) async {
+    try {
+      if (_userCertificationsCollection == null) {
+        return false;
+      }
+      
+      final doc = await _userCertificationsCollection!.doc(certificationId).get();
+      return doc.exists;
+    } catch (e) {
+      print('Error checking certification enrollment: $e');
+      return false;
+    }
+  }
+
+  // Save enrolled certification to Firebase
+  Future<bool> saveEnrolledCertification({
+    required String certificationId,
+    required String title,
+    required String provider,
+    required String description,
+    bool isCompleted = false,
+    DateTime? enrolledDate,
+    DateTime? completedDate,
+    String? certificateUrl,
+  }) async {
+    try {
+      if (_userCertificationsCollection == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      // Check if already enrolled
+      final alreadyEnrolled = await isCertificationAlreadyEnrolled(certificationId);
+      if (alreadyEnrolled) {
+        print('Certification already enrolled: $certificationId');
+        return false;
+      }
+      
+      final certificationData = {
+        'id': certificationId,
+        'title': title,
+        'provider': provider,
+        'description': description,
+        'isCompleted': isCompleted,
+        'enrolledDate': enrolledDate ?? DateTime.now(),
+        'completedDate': completedDate,
+        'certificateUrl': certificateUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      
+      await _userCertificationsCollection!.doc(certificationId).set(certificationData);
+      return true;
+    } catch (e) {
+      print('Error saving enrolled certification: $e');
+      return false;
+    }
+  }
+  
+  // Get all enrolled certifications
+  Future<List<Map<String, dynamic>>> getEnrolledCertifications() async {
+    try {
+      if (_userCertificationsCollection == null) {
+        return [];
+      }
+      
+      final querySnapshot = await _userCertificationsCollection!
+          .orderBy('enrolledDate', descending: true)
+          .get();
+      
+      return querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      print('Error getting enrolled certifications: $e');
+      return [];
+    }
+  }
+  
+  // Update certification completion
+  Future<bool> updateCertificationCompletion({
+    required String certificationId,
+    required bool isCompleted,
+    DateTime? completedDate,
+    String? certificateUrl,
+  }) async {
+    try {
+      if (_userCertificationsCollection == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      final updateData = {
+        'isCompleted': isCompleted,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      
+      if (completedDate != null) {
+        updateData['completedDate'] = completedDate;
+      }
+      
+      if (certificateUrl != null) {
+        updateData['certificateUrl'] = certificateUrl;
+      }
+      
+      await _userCertificationsCollection!.doc(certificationId).update(updateData);
+      return true;
+    } catch (e) {
+      print('Error updating certification completion: $e');
+      return false;
+    }
+  }
+  
+  // Remove enrolled certification
+  Future<bool> removeEnrolledCertification(String certificationId) async {
+    try {
+      if (_userCertificationsCollection == null) {
+        throw Exception('User not authenticated');
+      }
+      
+      await _userCertificationsCollection!.doc(certificationId).delete();
+      return true;
+    } catch (e) {
+      print('Error removing enrolled certification: $e');
+      return false;
+    }
+  }
+
 }

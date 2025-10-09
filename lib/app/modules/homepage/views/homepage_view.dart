@@ -15,32 +15,6 @@ import '../local_widget/course_progress_carousel.dart';
 
 class HomepageView extends GetView<HomepageController> {
   const HomepageView({super.key});
-  // Sample data for courses - in real app this would come from controller/API
-  List<CourseData> _getSampleCourses() {
-    return [
-      CourseData(
-        id: "1",
-        title: "Express JS Intermediate",
-        lastActivity: "Middleware",
-        lastTime: "10:46",
-        progress: 60.0,
-      ),
-      CourseData(
-        id: "2", 
-        title: "Flutter Advanced",
-        lastActivity: "State Management",
-        lastTime: "14:32",
-        progress: 35.0,
-      ),
-      CourseData(
-        id: "3",
-        title: "React Native Basics", 
-        lastActivity: "Components",
-        lastTime: "09:15",
-        progress: 80.0,
-      ),
-    ];
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -581,9 +555,7 @@ class HomepageView extends GetView<HomepageController> {
                               top: -37,
                               left: 0,
                               right: 0,
-                              child: CourseProgressCarousel(
-                                courses: _getSampleCourses(),
-                              ),
+                              child: const CourseProgressCarousel(),
                             ),
                           ],
                         )

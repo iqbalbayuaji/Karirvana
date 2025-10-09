@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import '../../../data/models/certification_model.dart';
+import '../../../routes/app_pages.dart';
 import '../../certification_store_main/controllers/certification_store_main_controller.dart';
+import '../../certification_manage/controllers/certification_manage_controller.dart';
 
 class CertificationStoreController extends GetxController {
   final isLoading = false.obs;
@@ -69,6 +71,47 @@ class CertificationStoreController extends GetxController {
   // Method to reload certification data (can be called when needed)
   void reloadCertification() {
     _loadCertificationData();
+  }
+
+  // Enroll in certification (add to managed certifications)
+  void enrollCertification() {
+    print('🔥 enrollCertification() called');
+    if (selectedCertification.value == null) {
+      print('❌ No selected certification');
+      return;
+    }
+    
+    print('📋 Selected certification: ${selectedCertification.value!.title}');
+    
+    try {
+      // Get or create CertificationManageController
+      CertificationManageController manageController;
+      try {
+        manageController = Get.find<CertificationManageController>();
+        print('✅ Found existing CertificationManageController - hashCode: ${manageController.hashCode}');
+        print('📋 Current certifications in controller: ${manageController.certifications.length}');
+      } catch (e) {
+        print('⚠️ Creating new CertificationManageController');
+        manageController = Get.put(CertificationManageController(), permanent: true);
+        print('✅ Created CertificationManageController - hashCode: ${manageController.hashCode}');
+      }
+      
+      // Enroll the certification (async call)
+      manageController.enrollCertification(selectedCertification.value!).then((success) {
+        if (success) {
+          print('✅ Certification enrolled successfully: ${selectedCertification.value!.title}');
+        } else {
+          print('⚠️ Certification enrollment failed or already enrolled');
+        }
+      }).catchError((e) {
+        print('❌ Error in enrollment: $e');
+      });
+      
+    } catch (e) {
+      print('❌ Error enrolling certification: $e');
+    }
+
+    Get.toNamed(Routes.CERTIFICATION_MANAGE);
   }
 
 
